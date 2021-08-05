@@ -12,14 +12,15 @@ public class GameModel : MonoBehaviour
     public TilemapManager TilemapManager;
 
     [Header("Game Elements")]
-    public Character Player;
+    public Player Player;
 
     [Header("Prefabs")]
-    public Character PlayerPrefab;
+    public Player PlayerPrefab;
 
     void Start()
     {
-        TilemapGenerator.GenerateTilemap(Tilemap);
+        TilemapGenerator.GenerateTilemap(Tilemap, 4);
+        TilemapManager.Init(Tilemap);
         SpawnPlayer(0, 0);
         CameraController.FocusObject(Player.Controller.transform);
     }
@@ -33,6 +34,23 @@ public class GameModel : MonoBehaviour
         Player = Instantiate(PlayerPrefab);
         Player.Init(this, curX, y);
         Player.transform.position = worldSpawn;
+    }
+
+    public void OnPlayerMove()
+    {
+        LoadChunks();
+    }
+
+    private void LoadChunks()
+    {
+        Vector2Int playerChunkCoordinates = TilemapGenerator.GetChunkCoordinates(Player.GridPosition);
+        for(int y = -1; y <= 1; y++)
+        {
+            for(int x = -1; x <= 1; x++)
+            {
+                TilemapGenerator.TryCreateChunk(Tilemap, playerChunkCoordinates + new Vector2Int(x, y));
+            }
+        }
     }
 
     private TileData GetTileData(int x, int y)

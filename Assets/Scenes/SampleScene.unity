@@ -248,9 +248,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b028758773ef2c048818dbcd54548500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  White: {fileID: 11400000, guid: 4f8ffee74a689204c88d3e866e34091b, type: 2}
-  Grey: {fileID: 11400000, guid: 7d62f96fe4938b44ca4db5c17f809626, type: 2}
-  Black: {fileID: 11400000, guid: f3d7a28f8fdde664d82e23cc76f2c668, type: 2}
+  GrassSet1: {fileID: 11400000, guid: 81267d25caab0b348b03b2523b9e7776, type: 2}
+  WallSet1: {fileID: 11400000, guid: d9644521179582c4f8708afe559f9a38, type: 2}
+  MinGridX: 0
+  MinGridY: 0
+  MaxGridX: 0
+  MaxGridY: 0
 --- !u!4 &558758191
 Transform:
   m_ObjectHideFlags: 0
@@ -294,11 +297,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e16eca1b8752e374b8dd099e8d7b275c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tilemap: {fileID: 1252013868}
   TileDatas:
   - {fileID: 11400000, guid: de15c498f6417ee4fb625a7c070f0ff9, type: 2}
   - {fileID: 11400000, guid: 3a95e85f6f1fdf24caca10935897f978, type: 2}
-  - {fileID: 11400000, guid: 242456353cf3eff439d52d437b03385a, type: 2}
 --- !u!4 &710985275
 Transform:
   m_ObjectHideFlags: 0
@@ -347,7 +348,7 @@ MonoBehaviour:
   TilemapGenerator: {fileID: 558758190}
   TilemapManager: {fileID: 710985274}
   Player: {fileID: 0}
-  PlayerPrefab: {fileID: 1737586888375814202, guid: bf50259155b002a4294ecfb43fbf1f0b, type: 3}
+  PlayerPrefab: {fileID: 444514033608972604, guid: bf50259155b002a4294ecfb43fbf1f0b, type: 3}
 --- !u!4 &869999487
 Transform:
   m_ObjectHideFlags: 0
@@ -473,7 +474,7 @@ GameObject:
   - component: {fileID: 1252013868}
   - component: {fileID: 1252013867}
   m_Layer: 0
-  m_Name: Tilemap
+  m_Name: TilemapMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

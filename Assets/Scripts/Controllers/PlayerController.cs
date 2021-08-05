@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerController : CharacterController
 {
-    // Start is called before the first frame update
-    void Start()
+    private Player Player;
+
+    public override void Awake()
     {
-        
+        base.Awake();
+        Player = GetComponentInParent<Player>();
     }
 
     // Update is called once per frame
@@ -20,5 +22,10 @@ public class PlayerController : CharacterController
         else MoveDirection = Direction.None;
 
         base.Update();
+    }
+
+    protected override void OnCharacterMove()
+    {
+        Player.Model.OnPlayerMove();
     }
 }

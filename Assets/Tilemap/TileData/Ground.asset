@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e5f1b6e0ce11d4c967ede2a390c1f2, type: 3}
   m_Name: Ground
   m_EditorClassIdentifier: 
-  Tiles:
-  - {fileID: 11400000, guid: 4f8ffee74a689204c88d3e866e34091b, type: 2}
+  TileSets:
+  - {fileID: 11400000, guid: 81267d25caab0b348b03b2523b9e7776, type: 2}
   SpeedModifier: 1
   Passable: 1
