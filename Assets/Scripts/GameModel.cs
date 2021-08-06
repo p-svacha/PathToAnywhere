@@ -11,6 +11,10 @@ public class GameModel : MonoBehaviour
     public TilemapGenerator TilemapGenerator;
     public TilemapManager TilemapManager;
 
+    [Header("Map Rendering Attributes")]
+    public static int MapRenderRange = 2; // Chunks up to this far away from the player are rendered
+    public static int MapGenerationRange = 4; // Chunks up to this far away from the player are generated. This needs to be higher than the render range because already generated chunks can change when new neighbouring chunks are generated or influenced by a generation
+
     [Header("Game Elements")]
     public Player Player;
 
@@ -19,7 +23,8 @@ public class GameModel : MonoBehaviour
 
     void Start()
     {
-        TilemapGenerator.GenerateTilemap(Tilemap, 4);
+        TilemapGenerator.Init(this);
+        TilemapGenerator.GenerateTilemap(MapGenerationRange + 1);
         TilemapManager.Init(Tilemap);
         SpawnPlayer(0, 0);
         CameraController.FocusObject(Player.Controller.transform);
@@ -38,20 +43,9 @@ public class GameModel : MonoBehaviour
 
     public void OnPlayerMove()
     {
-        LoadChunks();
+        TilemapGenerator.LoadChunksAroundPlayer(Player.GridPosition, MapRenderRange, MapGenerationRange);
     }
 
-    private void LoadChunks()
-    {
-        Vector2Int playerChunkCoordinates = TilemapGenerator.GetChunkCoordinates(Player.GridPosition);
-        for(int y = -1; y <= 1; y++)
-        {
-            for(int x = -1; x <= 1; x++)
-            {
-                TilemapGenerator.TryCreateChunk(Tilemap, playerChunkCoordinates + new Vector2Int(x, y));
-            }
-        }
-    }
 
     private TileData GetTileData(int x, int y)
     {

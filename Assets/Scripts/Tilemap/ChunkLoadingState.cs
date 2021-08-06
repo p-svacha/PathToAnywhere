@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TileType
+public enum ChunkLoadingState
 {
-    Mountain,
-    Grass,
-    Desert,
-    Wall,
-    WoodFloor
+    WaitingForAllNeighbours,
+    RenderReady
 }

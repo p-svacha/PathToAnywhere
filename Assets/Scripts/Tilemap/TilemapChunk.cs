@@ -11,8 +11,13 @@ public class TilemapChunk
 
     public Vector2Int Coordinates;
     public TileType[,] Tiles;
+    public Region[,] Regions;
 
     public int MinGridX, MinGridY, MaxGridX, MaxGridY;
+
+    // Loading state
+    public TilemapChunk NorthWest, North, NorthEast, East, SouthEast, South, SouthWest, West;
+    public ChunkLoadingState State;
 
     public TilemapChunk(Vector2Int coordinates)
     {
@@ -21,6 +26,22 @@ public class TilemapChunk
         MaxGridX = coordinates.x * ChunkSize + ChunkSize - 1;
         MinGridY = coordinates.y * ChunkSize;
         MaxGridY = coordinates.y * ChunkSize + ChunkSize - 1;
+
         Tiles = new TileType[ChunkSize, ChunkSize];
+        Regions = new Region[ChunkSize, ChunkSize];
+
+        State = ChunkLoadingState.WaitingForAllNeighbours;
+    }
+
+    public void CheckLoadingState()
+    {
+        if (NorthWest != null && North != null && NorthEast != null && East != null && SouthEast != null && South != null && SouthWest != null && West != null)
+            AllNeighbourChunksLoaded();
+    }
+
+    private void AllNeighbourChunksLoaded()
+    {
+        Debug.Log("Chunk at " + Coordinates.x + "/" + Coordinates.y + " fully loaded");
+        State = ChunkLoadingState.RenderReady;
     }
 }

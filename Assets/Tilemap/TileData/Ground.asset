@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileSets:
   - {fileID: 11400000, guid: 81267d25caab0b348b03b2523b9e7776, type: 2}
+  - {fileID: 11400000, guid: 24991fa161a4a31409360b1906dd689f, type: 2}
+  - {fileID: 11400000, guid: 0835016492d5a11428a7983947501cd8, type: 2}
   SpeedModifier: 1
   Passable: 1

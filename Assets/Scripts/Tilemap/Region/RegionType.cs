@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TileType
+public enum RegionType
 {
-    Mountain,
-    Grass,
+    Grassland,
     Desert,
-    Wall,
-    WoodFloor
+    Mountain,
+    Ruins
 }

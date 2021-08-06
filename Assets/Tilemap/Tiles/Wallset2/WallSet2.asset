@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815c062c05e1959469e2c603587dc065, type: 3}
+  m_Name: WallSet2
+  m_EditorClassIdentifier: 
+  Surrounded: {fileID: 11400000, guid: 84d4f1a28b430394d818a9d58fb7228e, type: 2}
+  Center1: {fileID: 11400000, guid: 6843880dd7674cb46aac359b96fcd63e, type: 2}
+  Center2: {fileID: 11400000, guid: 7891a8326afb1e043a43b35b6c710710, type: 2}
+  Center3: {fileID: 11400000, guid: ee5d969e64f2d1346af866ab2299732f, type: 2}
+  Center4: {fileID: 11400000, guid: e381f9bfca43eb14ca3318c42054d2be, type: 2}
+  T1: {fileID: 11400000, guid: 66f28262f5ca4f64c9bbbbc95c0cc9c6, type: 2}
+  T2: {fileID: 11400000, guid: 9758f27ee09aeb04a93893d40012b5e5, type: 2}
+  T3: {fileID: 11400000, guid: e8ec227d3a7717b4e91de98f55c7fd7e, type: 2}
+  Single: {fileID: 11400000, guid: b49a49b8cfe3d3449b996498d8025517, type: 2}
+  Center0: {fileID: 11400000, guid: 8c0235574d1b63c498eaae20cdccdb23, type: 2}
+  T0: {fileID: 11400000, guid: deceb852551095a488d72da5bc1fe9ff, type: 2}
+  Corner1: {fileID: 11400000, guid: 3dbcd157ab72d7f48a81bf45be0ae3fc, type: 2}
+  End: {fileID: 11400000, guid: a8e923f0af83c6847a1bb666bba28fa8, type: 2}
+  Straight: {fileID: 11400000, guid: 9a89fea965da68741997c89a0cabf02c, type: 2}
+  Corner0: {fileID: 11400000, guid: 4e81686b286708143bdcefcd0005840e, type: 2}

@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23e5f1b6e0ce11d4c967ede2a390c1f2, type: 3}
-  m_Name: Wall
+  m_Script: {fileID: 11500000, guid: ec2948ba07ea2fa4a89f493faeb297a4, type: 3}
+  m_Name: WoodFloorSet1 1
   m_EditorClassIdentifier: 
-  TileSets:
-  - {fileID: 11400000, guid: d9644521179582c4f8708afe559f9a38, type: 2}
-  - {fileID: 11400000, guid: 9ef19e72c7cc04a4ca4b90bb1137c56d, type: 2}
-  SpeedModifier: 0
-  Passable: 0
+  Tiles:
+  - {fileID: 11400000, guid: 8a2e996702f6fc64a82e9ecde25438c0, type: 2}
