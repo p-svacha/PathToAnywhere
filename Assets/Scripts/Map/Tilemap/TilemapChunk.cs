@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,7 @@ public class TilemapChunk
     public Vector2Int Coordinates;
     public TileType[,] Tiles;
     public Region[,] Regions;
+    public List<Region> RegionList;
 
     public int MinGridX, MinGridY, MaxGridX, MaxGridY;
 
@@ -30,16 +32,21 @@ public class TilemapChunk
         Tiles = new TileType[ChunkSize, ChunkSize];
         Regions = new Region[ChunkSize, ChunkSize];
 
-        State = ChunkLoadingState.WaitingForAllNeighbours;
+        State = ChunkLoadingState.Empty;
+    }
+
+    public void OnRegionsGenerated()
+    {
+        RegionList = Regions.Cast<Region>().Distinct().ToList();
     }
 
     public void CheckLoadingState()
     {
         if (NorthWest != null && North != null && NorthEast != null && East != null && SouthEast != null && South != null && SouthWest != null && West != null)
-            AllNeighbourChunksLoaded();
+            OnAllNeighbourChunksLoaded();
     }
 
-    private void AllNeighbourChunksLoaded()
+    private void OnAllNeighbourChunksLoaded()
     {
         Debug.Log("Chunk at " + Coordinates.x + "/" + Coordinates.y + " fully loaded");
         State = ChunkLoadingState.RenderReady;

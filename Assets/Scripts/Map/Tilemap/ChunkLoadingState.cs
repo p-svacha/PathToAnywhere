@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum ChunkLoadingState
 {
+    Empty,
     WaitingForAllNeighbours,
     RenderReady
 }

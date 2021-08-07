@@ -15,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class Voronoi
 {
+    private TilemapGenerator Generator;
     private Hash RegionVoronoiPointHash;
     private Hash ParcelVoronoiPointHashSmall;
     private int Resolution = 4;
@@ -29,8 +30,9 @@ public class Voronoi
         {RegionType.Ruins, 100 },
     };
 
-    public Voronoi()
+    public Voronoi(TilemapGenerator generator)
     {
+        Generator = generator;
         RegionVoronoiPointHash = new Hash(256, 10);
         ParcelVoronoiPointHashSmall = new Hash(16, 40); // 1 in 16 tiles is a voronoi point
     }
@@ -89,23 +91,6 @@ public class Voronoi
         return points;
     }
 
-    public Color GetColorFor(RegionType type)
-    {
-        switch (type)
-        {
-            case RegionType.Grassland:
-                return Color.green;
-            case RegionType.Desert:
-                return Color.yellow;
-            case RegionType.Mountain:
-                return Color.black;
-            case RegionType.Ruins:
-                return Color.red;
-            default:
-                return Color.gray;
-        }
-    }
-
     protected T GetWeightedRandomEnum<T>(Dictionary<T, int> weightDictionary) where T : System.Enum
     {
         int probabilitySum = weightDictionary.Sum(x => x.Value);
@@ -125,13 +110,13 @@ public class Voronoi
         switch(type)
         {
             case RegionType.Grassland:
-                return new Region_Grassland(id);
+                return new Region_Grassland(Generator, id);
             case RegionType.Desert:
-                return new Region_Desert(id);
+                return new Region_Desert(Generator, id);
             case RegionType.Mountain:
-                return new Regions_Mountains(id);
+                return new Regions_Mountains(Generator, id);
             case RegionType.Ruins:
-                return new Region_Ruins(id);
+                return new Region_Ruins(Generator, id);
             default:
                 throw new System.Exception("Region type not handled");
         }

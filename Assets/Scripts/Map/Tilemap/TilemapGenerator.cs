@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,44 +31,72 @@ public class TilemapGenerator : MonoBehaviour
     public void Init(GameModel model)
     {
         Model = model;
-        Voronoi = new Voronoi();
+        Voronoi = new Voronoi(this);
     }
 
-    public void GenerateTilemap(int chunkSize)
-    {
-        for(int y = -chunkSize / 2; y < (-chunkSize / 2) + chunkSize; y++)
-        {
-            for(int x = -chunkSize / 2; x < (-chunkSize / 2) + chunkSize; x++)
-            {
-                TilemapChunk chunk = GenerateChunk(new Vector2Int(x, y));
-                GenerateMapLayout(chunk);
-                PlaceTiles(chunk);
-            }
-        }
-    }
-
-    public void LoadChunksAroundPlayer(Vector2Int playerPosition, int visualRange, int interestRange)
+    /// <summary>
+    /// Chunks that are relevant to the player are loaded. All regions that are within the visual range of the player will be fully loaded (as in all chunks that have tiles of this region)
+    /// </summary>
+    public void LoadChunksAroundPlayer(Vector2Int playerPosition, int visualRange)
     {
         Vector2Int playerChunkCoordinates = GetChunkCoordinates(playerPosition);
-        for (int y = -interestRange; y <= interestRange; y++)
+        for (int y = -visualRange; y <= visualRange; y++)
         {
-            for (int x = -interestRange; x <= interestRange; x++)
+            for (int x = -visualRange; x <= visualRange; x++)
             {
-                TryCreateChunk(playerChunkCoordinates + new Vector2Int(x, y));
+                TilemapChunk chunk = LoadChunk(playerChunkCoordinates + new Vector2Int(x, y), true);
+                if (chunk.State == ChunkLoadingState.Empty) PlaceTiles(chunk);
             }
         }
     }
 
     /// <summary>
     /// Creates a chunk at the given coordinates if it doesn't already exist.
+    /// Also creates all chunks containing a region that appears in the new chunk.
     /// </summary>
-    public void TryCreateChunk(Vector2Int chunkCoordinates)
+    public TilemapChunk LoadChunk(Vector2Int chunkCoordinates, bool loadRegions)
     {
-        if(!Chunks.ContainsKey(chunkCoordinates))
+        TilemapChunk chunk;
+        Chunks.TryGetValue(chunkCoordinates, out chunk);
+        bool generateNewChunk = (chunk == null);
+
+        if (generateNewChunk)
         {
-            TilemapChunk chunk = GenerateChunk(chunkCoordinates);
-            GenerateMapLayout(chunk);
-            PlaceTiles(chunk);
+            chunk = GenerateChunk(chunkCoordinates);
+            GenerateChunkRegions(chunk);
+        }
+
+        if (loadRegions)
+        {
+            foreach (Region region in chunk.RegionList)
+            {
+                if (!region.FullyLoaded)
+                {
+                    region.Chunks.Add(chunk);
+                    LoadRegion(region, chunkCoordinates);
+                    region.OnLoadingComplete();
+                }
+            }
+        }
+
+        return chunk;
+    }
+
+    private void LoadRegion(Region region, Vector2Int chunkCoordinates)
+    {
+        CheckRegionChunk(region, chunkCoordinates + new Vector2Int(-1, 0));
+        CheckRegionChunk(region, chunkCoordinates + new Vector2Int(1, 0));
+        CheckRegionChunk(region, chunkCoordinates + new Vector2Int(0, -1));
+        CheckRegionChunk(region, chunkCoordinates + new Vector2Int(0, 1));
+    }
+
+    private void CheckRegionChunk(Region region, Vector2Int coordinates)
+    {
+        TilemapChunk chunk = LoadChunk(coordinates, false);
+        if (chunk.RegionList.Contains(region) && !region.Chunks.Contains(chunk))
+        {
+            region.Chunks.Add(chunk);
+            LoadRegion(region, coordinates);
         }
     }
 
@@ -84,22 +113,24 @@ public class TilemapGenerator : MonoBehaviour
     }
 
     // Determines for each tile of what type it is, without placing an actual tile
-    private void GenerateMapLayout(TilemapChunk chunk)
+    private void GenerateChunkRegions(TilemapChunk chunk)
     {
         for (int y = 0; y < TilemapChunk.ChunkSize; y++)
         {
             for (int x = 0; x < TilemapChunk.ChunkSize; x++)
             {
-                int tileX = chunk.Coordinates.x * TilemapChunk.ChunkSize + x;
-                int tileY = chunk.Coordinates.y * TilemapChunk.ChunkSize + y;
-                 
-                // Get region
-                Region region = Voronoi.GetRegionAt(new Vector2Int(tileX, tileY));
-                chunk.Regions[x, y] = region;
+                int gridX = chunk.Coordinates.x * TilemapChunk.ChunkSize + x;
+                int gridY = chunk.Coordinates.y * TilemapChunk.ChunkSize + y;
+                Vector2Int gridPosition = new Vector2Int(gridX, gridY);
 
-                chunk.Tiles[x, y] = region.GetTileType(tileX, tileY);
+                // Get region
+                Region region = Voronoi.GetRegionAt(gridPosition);
+                chunk.Regions[x, y] = region;
+                region.TilePositions.Add(gridPosition);
             }
         }
+
+        chunk.OnRegionsGenerated();
     }
 
     /// <summary>
@@ -109,6 +140,8 @@ public class TilemapGenerator : MonoBehaviour
     /// </summary>
     private void PlaceTiles(TilemapChunk chunk)
     {
+        chunk.State = ChunkLoadingState.WaitingForAllNeighbours;
+
         // Chunk center
         for (int y = 1; y < TilemapChunk.ChunkSize - 1; y++)
         {
@@ -262,7 +295,7 @@ public class TilemapGenerator : MonoBehaviour
         // Region tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
         TilemapRegions.SetTileFlags(tilePos, TileFlags.None);
-        TilemapRegions.SetColor(tilePos, Voronoi.GetColorFor(chunk.Regions[x, y].Type));
+        TilemapRegions.SetColor(tilePos, chunk.Regions[x,y].Color);
     }
 
     #region Chunkedge Tiles
@@ -526,8 +559,17 @@ public class TilemapGenerator : MonoBehaviour
 
         int inChunkX = gridX - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
-        //Debug.Log("chunk coordinates at " + gridX + "/" + gridY + " are " + chunkCoordinates.x + "/" + chunkCoordinates.y + " - " + inChunkX + "/" + inChunkY);
         return chunk.Tiles[inChunkX, inChunkY]; 
+    }
+
+    public void SetTileType(Vector2Int gridPosition, TileType type)
+    {
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+
+        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        chunk.Tiles[inChunkX, inChunkY] = type;
     }
 
     public Vector2Int GetChunkCoordinates(Vector2Int gridPosition)
