@@ -31,7 +31,7 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        Character.CurrentTile = Character.Model.TilemapGenerator.GetTileData(transform.position);
+        Character.CurrentTile = Character.Model.TilemapGenerator.GetTileInfo(transform.position);
         transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.SpeedModifier);
 
 
@@ -41,13 +41,13 @@ public class CharacterController : MonoBehaviour
 
             GetCharacterMovement();
 
-            if (MoveDirection == Direction.Left && Character.Model.TilemapGenerator.GetTileData(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
+            if (MoveDirection == Direction.Left && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
                 Move(Direction.Left);
-            else if (MoveDirection == Direction.Right && Character.Model.TilemapGenerator.GetTileData(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
+            else if (MoveDirection == Direction.Right && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
                 Move(Direction.Right);
-            else if (MoveDirection == Direction.Up && Character.Model.TilemapGenerator.GetTileData(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
+            else if (MoveDirection == Direction.Up && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
                 Move(Direction.Up);
-            else if (MoveDirection == Direction.Down && Character.Model.TilemapGenerator.GetTileData(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
+            else if (MoveDirection == Direction.Down && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
                 Move(Direction.Down);
         }
 

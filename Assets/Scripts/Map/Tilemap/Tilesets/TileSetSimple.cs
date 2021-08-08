@@ -7,7 +7,7 @@ public class TileSetSimple : TileSet
 {
     public List<TileBase> Tiles;
 
-    public TileSetSimple(TileData data, TileType type) : base(data, type)
+    public TileSetSimple(TileSetData data, TileType type) : base(data, type)
     {
         Tiles = new List<TileBase>();
     }

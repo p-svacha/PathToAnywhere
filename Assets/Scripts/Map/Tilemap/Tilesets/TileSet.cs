@@ -5,10 +5,10 @@ using UnityEngine.Tilemaps;
 
 public abstract class TileSet
 {
-    public TileData Data;
+    public TileSetData Data;
     public TileType Type;
 
-    public TileSet(TileData data, TileType type)
+    public TileSet(TileSetData data, TileType type)
     {
         Data = data;
         Type = type;

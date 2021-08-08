@@ -14,7 +14,7 @@ public class Region_Ruins : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileType(pos, GetRandomTileType());
+            Generator.SetTileTypeWithInfo(pos, GetRandomTileType());
         }
     }
 

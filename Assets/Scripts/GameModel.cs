@@ -30,7 +30,7 @@ public class GameModel : MonoBehaviour
     private void SpawnPlayer(int x, int y)
     {
         int curX = x;
-        while (!TilemapGenerator.GetTileData(curX, y).Passable) curX++;
+        while (!TilemapGenerator.GetTileInfo(curX, y).Passable) curX++;
         Vector3 cellPos = Tilemap.GetCellCenterWorld(new Vector3Int(curX, y, 1));
         Vector3 worldSpawn = cellPos + new Vector3(0, 0, -1f);
         Player = Instantiate(PlayerPrefab);

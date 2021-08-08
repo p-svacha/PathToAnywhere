@@ -11,11 +11,9 @@ public class TilemapChunk
     public static int ChunkSize = 12;
 
     public Vector2Int Coordinates;
-    public TileType[,] Tiles;
-    public Region[,] Regions;
-    public List<Region> RegionList;
+    public TileInfo[,] Tiles;
 
-    public int MinGridX, MinGridY, MaxGridX, MaxGridY;
+    public List<Region> RegionList;
 
     // Loading state
     public TilemapChunk NorthWest, North, NorthEast, East, SouthEast, South, SouthWest, West;
@@ -24,19 +22,18 @@ public class TilemapChunk
     public TilemapChunk(Vector2Int coordinates)
     {
         Coordinates = coordinates;
-        MinGridX = coordinates.x * ChunkSize;
-        MaxGridX = coordinates.x * ChunkSize + ChunkSize - 1;
-        MinGridY = coordinates.y * ChunkSize;
-        MaxGridY = coordinates.y * ChunkSize + ChunkSize - 1;
 
-        Tiles = new TileType[ChunkSize, ChunkSize];
-        Regions = new Region[ChunkSize, ChunkSize];
+        Tiles = new TileInfo[ChunkSize, ChunkSize];
+        for(int y = 0; y < ChunkSize; y++)
+            for(int x = 0; x < ChunkSize; x++)
+                Tiles[x, y] = new TileInfo();
+
 
         State = ChunkLoadingState.RegionsGenerated;
     }
 
     public void OnRegionsGenerated()
     {
-        RegionList = Regions.Cast<Region>().Distinct().ToList();
+        RegionList = Tiles.Cast<TileInfo>().Select(x => x.Region).Distinct().ToList();
     }
 }

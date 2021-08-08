@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public static class TileGenerator
 {
-    public static TileSetSimple GenerateSimpleTilset(TilemapGenerator generator, Texture2D texture, TileType type, TileData data, int tileSize)
+    public static TileSetSimple GenerateSimpleTilset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
     {
         TileSetSimple tileset = new TileSetSimple(data, type);
 
@@ -26,7 +26,7 @@ public static class TileGenerator
         return tileset;
     }
 
-    public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileData data, int tileSize)
+    public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
     {
         TileSetSliced tileset = new TileSetSliced(data, type);
 
@@ -54,7 +54,7 @@ public static class TileGenerator
         return tileset;
     }
 
-    public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, TileType type, TileData data, int tileSize)
+    public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, TileType type, TileSetData data, int tileSize)
     {
         TileSetSimple tileset = new TileSetSimple(data, type);
 
@@ -86,7 +86,7 @@ public static class TileGenerator
         return tileset;
     }
 
-    private static Tile GetTileAt(Texture2D texture, int tileSize, int x, int y)
+    public static Tile GetTileAt(Texture2D texture, int tileSize, int x, int y)
     {
         Tile tile = new Tile();
         tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), tileSize, 1, SpriteMeshType.Tight, Vector4.zero);

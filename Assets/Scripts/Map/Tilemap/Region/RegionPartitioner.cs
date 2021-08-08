@@ -13,7 +13,7 @@ using UnityEngine;
 /// 2. Then we check the nearest region voronoi point for the found point in step 1.
 /// 3. That point is the position Id for the region. Each region has this unique id
 /// </summary>
-public class Voronoi
+public class RegionPartitioner
 {
     private TilemapGenerator Generator;
     private MapHash RegionVoronoiPointHash;
@@ -24,13 +24,13 @@ public class Voronoi
 
     private Dictionary<RegionType, int> RegionTable = new Dictionary<RegionType, int>()
     {
-        {RegionType.Grassland, 100 },
-        {RegionType.Desert, 100 },
+        {RegionType.Grassland, 150 },
+        {RegionType.Desert, 70 },
         {RegionType.Mountain, 100 },
-        {RegionType.Ruins, 100 },
+        {RegionType.Ruins, 50 },
     };
 
-    public Voronoi(TilemapGenerator generator)
+    public RegionPartitioner(TilemapGenerator generator)
     {
         Generator = generator;
         RegionVoronoiPointHash = new MapHash(256, 10);

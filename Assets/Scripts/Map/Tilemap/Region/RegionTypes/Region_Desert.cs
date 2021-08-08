@@ -14,7 +14,7 @@ public class Region_Desert : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileType(pos, TileType.Desert);
+            Generator.SetTileTypeWithInfo(pos, TileType.Desert);
         }
     }
 }

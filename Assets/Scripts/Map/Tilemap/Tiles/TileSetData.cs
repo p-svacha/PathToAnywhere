@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TileData
+public class TileSetData
 {
-    public TileSet[] TileSets;
-
     public float SpeedModifier;
     public bool Passable;
 
-    public TileData(bool passable, float speedModifier)
+    public TileSetData(bool passable, float speedModifier)
     {
         Passable = passable;
         SpeedModifier = speedModifier;

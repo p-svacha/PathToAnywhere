@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum TileType
 {
-    Error,
+    None,
     Mountain,
     Grass,
     Desert,

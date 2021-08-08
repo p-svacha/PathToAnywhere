@@ -9,14 +9,22 @@ public class TilemapGenerator : MonoBehaviour
     private GameModel Model;
 
     [Header("Tilemaps")]
-    public Tilemap TilemapBase;
-    public Tilemap TilemapRegions;
+    [SerializeField]
+    private Tilemap TilemapBase;
+    [SerializeField]
+    private Tilemap TilemapOverlay;
+    [SerializeField]
+    private Tilemap TilemapFrontOfPlayer1;
+    [SerializeField]
+    private Tilemap TilemapFrontOfPlayer2;
+    [SerializeField]
+    private Tilemap TilemapRegions;
+
+    
+    public Dictionary<TileType, TileSet> TileSets;
+    public const int TilePixelSize = 64; // pixels
 
     [Header("Tiles")]
-    public Dictionary<TileType, TileSet> TileSets;
-
-    private const int TilePixelSize = 64; // pixels
-
     public TileBase TestTile;
 
     public Texture2D DesertSet1;
@@ -31,10 +39,8 @@ public class TilemapGenerator : MonoBehaviour
     private Dictionary<Vector2Int, TilemapChunk> Chunks = new Dictionary<Vector2Int, TilemapChunk>();
     private List<TilemapChunk> LoadedChunks = new List<TilemapChunk>(); // Loaded chunks include all chanks that are within generation are of the player
 
-    public int MinGridX, MinGridY, MaxGridX, MaxGridY;
-
     [Header("Regions")]
-    private Voronoi Voronoi;
+    private RegionPartitioner Voronoi;
 
 
     private void Update()
@@ -43,20 +49,20 @@ public class TilemapGenerator : MonoBehaviour
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int gridPosition = GetGridPosition(mousePosition);
-            TileData data = GetTileData(gridPosition);
+            TileInfo info = GetTileInfo(gridPosition.x, gridPosition.y);
         }
     }
 
     public void Init(GameModel model)
     {
         Model = model;
-        Voronoi = new Voronoi(this);
+        Voronoi = new RegionPartitioner(this);
         TilemapRegions.gameObject.SetActive(false);
 
         // Tile datas
         TileSets = new Dictionary<TileType, TileSet>();
-        TileData ground = new TileData(true, 1);
-        TileData wall = new TileData(false, 0);
+        TileSetData ground = new TileSetData(true, 1);
+        TileSetData wall = new TileSetData(false, 0);
 
         // Generate tiles from textures
         TileGenerator.GenerateSimpleTilset(this, GrassSet1, TileType.Grass, ground, TilePixelSize);
@@ -74,7 +80,7 @@ public class TilemapGenerator : MonoBehaviour
     /// </summary>
     public void LoadChunksAroundPlayer(Vector2Int playerPosition, int visualRange)
     {
-        Vector2Int playerChunkCoordinates = GetChunkCoordinates(playerPosition);
+        Vector2Int playerChunkCoordinates = GetChunkCoordinates(playerPosition.x, playerPosition.y);
         for (int y = -visualRange; y <= visualRange; y++)
         {
             for (int x = -visualRange; x <= visualRange; x++)
@@ -138,10 +144,6 @@ public class TilemapGenerator : MonoBehaviour
     private TilemapChunk GenerateChunk(Vector2Int chunkCoordinates)
     {
         TilemapChunk chunk = new TilemapChunk(chunkCoordinates);
-        if (chunk.MinGridX < MinGridX) MinGridX = chunk.MinGridX;
-        if (chunk.MaxGridX > MaxGridX) MaxGridX = chunk.MaxGridX;
-        if (chunk.MinGridY < MinGridY) MinGridY = chunk.MinGridY;
-        if (chunk.MaxGridY > MaxGridY) MaxGridY = chunk.MaxGridY;
         Debug.Log("creating chunk at " + chunkCoordinates);
         Chunks.Add(chunkCoordinates, chunk);
         return chunk;
@@ -160,7 +162,7 @@ public class TilemapGenerator : MonoBehaviour
 
                 // Get region
                 Region region = Voronoi.GetRegionAt(gridPosition);
-                chunk.Regions[x, y] = region;
+                chunk.Tiles[x, y].Region = region;
                 region.TilePositions.Add(gridPosition);
             }
         }
@@ -194,43 +196,65 @@ public class TilemapGenerator : MonoBehaviour
         Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
         
         // Base tilemap
-        TileSets[chunk.Tiles[x, y]].PlaceTile(this, TilemapBase, tilePos);
+        TileSets[chunk.Tiles[x, y].Type].PlaceTile(this, TilemapBase, tilePos);
 
         // Region tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
         TilemapRegions.SetTileFlags(tilePos, TileFlags.None);
-        TilemapRegions.SetColor(tilePos, chunk.Regions[x,y].Color);
+        TilemapRegions.SetColor(tilePos, chunk.Tiles[x,y].Region.Color);
     }
+
+
+    #region Setters
+
+    /// <summary>
+    /// Sets the type and its corresponding attributes (passability, speed modifier, etc) of the tile at the given position.
+    /// </summary>
+    public void SetTileTypeWithInfo(Vector2Int gridPosition, TileType type)
+    {
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+
+        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        chunk.Tiles[inChunkX, inChunkY].Type = type;
+        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(TileSets[type].Data);
+    }
+
+    public void SetOverlayTile(Vector2Int gridPosition, TileBase tile)
+    {
+        TilemapOverlay.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tile);
+    }
+
+    public void SetFrontOfPlayerTile(Vector2Int gridPosition, TileBase tile)
+    {
+        Vector3Int tilePos = new Vector3Int(gridPosition.x, gridPosition.y, 0);
+        if (TilemapFrontOfPlayer1.GetTile(tilePos) == null ) TilemapFrontOfPlayer1.SetTile(tilePos, tile);
+        else TilemapFrontOfPlayer2.SetTile(tilePos, tile);
+
+    }
+
+    #endregion
+
+    #region Getters
 
     public TileType GetTileType(int gridX, int gridY)
     {
-        Vector2Int chunkCoordinates = GetChunkCoordinates(new Vector2Int(gridX, gridY));
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridX, gridY);
         if (!Chunks.ContainsKey(chunkCoordinates)) return TileType.Grass;
         TilemapChunk chunk = Chunks[chunkCoordinates];
 
         int inChunkX = gridX - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
-        return chunk.Tiles[inChunkX, inChunkY]; 
+        return chunk.Tiles[inChunkX, inChunkY].Type;
     }
 
-    public void SetTileType(Vector2Int gridPosition, TileType type)
+    public Vector2Int GetChunkCoordinates(int gridX, int gridY)
     {
-        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition);
-        TilemapChunk chunk = Chunks[chunkCoordinates];
-
-        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
-        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
-        chunk.Tiles[inChunkX, inChunkY] = type;
-    }
-
-   
-
-    public Vector2Int GetChunkCoordinates(Vector2Int gridPosition)
-    {
-        int chunkX = gridPosition.x / TilemapChunk.ChunkSize;
-        int chunkY = gridPosition.y / TilemapChunk.ChunkSize;
-        if (gridPosition.x < 0 && gridPosition.x % TilemapChunk.ChunkSize != 0) chunkX--;
-        if (gridPosition.y < 0 && gridPosition.y % TilemapChunk.ChunkSize != 0) chunkY--;
+        int chunkX = gridX / TilemapChunk.ChunkSize;
+        int chunkY = gridY / TilemapChunk.ChunkSize;
+        if (gridX < 0 && gridX % TilemapChunk.ChunkSize != 0) chunkX--;
+        if (gridY < 0 && gridY % TilemapChunk.ChunkSize != 0) chunkY--;
         return new Vector2Int(chunkX, chunkY);
     }
 
@@ -240,17 +264,23 @@ public class TilemapGenerator : MonoBehaviour
         return new Vector2Int(gridPos.x, gridPos.y);
     }
 
-    public TileData GetTileData(Vector3 worldPosition)
+    public TileInfo GetTileInfo(Vector3 worldPosition)
     {
         Vector2Int gridPosition = GetGridPosition(worldPosition);
-        return GetTileData(gridPosition);
+        return GetTileInfo(gridPosition.x, gridPosition.y);
     }
-    public TileData GetTileData(Vector2Int gridPosition)
+    public TileInfo GetTileInfo(Vector2Int gridPosition)
     {
-        return GetTileData(gridPosition.x, gridPosition.y);
+        return GetTileInfo(gridPosition.x, gridPosition.y);
     }
-    public TileData GetTileData(int gridX, int gridY)
+    public TileInfo GetTileInfo(int gridX, int gridY)
     {
-        return TileSets[GetTileType(gridX, gridY)].Data;
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridX, gridY);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+        int inChunkX = gridX - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        return chunk.Tiles[inChunkX, inChunkY]; // we need tileinfo here, not tilesetdata
     }
+
+    #endregion
 }

@@ -7,7 +7,7 @@ public class Character : MonoBehaviour
 {
     public GameModel Model;
 
-    public TileData CurrentTile; // The data of the exact tile the character is on at this moment
+    public TileInfo CurrentTile; // The data of the exact tile the character is on at this moment
     public Vector2Int GridPosition; // The position of the character after he is done moving
 
     public float MovementSpeed;
