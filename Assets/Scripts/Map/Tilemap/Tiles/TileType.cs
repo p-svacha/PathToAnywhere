@@ -9,5 +9,6 @@ public enum TileType
     Grass,
     Desert,
     Wall,
-    WoodFloor
+    WoodFloor,
+    GrassRock
 }

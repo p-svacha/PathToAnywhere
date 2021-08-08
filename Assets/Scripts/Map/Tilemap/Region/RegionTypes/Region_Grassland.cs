@@ -66,7 +66,9 @@ public class Region_Grassland : Region
         // Base grass
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileType(pos, TileType.Grass);
+            if(Random.value < 0.95f) Generator.SetTileType(pos, TileType.Grass);
+            else Generator.SetTileType(pos, TileType.GrassRock);
+
         }
 
         // Buildings
