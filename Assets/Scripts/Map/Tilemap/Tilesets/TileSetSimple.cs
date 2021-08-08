@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu]
 public class TileSetSimple : TileSet
 {
     public List<TileBase> Tiles;
 
-    public override List<TileBase> GetTiles()
+    public TileSetSimple(TileData data, TileType type) : base(data, type)
     {
-        return Tiles;
+        Tiles = new List<TileBase>();
+    }
+
+    public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
+    {
+        tilemap.SetTile(position, GetRandomTile());
     }
 
     public TileBase GetRandomTile()

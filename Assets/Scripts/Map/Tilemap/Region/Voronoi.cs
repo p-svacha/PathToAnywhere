@@ -16,8 +16,8 @@ using UnityEngine;
 public class Voronoi
 {
     private TilemapGenerator Generator;
-    private Hash RegionVoronoiPointHash;
-    private Hash ParcelVoronoiPointHashSmall;
+    private MapHash RegionVoronoiPointHash;
+    private MapHash ParcelVoronoiPointHashSmall;
     private int Resolution = 4;
 
     public Dictionary<Vector2Int, Region> Regions = new Dictionary<Vector2Int, Region>();
@@ -33,8 +33,8 @@ public class Voronoi
     public Voronoi(TilemapGenerator generator)
     {
         Generator = generator;
-        RegionVoronoiPointHash = new Hash(256, 10);
-        ParcelVoronoiPointHashSmall = new Hash(16, 40); // 1 in 16 tiles is a voronoi point
+        RegionVoronoiPointHash = new MapHash(256, 10);
+        ParcelVoronoiPointHashSmall = new MapHash(16, 40); // 1 in 16 tiles is a voronoi point
     }
 
     public Region GetRegionAt(Vector2Int gridPosition)
@@ -53,7 +53,7 @@ public class Voronoi
         }
     }
 
-    private Vector2Int GetNearestVoronoiPoint(Hash voronoiHash, Vector2Int gridPosition, int range)
+    private Vector2Int GetNearestVoronoiPoint(MapHash voronoiHash, Vector2Int gridPosition, int range)
     {
         Vector2Int scaledPosition2D = new Vector2Int(gridPosition.x / Resolution, gridPosition.y / Resolution);
 
@@ -75,7 +75,7 @@ public class Voronoi
         return nearestPoint;
     }
 
-    private List<Vector2Int> GetVoronoiPointsAround(Hash voronoiHash, Vector2Int position, int range)
+    private List<Vector2Int> GetVoronoiPointsAround(MapHash voronoiHash, Vector2Int position, int range)
     {
         List<Vector2Int> points = new List<Vector2Int>();
         for (int y = -range; y < range + 1; y++)

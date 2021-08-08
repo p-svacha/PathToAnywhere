@@ -9,7 +9,6 @@ public class GameModel : MonoBehaviour
     public CameraController CameraController;
     public Tilemap Tilemap;
     public TilemapGenerator TilemapGenerator;
-    public TilemapManager TilemapManager;
 
     [Header("Map Rendering Attributes")]
     public static int MapRenderRange = 2;
@@ -24,7 +23,6 @@ public class GameModel : MonoBehaviour
     {
         TilemapGenerator.Init(this);
         TilemapGenerator.LoadChunksAroundPlayer(new Vector2Int(0,0), MapRenderRange);
-        TilemapManager.Init(Tilemap);
         SpawnPlayer(0, 0);
         CameraController.FocusObject(Player.Controller.transform);
     }
@@ -32,7 +30,7 @@ public class GameModel : MonoBehaviour
     private void SpawnPlayer(int x, int y)
     {
         int curX = x;
-        while (!GetTileData(curX, y).Passable) curX++;
+        while (!TilemapGenerator.GetTileData(curX, y).Passable) curX++;
         Vector3 cellPos = Tilemap.GetCellCenterWorld(new Vector3Int(curX, y, 1));
         Vector3 worldSpawn = cellPos + new Vector3(0, 0, -1f);
         Player = Instantiate(PlayerPrefab);
@@ -43,11 +41,5 @@ public class GameModel : MonoBehaviour
     public void OnPlayerMove()
     {
         TilemapGenerator.LoadChunksAroundPlayer(Player.GridPosition, MapRenderRange);
-    }
-
-
-    private TileData GetTileData(int x, int y)
-    {
-        return TilemapManager.GetTileData(x, y);
     }
 }
