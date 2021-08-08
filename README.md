@@ -15,9 +15,9 @@ I am keeping track of my progress in a [Google Sheets document](https://docs.goo
 At this point there is very little to show since I'm just building very core systems. All visuals are just for testing purposes. But since someone asked for it, here we go..
 
 *Example of a generated landscape with a building, rocks and trees*
-<img src="Screenshots/trees.png" alt="example landscape" height="200" />
+<br/><img src="Screenshots/exampleLandscape.png" alt="example landscape" height="200" /><br/>
 
-*Region partitioning with nested voronoi*
-<img src="Screenshots/regions.png" alt="region partitioning" height="200"  />
+*Region partitioning with nested voronoi*<br/>
+<br/><img src="Screenshots/regions.png" alt="region partitioning" height="200"  /><br/>
 
 
