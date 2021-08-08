@@ -32,6 +32,7 @@ public class TilemapGenerator : MonoBehaviour
     {
         Model = model;
         Voronoi = new Voronoi(this);
+        TilemapRegions.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -107,7 +108,7 @@ public class TilemapGenerator : MonoBehaviour
         if (chunk.MaxGridX > MaxGridX) MaxGridX = chunk.MaxGridX;
         if (chunk.MinGridY < MinGridY) MinGridY = chunk.MinGridY;
         if (chunk.MaxGridY > MaxGridY) MaxGridY = chunk.MaxGridY;
-        Debug.Log("adding chunk at " + chunkCoordinates);
+        Debug.Log("creating chunk at " + chunkCoordinates);
         Chunks.Add(chunkCoordinates, chunk);
         return chunk;
     }

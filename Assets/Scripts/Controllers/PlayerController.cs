@@ -6,6 +6,9 @@ public class PlayerController : CharacterController
 {
     private Player Player;
 
+    private float DirectionChangeTolerance = 0.12f; // When a direcion is pressed for less than this amount, then the player only changes facing direction instead of moving
+    private float TimeSinceLastDirectionChange; // Time since last direction change
+
     public override void Awake()
     {
         base.Awake();
@@ -13,15 +16,30 @@ public class PlayerController : CharacterController
     }
 
     // Update is called once per frame
-    public override void Update()
+    protected override void GetCharacterMovement()
     {
-        if (Input.GetAxisRaw("Horizontal") == 1f) MoveDirection = Direction.Right;
-        else if (Input.GetAxisRaw("Horizontal") == -1f) MoveDirection = Direction.Left;
-        else if (Input.GetAxisRaw("Vertical") == 1f) MoveDirection = Direction.Up;
-        else if (Input.GetAxisRaw("Vertical") == -1f) MoveDirection = Direction.Down;
+        if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.Right);
+        else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.Left);
+        else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.Up);
+        else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.Down);
         else MoveDirection = Direction.None;
+    }
 
-        base.Update();
+    private void OnInputAxis(Direction dir)
+    {
+        if (!IsMoving)
+        {
+            if (MoveDirection == Direction.None && dir != FaceDirection)
+            {
+                TimeSinceLastDirectionChange = 0f;
+            }
+            else
+            {
+                if (TimeSinceLastDirectionChange < DirectionChangeTolerance) TimeSinceLastDirectionChange += Time.deltaTime;
+                else MoveDirection = dir;
+            }
+            FaceDirection = dir;
+        }
     }
 
     protected override void OnCharacterMove()

@@ -19,6 +19,8 @@ public class CharacterController : MonoBehaviour
         Down
     }
 
+    public bool IsMoving;
+    public Direction FaceDirection;
     public Direction MoveDirection;
 
     public virtual void Awake()
@@ -27,14 +29,18 @@ public class CharacterController : MonoBehaviour
     }
 
     // Update is called once per frame
-    public virtual void Update()
+    public void Update()
     {
         Character.CurrentTile = Character.Model.TilemapManager.GetTileData(transform.position);
         transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.SpeedModifier);
-        
 
-        if (Vector3.Distance(transform.position, MovePoint.position) <= 0.05f)
+
+        if (Vector3.Distance(transform.position, MovePoint.position) <= 0.05f) // Character is near the destination and next movement command can be given
         {
+            IsMoving = false;
+
+            GetCharacterMovement();
+
             if (MoveDirection == Direction.Left && Character.Model.TilemapManager.GetTileData(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
                 Move(Direction.Left);
             else if (MoveDirection == Direction.Right && Character.Model.TilemapManager.GetTileData(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
@@ -44,10 +50,16 @@ public class CharacterController : MonoBehaviour
             else if (MoveDirection == Direction.Down && Character.Model.TilemapManager.GetTileData(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
                 Move(Direction.Down);
         }
+
+        ShowCharacterSide(FaceDirection);
     }
+
+    protected virtual void GetCharacterMovement() { }
 
     private void Move(Direction moveDirection)
     {
+        IsMoving = true;
+
         switch(moveDirection)
         {
             case Direction.Left:
@@ -70,8 +82,7 @@ public class CharacterController : MonoBehaviour
                 MovePoint.position += new Vector3(0, -1, 0);
                 break;
         }
-
-        ShowCharacterSide(moveDirection);
+        
         OnCharacterMove();
     }
 
@@ -94,7 +105,7 @@ public class CharacterController : MonoBehaviour
             case Direction.Up:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Body.sortingOrder = 1;
+                Body.sortingOrder = 2;
                 break;
 
             case Direction.Down:
