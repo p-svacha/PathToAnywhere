@@ -28,6 +28,7 @@ public class RegionPartitioner
         {RegionType.Desert, 70 },
         {RegionType.Mountain, 100 },
         {RegionType.Ruins, 50 },
+        {RegionType.Lake, 100 },
     };
 
     public RegionPartitioner(TilemapGenerator generator)
@@ -117,6 +118,8 @@ public class RegionPartitioner
                 return new Regions_Mountains(Generator, id);
             case RegionType.Ruins:
                 return new Region_Ruins(Generator, id);
+            case RegionType.Lake:
+                return new Region_Lake(Generator, id);
             default:
                 throw new System.Exception("Region type not handled");
         }

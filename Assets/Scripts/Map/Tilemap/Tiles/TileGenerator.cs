@@ -42,6 +42,14 @@ public static class TileGenerator
         return tileset;
     }
 
+    public static TileSetSlicedFull GenerateFullSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
+    {
+        TileSetSlicedFull tileset = new TileSetSlicedFull(data, type);
+        AssignTilesToFullSlicedSet(tileset, texture, tileSize);
+        generator.TileSets.Add(type, tileset);
+        return tileset;
+    }
+
     private static void AssignTilesToSlicedSet(TileSetSliced tileset, Texture2D texture, int tileSize)
     {
         tileset.Surrounded = GetTileAt(texture, tileSize, 0, 3);
@@ -62,6 +70,70 @@ public static class TileGenerator
         tileset.End = GetTileAt(texture, tileSize, 0, 0);
         tileset.Straight = GetTileAt(texture, tileSize, 1, 0);
         tileset.Corner0 = GetTileAt(texture, tileSize, 2, 0);
+    }
+
+    private static void AssignTilesToFullSlicedSet(TileSetSlicedFull tileset, Texture2D texture, int tileSize)
+    {
+        tileset.Surrounded.Add(0, GetTileAt(texture, tileSize, 1, 6));
+        tileset.CenterEmpty.Add(0, GetTileAt(texture, tileSize, 4, 6));
+        tileset.Single.Add(0, GetTileAt(texture, tileSize, 3, 7));
+
+        tileset.Straight.Add(0, GetTileAt(texture, tileSize, 5, 6));
+        tileset.Straight.Add(90, GetTileAt(texture, tileSize, 4, 5));
+
+        tileset.End.Add(0, GetTileAt(texture, tileSize, 4, 4));
+        tileset.End.Add(90, GetTileAt(texture, tileSize, 6, 6));
+        tileset.End.Add(180, GetTileAt(texture, tileSize, 4, 7));
+        tileset.End.Add(270, GetTileAt(texture, tileSize, 3, 6));
+
+        tileset.CornerEmpty.Add(0, GetTileAt(texture, tileSize, 1, 3));
+        tileset.CornerEmpty.Add(90, GetTileAt(texture, tileSize, 1, 4));
+        tileset.CornerEmpty.Add(180, GetTileAt(texture, tileSize, 0, 4));
+        tileset.CornerEmpty.Add(270, GetTileAt(texture, tileSize, 0, 3));
+
+        tileset.CornerFull.Add(0, GetTileAt(texture, tileSize, 2, 5));
+        tileset.CornerFull.Add(90, GetTileAt(texture, tileSize, 2, 7));
+        tileset.CornerFull.Add(180, GetTileAt(texture, tileSize, 0, 7));
+        tileset.CornerFull.Add(270, GetTileAt(texture, tileSize, 0, 5));
+
+        tileset.TEmpty.Add(0, GetTileAt(texture, tileSize, 6, 7));
+        tileset.TEmpty.Add(90, GetTileAt(texture, tileSize, 7, 7));
+        tileset.TEmpty.Add(180, GetTileAt(texture, tileSize, 5, 7));
+        tileset.TEmpty.Add(270, GetTileAt(texture, tileSize, 7, 6));
+
+        tileset.THalfFullA.Add(0, GetTileAt(texture, tileSize, 6, 4));
+        tileset.THalfFullA.Add(90, GetTileAt(texture, tileSize, 6, 3));
+        tileset.THalfFullA.Add(180, GetTileAt(texture, tileSize, 5, 5));
+        tileset.THalfFullA.Add(270, GetTileAt(texture, tileSize, 5, 2));
+
+        tileset.THalfFullB.Add(0, GetTileAt(texture, tileSize, 6, 5));
+        tileset.THalfFullB.Add(90, GetTileAt(texture, tileSize, 5, 3));
+        tileset.THalfFullB.Add(180, GetTileAt(texture, tileSize, 5, 4));
+        tileset.THalfFullB.Add(270, GetTileAt(texture, tileSize, 6, 2));
+
+        tileset.TFull.Add(0, GetTileAt(texture, tileSize, 2, 6));
+        tileset.TFull.Add(90, GetTileAt(texture, tileSize, 1, 7));
+        tileset.TFull.Add(180, GetTileAt(texture, tileSize, 0, 6));
+        tileset.TFull.Add(270, GetTileAt(texture, tileSize, 1, 5));
+
+        tileset.CenterQuarterFull.Add(0, GetTileAt(texture, tileSize, 1, 1));
+        tileset.CenterQuarterFull.Add(90, GetTileAt(texture, tileSize, 1, 2));
+        tileset.CenterQuarterFull.Add(180, GetTileAt(texture, tileSize, 0, 2));
+        tileset.CenterQuarterFull.Add(270, GetTileAt(texture, tileSize, 0, 1));
+
+        tileset.CenterHalfFullStraight.Add(0, GetTileAt(texture, tileSize, 2, 0));
+        tileset.CenterHalfFullStraight.Add(90, GetTileAt(texture, tileSize, 1, 0));
+        tileset.CenterHalfFullStraight.Add(180, GetTileAt(texture, tileSize, 2, 1));
+        tileset.CenterHalfFullStraight.Add(270, GetTileAt(texture, tileSize, 0, 0));
+
+        tileset.CenterHalfFullCorners.Add(0, GetTileAt(texture, tileSize, 3, 2));
+        tileset.CenterHalfFullCorners.Add(90, GetTileAt(texture, tileSize, 2, 2));
+
+        tileset.Center3QuartersFull.Add(0, GetTileAt(texture, tileSize, 3, 3));
+        tileset.Center3QuartersFull.Add(90, GetTileAt(texture, tileSize, 3, 4));
+        tileset.Center3QuartersFull.Add(180, GetTileAt(texture, tileSize, 2, 4));
+        tileset.Center3QuartersFull.Add(270, GetTileAt(texture, tileSize, 2, 3));
+
     }
 
     public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, TileType type, TileSetData data, int tileSize)

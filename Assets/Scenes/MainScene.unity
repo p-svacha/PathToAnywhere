@@ -578,6 +578,7 @@ MonoBehaviour:
   MountainSet1: {fileID: 2800000, guid: 516cca69f56fafd4999500b6be880306, type: 3}
   WallSet2: {fileID: 2800000, guid: 48b12da4d7062d34faa41c427ac053b7, type: 3}
   RockSet1: {fileID: 2800000, guid: 4aef8ffaddc54c24da2e421a1d220893, type: 3}
+  WaterSet1: {fileID: 2800000, guid: 9076ae9814daca343a5459b42edadff1, type: 3}
 --- !u!4 &558758191
 Transform:
   m_ObjectHideFlags: 0

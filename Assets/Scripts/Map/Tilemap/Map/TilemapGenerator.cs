@@ -42,6 +42,8 @@ public class TilemapGenerator : MonoBehaviour
 
     public Texture2D RockSet1;
 
+    public Texture2D WaterSet1;
+
     private Dictionary<Vector2Int, TilemapChunk> Chunks = new Dictionary<Vector2Int, TilemapChunk>();
     private List<TilemapChunk> LoadedChunks = new List<TilemapChunk>(); // Loaded chunks include all chanks that are within generation are of the player
 
@@ -80,6 +82,8 @@ public class TilemapGenerator : MonoBehaviour
         TileGenerator.GenerateSlicedTileset(this, WallSet2, TileType.Wall, wall, TilePixelSize);
 
         TileGenerator.GenerateSimpleOverlayTileset(this, GrassSet1, RockSet1, TileType.GrassRock, wall, TilePixelSize);
+
+        TileGenerator.GenerateFullSlicedTileset(this, WaterSet1, TileType.Water, ground, TilePixelSize);
     }
 
     /// <summary>

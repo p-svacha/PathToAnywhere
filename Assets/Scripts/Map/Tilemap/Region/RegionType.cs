@@ -7,5 +7,6 @@ public enum RegionType
     Grassland,
     Desert,
     Mountain,
-    Ruins
+    Ruins,
+    Lake
 }
