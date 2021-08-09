@@ -26,10 +26,24 @@ public static class TileGenerator
         return tileset;
     }
 
+    public static TileSetSliced GenerateSlicedTileset(Texture2D texture, int tileSize)
+    {
+        TileSetSliced tileset = new TileSetSliced();
+        AssignTilesToSlicedSet(tileset, texture, tileSize);
+        return tileset;
+    }
+
     public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
     {
         TileSetSliced tileset = new TileSetSliced(data, type);
+        AssignTilesToSlicedSet(tileset, texture, tileSize);
+        generator.TileSets.Add(type, tileset);
 
+        return tileset;
+    }
+
+    private static void AssignTilesToSlicedSet(TileSetSliced tileset, Texture2D texture, int tileSize)
+    {
         tileset.Surrounded = GetTileAt(texture, tileSize, 0, 3);
         tileset.Center1 = GetTileAt(texture, tileSize, 1, 3);
         tileset.Center2 = GetTileAt(texture, tileSize, 2, 3);
@@ -48,10 +62,6 @@ public static class TileGenerator
         tileset.End = GetTileAt(texture, tileSize, 0, 0);
         tileset.Straight = GetTileAt(texture, tileSize, 1, 0);
         tileset.Corner0 = GetTileAt(texture, tileSize, 2, 0);
-
-        generator.TileSets.Add(type, tileset);
-
-        return tileset;
     }
 
     public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, TileType type, TileSetData data, int tileSize)

@@ -17,14 +17,9 @@ public abstract class Region
     {
         Generator = generator;
         Id = id;
-        Color = GetRandomRegionColor();
+        Color = ColorManager.GetRandomGreenishColor();
         Chunks = new List<TilemapChunk>();
         TilePositions = new List<Vector2Int>();
-    }
-
-    private Color GetRandomRegionColor()
-    {
-        return new Color(Random.value * 0.5f, 0.3f + Random.value * 0.7f, 0.3f + Random.value * 0.7f);
     }
 
     public void OnLoadingComplete()

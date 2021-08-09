@@ -14,13 +14,19 @@ public class TilemapGenerator : MonoBehaviour
     [SerializeField]
     private Tilemap TilemapOverlay;
     [SerializeField]
+    private Tilemap TilemapRoof;
+    [SerializeField]
     private Tilemap TilemapFrontOfPlayer1;
     [SerializeField]
     private Tilemap TilemapFrontOfPlayer2;
+
+    [Header("Debug Tilemaps")]
     [SerializeField]
     private Tilemap TilemapRegions;
+    [SerializeField]
+    private Tilemap TilemapBuildings;
 
-    
+
     public Dictionary<TileType, TileSet> TileSets;
     public const int TilePixelSize = 64; // pixels
 
@@ -58,6 +64,7 @@ public class TilemapGenerator : MonoBehaviour
         Model = model;
         Voronoi = new RegionPartitioner(this);
         TilemapRegions.gameObject.SetActive(false);
+        TilemapBuildings.gameObject.SetActive(false);
 
         // Tile datas
         TileSets = new Dictionary<TileType, TileSet>();
@@ -198,10 +205,19 @@ public class TilemapGenerator : MonoBehaviour
         // Base tilemap
         TileSets[chunk.Tiles[x, y].Type].PlaceTile(this, TilemapBase, tilePos);
 
-        // Region tilemap
+        // Region debug tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
         TilemapRegions.SetTileFlags(tilePos, TileFlags.None);
         TilemapRegions.SetColor(tilePos, chunk.Tiles[x,y].Region.Color);
+
+        // Building debug tilemap
+        if(chunk.Tiles[x, y].Building != null)
+        {
+            TilemapBuildings.SetTile(tilePos, TestTile);
+            TilemapBuildings.SetTileFlags(tilePos, TileFlags.None);
+            TilemapBuildings.SetColor(tilePos, chunk.Tiles[x, y].Building.Color);
+        }
+
     }
 
 
@@ -226,12 +242,17 @@ public class TilemapGenerator : MonoBehaviour
         TilemapOverlay.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tile);
     }
 
+    public void SetRoofTile(Vector2Int gridPosition, TileBase tile, int rotation)
+    {
+        TilemapRoof.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tile);
+        if(rotation != 0) TilemapRoof.SetTransformMatrix(new Vector3Int(gridPosition.x, gridPosition.y, 0), Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 0f, rotation), Vector3.one));
+    }
+
     public void SetFrontOfPlayerTile(Vector2Int gridPosition, TileBase tile)
     {
         Vector3Int tilePos = new Vector3Int(gridPosition.x, gridPosition.y, 0);
         if (TilemapFrontOfPlayer1.GetTile(tilePos) == null ) TilemapFrontOfPlayer1.SetTile(tilePos, tile);
         else TilemapFrontOfPlayer2.SetTile(tilePos, tile);
-
     }
 
     #endregion

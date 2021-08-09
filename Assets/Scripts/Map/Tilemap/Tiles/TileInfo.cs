@@ -9,6 +9,7 @@ public class TileInfo
 {
     public TileType Type;
     public Region Region;
+    public Building Building;
     public bool Passable;
     public float SpeedModifier;
 

@@ -8,6 +8,8 @@ public abstract class TileSet
     public TileSetData Data;
     public TileType Type;
 
+    public TileSet() { }
+
     public TileSet(TileSetData data, TileType type)
     {
         Data = data;

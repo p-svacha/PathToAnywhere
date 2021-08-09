@@ -17,7 +17,7 @@ At this point there is very little to show since I'm just building very core sys
 *Example of a generated landscape with a building, rocks and trees*
 <br/><img src="Screenshots/exampleLandscape.png" alt="example landscape" height="200" /><br/>
 
-*Region partitioning with nested voronoi*<br/>
+*Region partitioning with nested voronoi*
 <br/><img src="Screenshots/regions.png" alt="region partitioning" height="200"  /><br/>
 
 

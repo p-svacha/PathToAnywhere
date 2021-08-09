@@ -60,6 +60,8 @@ public class CharacterController : MonoBehaviour
     {
         IsMoving = true;
 
+        Vector2Int fromPosition = Character.GridPosition;
+
         switch(moveDirection)
         {
             case Direction.Left:
@@ -83,7 +85,7 @@ public class CharacterController : MonoBehaviour
                 break;
         }
         
-        OnCharacterMove();
+        OnCharacterMove(Character.Model.TilemapGenerator.GetTileInfo(fromPosition), Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition));
     }
 
     private void ShowCharacterSide(Direction dir)
@@ -121,7 +123,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    protected virtual void OnCharacterMove()
+    protected virtual void OnCharacterMove(TileInfo from, TileInfo to) // Add referenced from where to where character is moving1
     {
         
     }

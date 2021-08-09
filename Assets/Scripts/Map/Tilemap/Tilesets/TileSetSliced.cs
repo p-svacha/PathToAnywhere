@@ -25,6 +25,7 @@ public class TileSetSliced : TileSet
     public TileBase Straight;
     public TileBase Corner0;
    
+    public TileSetSliced() { }
     public TileSetSliced(TileSetData data, TileType type) : base(data, type) { }
 
     public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
@@ -37,204 +38,230 @@ public class TileSetSliced : TileSet
         TileBase tileToPlace;
         int tileRotation = 0;
 
-        TileType up = generator.GetTileType(tileX, tileY + 1);
-        TileType down = generator.GetTileType(tileX, tileY - 1);
-        TileType left = generator.GetTileType(tileX - 1, tileY);
-        TileType right = generator.GetTileType(tileX + 1, tileY);
+        bool hasNorthNeighbour = generator.GetTileType(tileX, tileY + 1) == Type;
+        bool hasSouthNeighbour = generator.GetTileType(tileX, tileY - 1) == Type;
+        bool hasEastNeighbour = generator.GetTileType(tileX + 1, tileY) == Type;
+        bool hasWestNeighbour = generator.GetTileType(tileX - 1, tileY) == Type;
 
-        TileType upLeft = generator.GetTileType(tileX - 1, tileY + 1);
-        TileType upRight = generator.GetTileType(tileX + 1, tileY + 1);
-        TileType downLeft = generator.GetTileType(tileX - 1, tileY - 1);
-        TileType downRight = generator.GetTileType(tileX + 1, tileY - 1);
+        bool hasNorthWestNeighbour = generator.GetTileType(tileX - 1, tileY + 1) == Type;
+        bool hasNorthEastNeighbour = generator.GetTileType(tileX + 1, tileY + 1) == Type;
+        bool hasSouthWestNeighbour = generator.GetTileType(tileX - 1, tileY - 1) == Type;
+        bool hasSouthEastNeighbour = generator.GetTileType(tileX + 1, tileY - 1) == Type;
+
+        GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour, out tileToPlace, out tileRotation);
+
+        Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
+        tilemap.SetTile(tilePos, tileToPlace);
+        if (tileRotation != 0) tilemap.SetTransformMatrix(tilePos, Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 0f, tileRotation), Vector3.one));
+    }
+
+    /// <summary>
+    /// This method returns the correct tile and rotation at the given position. The list param contains all positions of where tiles of this type also occur.
+    /// </summary>
+    public void GetTileAt(Vector2Int gridPosition, List<Vector2Int> tiles, out TileBase tile, out int rotation)
+    {
+        bool hasNorthNeighbour = tiles.Contains(gridPosition + new Vector2Int(0, 1));
+        bool hasSouthNeighbour = tiles.Contains(gridPosition + new Vector2Int(0, -1));
+        bool hasEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1, 0));
+        bool hasWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, 0));
+
+        bool hasNorthEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1, 1));
+        bool hasNorthWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, 1));
+        bool hasSouthEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1,-1));
+        bool hasSouthWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, -1));
+
+        GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour, out tile, out rotation);
+    }
+
+    private void GetTileAt(bool hasNorthNeighbour, bool hasSouthNeighbour, bool hasEastNeighbour, bool hasWestNeighbour, bool hasNorthEastNeighbour, bool hasNorthWestNeighbour, bool hasSouthEastNeighbour, bool hasSouthWestNeighbour, out TileBase tile, out int rotation)
+    {
+        tile = Single;
+        rotation = 0;
 
         // Surrounded, Center0, Center1, Center2, Center3, Center4
-        if (up == Type && down == Type && left == Type && right == Type)
+        if (hasNorthNeighbour && hasSouthNeighbour && hasWestNeighbour && hasEastNeighbour)
         {
             // Surrounded
-            if (upRight == Type && upLeft == Type && downRight == Type && downLeft == Type)
+            if (hasNorthEastNeighbour && hasNorthWestNeighbour && hasSouthEastNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Surrounded;
+                tile = Surrounded;
             }
 
             // Center4
-            else if (upRight == Type && upLeft == Type && downLeft == Type)
+            else if (hasNorthEastNeighbour && hasNorthWestNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Center4;
+                tile = Center4;
             }
-            else if (upLeft == Type && downRight == Type && downLeft == Type)
+            else if (hasNorthWestNeighbour && hasSouthEastNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Center4;
-                tileRotation = 90;
+                tile = Center4;
+                rotation = 90;
             }
-            else if (upRight == Type && downRight == Type && downLeft == Type)
+            else if (hasNorthEastNeighbour && hasSouthEastNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Center4;
-                tileRotation = 180;
+                tile = Center4;
+                rotation = 180;
             }
-            else if (upRight == Type && upLeft == Type && downRight == Type)
+            else if (hasNorthEastNeighbour && hasNorthWestNeighbour && hasSouthEastNeighbour)
             {
-                tileToPlace = Center4;
-                tileRotation = 270;
+                tile = Center4;
+                rotation = 270;
             }
 
             // Center2 
-            else if (upLeft == Type && downLeft == Type)
+            else if (hasNorthWestNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Center2;
+                tile = Center2;
             }
-            else if (downLeft == Type && downRight == Type)
+            else if (hasSouthWestNeighbour && hasSouthEastNeighbour)
             {
-                tileToPlace = Center2;
-                tileRotation = 90;
+                tile = Center2;
+                rotation = 90;
             }
-            else if (downRight == Type && upRight == Type)
+            else if (hasSouthEastNeighbour && hasNorthEastNeighbour)
             {
-                tileToPlace = Center2;
-                tileRotation = 180;
+                tile = Center2;
+                rotation = 180;
             }
-            else if (upRight == Type && upLeft == Type)
+            else if (hasNorthEastNeighbour && hasNorthWestNeighbour)
             {
-                tileToPlace = Center2;
-                tileRotation = 270;
+                tile = Center2;
+                rotation = 270;
             }
 
             // Center3
-            else if (upLeft == Type && downRight == Type)
+            else if (hasNorthWestNeighbour && hasSouthEastNeighbour)
             {
-                tileToPlace = Center3;
+                tile = Center3;
             }
-            else if (upRight == Type && downLeft == Type)
+            else if (hasNorthEastNeighbour && hasSouthWestNeighbour)
             {
-                tileToPlace = Center3;
-                tileRotation = 90;
+                tile = Center3;
+                rotation = 90;
             }
 
             // Center1
-            else if (upLeft == Type)
+            else if (hasNorthWestNeighbour)
             {
-                tileToPlace = Center1;
+                tile = Center1;
             }
-            else if (downLeft == Type)
+            else if (hasSouthWestNeighbour)
             {
-                tileToPlace = Center1;
-                tileRotation = 90;
+                tile = Center1;
+                rotation = 90;
             }
-            else if (downRight == Type)
+            else if (hasSouthEastNeighbour)
             {
-                tileToPlace = Center1;
-                tileRotation = 180;
+                tile = Center1;
+                rotation = 180;
             }
-            else if (upRight == Type)
+            else if (hasNorthEastNeighbour)
             {
-                tileToPlace = Center1;
-                tileRotation = 270;
+                tile = Center1;
+                rotation = 270;
             }
 
             // Center0
             else
             {
-                tileToPlace = Center0;
+                tile = Center0;
             }
 
         }
 
         // T0, T1, T2, T3
-        else if (up == Type && down == Type && left == Type) // -|
+        else if (hasNorthNeighbour && hasSouthNeighbour && hasWestNeighbour) // -|
         {
-            if (upLeft == Type && downLeft == Type) tileToPlace = T3;
-            else if (downLeft == Type) tileToPlace = T2;
-            else if (upLeft == Type) tileToPlace = T1;
-            else tileToPlace = T0;
+            if (hasNorthWestNeighbour && hasSouthWestNeighbour) tile = T3;
+            else if (hasSouthWestNeighbour) tile = T2;
+            else if (hasNorthWestNeighbour) tile = T1;
+            else tile = T0;
         }
-        else if (down == Type && left == Type && right == Type) // T
+        else if (hasSouthNeighbour && hasWestNeighbour && hasEastNeighbour) // T
         {
-            tileRotation = 90;
-            if (downLeft == Type && downRight == Type) tileToPlace = T3;
-            else if (downRight == Type) tileToPlace = T2;
-            else if (downLeft == Type) tileToPlace = T1;
-            else tileToPlace = T0;
+            rotation = 90;
+            if (hasSouthWestNeighbour && hasSouthEastNeighbour) tile = T3;
+            else if (hasSouthEastNeighbour) tile = T2;
+            else if (hasSouthWestNeighbour) tile = T1;
+            else tile = T0;
         }
-        else if (up == Type && down == Type && right == Type) // |-
+        else if (hasNorthNeighbour && hasSouthNeighbour && hasEastNeighbour) // |-
         {
-            tileRotation = 180;
-            if (upRight == Type && downRight == Type) tileToPlace = T3;
-            else if (upRight == Type) tileToPlace = T2;
-            else if (downRight == Type) tileToPlace = T1;
-            else tileToPlace = T0;
+            rotation = 180;
+            if (hasNorthEastNeighbour && hasSouthEastNeighbour) tile = T3;
+            else if (hasNorthEastNeighbour) tile = T2;
+            else if (hasSouthEastNeighbour) tile = T1;
+            else tile = T0;
         }
-        else if (up == Type && left == Type && right == Type) // l
+        else if (hasNorthNeighbour && hasWestNeighbour && hasEastNeighbour) // l
         {
-            tileRotation = 270;
-            if (upLeft == Type && upRight == Type) tileToPlace = T3;
-            else if (upLeft == Type) tileToPlace = T2;
-            else if (upRight == Type) tileToPlace = T1;
-            else tileToPlace = T0;
+            rotation = 270;
+            if (hasNorthWestNeighbour && hasNorthEastNeighbour) tile = T3;
+            else if (hasNorthWestNeighbour) tile = T2;
+            else if (hasNorthEastNeighbour) tile = T1;
+            else tile = T0;
         }
 
         // Corner0, Corner1
-        else if (left == Type && up == Type) // J
+        else if (hasWestNeighbour && hasNorthNeighbour) // J
         {
-            if (upLeft == Type) tileToPlace = Corner1;
-            else tileToPlace = Corner0;
+            if (hasNorthWestNeighbour) tile = Corner1;
+            else tile = Corner0;
         }
-        else if (left == Type && down == Type) // ¬
+        else if (hasWestNeighbour && hasSouthNeighbour) // ¬
         {
-            tileRotation = 90;
-            if (downLeft == Type) tileToPlace = Corner1;
-            else tileToPlace = Corner0;
+            rotation = 90;
+            if (hasSouthWestNeighbour) tile = Corner1;
+            else tile = Corner0;
         }
-        else if (down == Type && right == Type) // L
+        else if (hasSouthNeighbour && hasEastNeighbour) // L
         {
-            tileRotation = 180;
-            if (downRight == Type) tileToPlace = Corner1;
-            else tileToPlace = Corner0;
+            rotation = 180;
+            if (hasSouthEastNeighbour) tile = Corner1;
+            else tile = Corner0;
         }
 
-        else if (right == Type && up == Type) // r
+        else if (hasEastNeighbour && hasNorthNeighbour) // r
         {
-            tileRotation = 270;
-            if (upRight == Type) tileToPlace = Corner1;
-            else tileToPlace = Corner0;
+            rotation = 270;
+            if (hasNorthEastNeighbour) tile = Corner1;
+            else tile = Corner0;
         }
 
         // Straight
-        else if (left == Type && right == Type)
+        else if (hasWestNeighbour && hasEastNeighbour)
         {
-            tileToPlace = Straight;
+            tile = Straight;
         }
-        else if (down == Type && up == Type)
+        else if (hasSouthNeighbour && hasNorthNeighbour)
         {
-            tileToPlace = Straight;
-            tileRotation = 90;
+            tile = Straight;
+            rotation = 90;
         }
 
         // End
-        else if (left == Type)
+        else if (hasWestNeighbour)
         {
-            tileToPlace = End;
-            tileRotation = 180;
+            tile = End;
+            rotation = 180;
         }
-        else if (down == Type)
+        else if (hasSouthNeighbour)
         {
-            tileToPlace = End;
-            tileRotation = 270;
+            tile = End;
+            rotation = 270;
         }
-        else if (right == Type)
+        else if (hasEastNeighbour)
         {
-            tileToPlace = End;
+            tile = End;
         }
-        else if (up == Type)
+        else if (hasNorthNeighbour)
         {
-            tileToPlace = End;
-            tileRotation = 90;
+            tile = End;
+            rotation = 90;
         }
 
         // Single
-        else tileToPlace = Single;
-
-        Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
-        tilemap.SetTile(tilePos, tileToPlace);
-        if (tileRotation != 0) tilemap.SetTransformMatrix(tilePos, Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 0f, tileRotation), Vector3.one));
+        else tile = Single;
     }
 
 }

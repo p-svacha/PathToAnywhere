@@ -42,8 +42,14 @@ public class PlayerController : CharacterController
         }
     }
 
-    protected override void OnCharacterMove()
+    protected override void OnCharacterMove(TileInfo from, TileInfo to)
     {
         Player.Model.OnPlayerMove();
+        if(from.Building != to.Building)
+        {
+            if(from.Building != null) from.Building.SetDrawRoof(Player.Model.TilemapGenerator, true);
+            if (to.Building != null) to.Building.SetDrawRoof(Player.Model.TilemapGenerator, false);
+        }
+        
     }
 }

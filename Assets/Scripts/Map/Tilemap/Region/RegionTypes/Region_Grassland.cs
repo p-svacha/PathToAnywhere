@@ -12,8 +12,6 @@ public class Region_Grassland : Region
     private List<Building> Buildings = new List<Building>();
     private List<Tree> Trees = new List<Tree>();
 
-
-
     public Region_Grassland(TilemapGenerator generator, Vector2Int id) : base(generator, id)
     {
         Type = RegionType.Grassland;
@@ -50,7 +48,7 @@ public class Region_Grassland : Region
                 canSpawnBuilding = true;
                 Vector2Int buildingPosition = TilePositions[Random.Range(0, TilePositions.Count)];
 
-                building = BuildingGenerator.GenerateBuilding(buildingPosition, TileType.Wall, TileType.WoodFloor);
+                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, TileType.Wall, TileType.WoodFloor);
 
                 // Check if building is fully within region
                 if(!building.IsFullyWithinRegion(this))
