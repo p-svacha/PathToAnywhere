@@ -9,27 +9,55 @@ public class PlayerController : CharacterController
     private float DirectionChangeTolerance = 0.12f; // When a direcion is pressed for less than this amount, then the player only changes facing direction instead of moving
     private float TimeSinceLastDirectionChange; // Time since last direction change
 
+    private PlayerInputMode InputMode;
+
     public override void Awake()
     {
         base.Awake();
         Player = GetComponentInParent<Player>();
     }
 
-    // Update is called once per frame
+
+    public override void Update()
+    {
+        base.Update();
+        switch(InputMode)
+        {
+            case PlayerInputMode.Movement:
+                if(!IsMoving && Input.GetKeyDown(KeyCode.Space))
+                {
+                    Player.Model.Interact();
+                    InputMode = PlayerInputMode.Interaction;
+                }
+                break;
+
+            case PlayerInputMode.Interaction:
+                if(Input.GetKeyDown(KeyCode.Space))
+                {
+                    Player.Model.EndInteraction();
+                    InputMode = PlayerInputMode.Movement;
+                }
+                break;
+        }
+    }
+
     protected override void GetCharacterMovement()
     {
-        if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.Right);
-        else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.Left);
-        else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.Up);
-        else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.Down);
-        else MoveDirection = Direction.None;
+        if (InputMode == PlayerInputMode.Movement)
+        {
+            if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.East);
+            else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.West);
+            else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.North);
+            else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.South);
+            else MoveDirection = Direction.None;
+        }
     }
 
     private void OnInputAxis(Direction dir)
     {
         if (!IsMoving)
         {
-            if (MoveDirection == Direction.None && dir != FaceDirection)
+            if (MoveDirection == Direction.None && dir != Player.FaceDirection)
             {
                 TimeSinceLastDirectionChange = 0f;
             }
@@ -38,7 +66,7 @@ public class PlayerController : CharacterController
                 if (TimeSinceLastDirectionChange < DirectionChangeTolerance) TimeSinceLastDirectionChange += Time.deltaTime;
                 else MoveDirection = dir;
             }
-            FaceDirection = dir;
+            Player.FaceDirection = dir;
         }
     }
 
@@ -50,6 +78,5 @@ public class PlayerController : CharacterController
             if(from.Building != null) from.Building.SetDrawRoof(Player.Model.TilemapGenerator, true);
             if (to.Building != null) to.Building.SetDrawRoof(Player.Model.TilemapGenerator, false);
         }
-        
     }
 }

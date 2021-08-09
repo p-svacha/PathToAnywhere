@@ -26,7 +26,7 @@ public class TilemapChunk
         Tiles = new TileInfo[ChunkSize, ChunkSize];
         for(int y = 0; y < ChunkSize; y++)
             for(int x = 0; x < ChunkSize; x++)
-                Tiles[x, y] = new TileInfo();
+                Tiles[x, y] = new TileInfo(new Vector2Int(Coordinates.x * ChunkSize + x, Coordinates.y * ChunkSize + y));
 
 
         State = ChunkLoadingState.RegionsGenerated;

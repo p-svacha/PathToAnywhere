@@ -10,17 +10,7 @@ public class CharacterController : MonoBehaviour
     public SpriteRenderer Head;
     public SpriteRenderer Body;
 
-    public enum Direction
-    {
-        None,
-        Left,
-        Right,
-        Up,
-        Down
-    }
-
     public bool IsMoving;
-    public Direction FaceDirection;
     public Direction MoveDirection;
 
     public virtual void Awake()
@@ -29,7 +19,7 @@ public class CharacterController : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Update()
+    public virtual void Update()
     {
         Character.CurrentTile = Character.Model.TilemapGenerator.GetTileInfo(transform.position);
         transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.SpeedModifier);
@@ -41,17 +31,17 @@ public class CharacterController : MonoBehaviour
 
             GetCharacterMovement();
 
-            if (MoveDirection == Direction.Left && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
-                Move(Direction.Left);
-            else if (MoveDirection == Direction.Right && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
-                Move(Direction.Right);
-            else if (MoveDirection == Direction.Up && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
-                Move(Direction.Up);
-            else if (MoveDirection == Direction.Down && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
-                Move(Direction.Down);
+            if (MoveDirection == Direction.West && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
+                Move(Direction.West);
+            else if (MoveDirection == Direction.East && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
+                Move(Direction.East);
+            else if (MoveDirection == Direction.North && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
+                Move(Direction.North);
+            else if (MoveDirection == Direction.South && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
+                Move(Direction.South);
         }
 
-        ShowCharacterSide(FaceDirection);
+        ShowCharacterSide(Character.FaceDirection);
     }
 
     protected virtual void GetCharacterMovement() { }
@@ -64,26 +54,27 @@ public class CharacterController : MonoBehaviour
 
         switch(moveDirection)
         {
-            case Direction.Left:
+            case Direction.West:
                 Character.GridPosition.x -= 1;
                 MovePoint.position += new Vector3(-1, 0, 0);
                 break;
 
-            case Direction.Right:
+            case Direction.East:
                 Character.GridPosition.x += 1;
                 MovePoint.position += new Vector3(1, 0, 0);
                 break;
 
-            case Direction.Up:
+            case Direction.North:
                 Character.GridPosition.y += 1;
                 MovePoint.position += new Vector3(0, 1, 0);
                 break;
 
-            case Direction.Down:
+            case Direction.South:
                 Character.GridPosition.y -= 1;
                 MovePoint.position += new Vector3(0, -1, 0);
                 break;
         }
+
         
         OnCharacterMove(Character.Model.TilemapGenerator.GetTileInfo(fromPosition), Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition));
     }
@@ -92,28 +83,28 @@ public class CharacterController : MonoBehaviour
     {
         switch(dir)
         {
-            case Direction.Left:
+            case Direction.West:
                 Head.transform.localPosition = new Vector3(-0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
                 Head.sortingOrder = 11;
                 Body.sortingOrder = 10;
                 break;
 
-            case Direction.Right:
+            case Direction.East:
                 Head.transform.localPosition = new Vector3(0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
                 Head.sortingOrder = 11;
                 Body.sortingOrder = 10;
                 break;
 
-            case Direction.Up:
+            case Direction.North:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
                 Head.sortingOrder = 11;
                 Body.sortingOrder = 12;
                 break;
 
-            case Direction.Down:
+            case Direction.South:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
                 Head.sortingOrder = 11;
@@ -122,6 +113,7 @@ public class CharacterController : MonoBehaviour
 
         }
     }
+
 
     protected virtual void OnCharacterMove(TileInfo from, TileInfo to) // Add referenced from where to where character is moving1
     {

@@ -302,6 +302,10 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         return chunk.Tiles[inChunkX, inChunkY]; // we need tileinfo here, not tilesetdata
     }
+    public TileBase GetOverlayTile(Vector2Int gridPosition)
+    {
+        return TilemapOverlay.GetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0));
+    }
 
     #endregion
 }

@@ -9,11 +9,12 @@ public class Character : MonoBehaviour
 
     public TileInfo CurrentTile; // The data of the exact tile the character is on at this moment
     public Vector2Int GridPosition; // The position of the character after he is done moving
+    public Direction FaceDirection;
 
     public float MovementSpeed;
     public CharacterController Controller;
 
-    void Awake()
+    public virtual void Awake()
     {
         Controller = GetComponentInChildren<CharacterController>();
     }
@@ -22,5 +23,14 @@ public class Character : MonoBehaviour
     {
         Model = model;
         GridPosition = new Vector2Int(x, y);
+    }
+
+    public TileInfo GetFacedTile()
+    {
+        if (FaceDirection == Direction.North) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, 1));
+        if (FaceDirection == Direction.East) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(1, 0));
+        if (FaceDirection == Direction.South) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, -1));
+        if (FaceDirection == Direction.West) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(-1, 0));
+        throw new System.Exception();
     }
 }

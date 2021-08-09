@@ -37,8 +37,11 @@ public class BuildingGenerator : MonoBehaviour
                 roofTiles.Add(absolutePos);
                 
 
-                if (!building.TileTypes.ContainsKey(absolutePos) && Random.value < 0.9f)
-                    building.TileTypes.Add(absolutePos, wallType);
+                if (!building.TileTypes.ContainsKey(absolutePos))
+                {
+                    if(Random.value < 0.9f) building.TileTypes.Add(absolutePos, wallType);
+                    else building.TileTypes.Add(absolutePos, floorType);
+                }
             }
         }
 
