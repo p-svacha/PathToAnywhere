@@ -26,7 +26,7 @@ public class TileSetSliced : TileSet
     public TileBase Corner0;
    
     public TileSetSliced() { }
-    public TileSetSliced(TileSetData data, TileType type) : base(data, type) { }
+    public TileSetSliced(TileSetData data, SurfaceType type) : base(data, type) { }
 
     public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
     {

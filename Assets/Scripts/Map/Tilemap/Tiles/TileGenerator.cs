@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public static class TileGenerator
 {
-    public static TileSetSimple GenerateSimpleTilset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
+    public static TileSetSimple GenerateSimpleTilset(TilemapGenerator generator, Texture2D texture, SurfaceType type, TileSetData data, int tileSize)
     {
         TileSetSimple tileset = new TileSetSimple(data, type);
 
@@ -33,7 +33,7 @@ public static class TileGenerator
         return tileset;
     }
 
-    public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
+    public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, SurfaceType type, TileSetData data, int tileSize)
     {
         TileSetSliced tileset = new TileSetSliced(data, type);
         AssignTilesToSlicedSet(tileset, texture, tileSize);
@@ -42,10 +42,10 @@ public static class TileGenerator
         return tileset;
     }
 
-    public static TileSetSlicedFull GenerateFullSlicedTileset(TilemapGenerator generator, Texture2D texture, TileType type, TileSetData data, int tileSize)
+    public static TileSetSlicedFull GenerateFullSlicedTileset(TilemapGenerator generator, Texture2D texture, SurfaceType type, TileSetData data, int tileSize, List<SurfaceType> connectionTypes, bool hasOverlayEdges)
     {
-        TileSetSlicedFull tileset = new TileSetSlicedFull(data, type);
-        AssignTilesToFullSlicedSet(tileset, texture, tileSize);
+        TileSetSlicedFull tileset = new TileSetSlicedFull(connectionTypes, data, type, hasOverlayEdges);
+        AssignTilesToFullSlicedSet(generator, tileset, texture, tileSize);
         generator.TileSets.Add(type, tileset);
         return tileset;
     }
@@ -72,71 +72,82 @@ public static class TileGenerator
         tileset.Corner0 = GetTileAt(texture, tileSize, 2, 0);
     }
 
-    private static void AssignTilesToFullSlicedSet(TileSetSlicedFull tileset, Texture2D texture, int tileSize)
+    private static void AssignTilesToFullSlicedSet(TilemapGenerator generator, TileSetSlicedFull tileset, Texture2D texture, int tileSize)
     {
         tileset.Surrounded.Add(0, GetTileAt(texture, tileSize, 1, 6));
-        tileset.CenterEmpty.Add(0, GetTileAt(texture, tileSize, 4, 6));
-        tileset.Single.Add(0, GetTileAt(texture, tileSize, 3, 7));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterEmpty, 0, 4, 6);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Single, 0, 3, 7);
 
-        tileset.Straight.Add(0, GetTileAt(texture, tileSize, 5, 6));
-        tileset.Straight.Add(90, GetTileAt(texture, tileSize, 4, 5));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Straight, 0, 5, 6);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Straight, 90, 4, 5);
 
-        tileset.End.Add(0, GetTileAt(texture, tileSize, 4, 4));
-        tileset.End.Add(90, GetTileAt(texture, tileSize, 6, 6));
-        tileset.End.Add(180, GetTileAt(texture, tileSize, 4, 7));
-        tileset.End.Add(270, GetTileAt(texture, tileSize, 3, 6));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.End, 0, 4, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.End, 90, 6, 6);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.End, 180, 4, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.End, 270, 3, 6);
 
-        tileset.CornerEmpty.Add(0, GetTileAt(texture, tileSize, 1, 3));
-        tileset.CornerEmpty.Add(90, GetTileAt(texture, tileSize, 1, 4));
-        tileset.CornerEmpty.Add(180, GetTileAt(texture, tileSize, 0, 4));
-        tileset.CornerEmpty.Add(270, GetTileAt(texture, tileSize, 0, 3));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerEmpty, 0, 1, 3);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerEmpty, 90, 1, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerEmpty, 180, 0, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerEmpty, 270, 0, 3);
 
-        tileset.CornerFull.Add(0, GetTileAt(texture, tileSize, 2, 5));
-        tileset.CornerFull.Add(90, GetTileAt(texture, tileSize, 2, 7));
-        tileset.CornerFull.Add(180, GetTileAt(texture, tileSize, 0, 7));
-        tileset.CornerFull.Add(270, GetTileAt(texture, tileSize, 0, 5));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerFull, 0, 2, 5);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerFull, 90, 2, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerFull, 180, 0, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CornerFull, 270, 0, 5);
 
-        tileset.TEmpty.Add(0, GetTileAt(texture, tileSize, 6, 7));
-        tileset.TEmpty.Add(90, GetTileAt(texture, tileSize, 7, 7));
-        tileset.TEmpty.Add(180, GetTileAt(texture, tileSize, 5, 7));
-        tileset.TEmpty.Add(270, GetTileAt(texture, tileSize, 7, 6));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TEmpty, 0, 6, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TEmpty, 90, 7, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TEmpty, 180, 5, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TEmpty, 270, 7, 6);
 
-        tileset.THalfFullA.Add(0, GetTileAt(texture, tileSize, 6, 4));
-        tileset.THalfFullA.Add(90, GetTileAt(texture, tileSize, 6, 3));
-        tileset.THalfFullA.Add(180, GetTileAt(texture, tileSize, 5, 5));
-        tileset.THalfFullA.Add(270, GetTileAt(texture, tileSize, 5, 2));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullA, 0, 6, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullA, 90, 6, 3);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullA, 180, 5, 5);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullA, 270, 5, 2);
 
-        tileset.THalfFullB.Add(0, GetTileAt(texture, tileSize, 6, 5));
-        tileset.THalfFullB.Add(90, GetTileAt(texture, tileSize, 5, 3));
-        tileset.THalfFullB.Add(180, GetTileAt(texture, tileSize, 5, 4));
-        tileset.THalfFullB.Add(270, GetTileAt(texture, tileSize, 6, 2));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullB, 0, 6, 5);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullB, 90, 5, 3);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullB, 180, 5, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.THalfFullB, 270, 6, 2);
 
-        tileset.TFull.Add(0, GetTileAt(texture, tileSize, 2, 6));
-        tileset.TFull.Add(90, GetTileAt(texture, tileSize, 1, 7));
-        tileset.TFull.Add(180, GetTileAt(texture, tileSize, 0, 6));
-        tileset.TFull.Add(270, GetTileAt(texture, tileSize, 1, 5));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TFull, 0, 2, 6);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TFull, 90, 1, 7);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TFull, 180, 0, 6);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.TFull, 270, 1, 5);
 
-        tileset.CenterQuarterFull.Add(0, GetTileAt(texture, tileSize, 1, 1));
-        tileset.CenterQuarterFull.Add(90, GetTileAt(texture, tileSize, 1, 2));
-        tileset.CenterQuarterFull.Add(180, GetTileAt(texture, tileSize, 0, 2));
-        tileset.CenterQuarterFull.Add(270, GetTileAt(texture, tileSize, 0, 1));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterQuarterFull, 0, 1, 1);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterQuarterFull, 90, 1, 2);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterQuarterFull, 180, 0, 2);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterQuarterFull, 270, 0, 1);
 
-        tileset.CenterHalfFullStraight.Add(0, GetTileAt(texture, tileSize, 2, 0));
-        tileset.CenterHalfFullStraight.Add(90, GetTileAt(texture, tileSize, 1, 0));
-        tileset.CenterHalfFullStraight.Add(180, GetTileAt(texture, tileSize, 2, 1));
-        tileset.CenterHalfFullStraight.Add(270, GetTileAt(texture, tileSize, 0, 0));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullStraight, 0, 2, 0);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullStraight, 90, 1, 0);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullStraight, 180, 2, 1);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullStraight, 270, 0, 0);
 
-        tileset.CenterHalfFullCorners.Add(0, GetTileAt(texture, tileSize, 3, 2));
-        tileset.CenterHalfFullCorners.Add(90, GetTileAt(texture, tileSize, 2, 2));
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullCorners, 0, 3, 2);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.CenterHalfFullCorners, 90, 2, 2);
 
-        tileset.Center3QuartersFull.Add(0, GetTileAt(texture, tileSize, 3, 3));
-        tileset.Center3QuartersFull.Add(90, GetTileAt(texture, tileSize, 3, 4));
-        tileset.Center3QuartersFull.Add(180, GetTileAt(texture, tileSize, 2, 4));
-        tileset.Center3QuartersFull.Add(270, GetTileAt(texture, tileSize, 2, 3));
-
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Center3QuartersFull, 0, 3, 3);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Center3QuartersFull, 90, 3, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Center3QuartersFull, 180, 2, 4);
+        CreateTileVariationsForFullSlicedSet(generator, tileset, texture, tileSize, tileset.Center3QuartersFull, 270, 2, 3);
     }
 
-    public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, TileType type, TileSetData data, int tileSize)
+    private static void CreateTileVariationsForFullSlicedSet(TilemapGenerator generator, TileSetSlicedFull tileset, Texture2D texture, int tileSize, Dictionary<int, TileBase> slicedTiles, int rotation, int x, int y)
+    {
+        TileBase tile = GetTileAt(texture, tileSize, x, y);
+        slicedTiles.Add(rotation, tile);
+        if(tileset.HasOverlayEdges)
+        {
+            tileset.OverlayTiles.Add(new System.Tuple<TileBase, SurfaceType>(tile, SurfaceType.Grass), GetOverlayTileAt(tileSize, generator.GrassSet1, 0, 0, texture, x, y));
+            tileset.OverlayTiles.Add(new System.Tuple<TileBase, SurfaceType>(tile, SurfaceType.Desert), GetOverlayTileAt(tileSize, generator.DesertSet1, 0, 0, texture, x, y));
+        }
+        
+    }
+
+    public static TileSetSimple GenerateSimpleOverlayTileset(TilemapGenerator generator, Texture2D baseTexture, Texture2D overlayTexture, SurfaceType type, TileSetData data, int tileSize)
     {
         TileSetSimple tileset = new TileSetSimple(data, type);
 

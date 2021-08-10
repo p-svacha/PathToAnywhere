@@ -14,9 +14,9 @@ public class Region_Desert : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            if(Random.value <= 0.002f) Generator.SetTileTypeWithInfo(pos, TileType.Water);
-            if(Random.value <= 0.004f) Generator.SetTileTypeWithInfo(pos, TileType.Mountain);
-            else Generator.SetTileTypeWithInfo(pos, TileType.Desert);
+            if(Random.value <= 0.002f) Generator.SetTileTypeWithInfo(pos, SurfaceType.Water);
+            if(Random.value <= 0.004f) Generator.SetTileTypeWithInfo(pos, SurfaceType.Mountain);
+            else Generator.SetTileTypeWithInfo(pos, SurfaceType.Desert);
         }
     }
 }

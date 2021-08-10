@@ -6,8 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class Building : Structure
 {
-    public TileType WallType;
-    public TileType FloorType;
+    public SurfaceType WallType;
+    public SurfaceType FloorType;
 
     public Color Color;
 
@@ -15,7 +15,7 @@ public class Building : Structure
     public Dictionary<Vector2Int, TileBase> RoofTiles; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
     public Dictionary<Vector2Int, int> RoofTilesRotation; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
 
-    public Building(Vector2Int origin, TileType wallType, TileType floorType) : base(origin)
+    public Building(Vector2Int origin, SurfaceType wallType, SurfaceType floorType) : base(origin)
     {
         WallType = wallType;
         FloorType = floorType;

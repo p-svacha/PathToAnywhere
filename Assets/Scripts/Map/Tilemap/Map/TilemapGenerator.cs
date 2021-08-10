@@ -27,7 +27,7 @@ public class TilemapGenerator : MonoBehaviour
     private Tilemap TilemapBuildings;
 
 
-    public Dictionary<TileType, TileSet> TileSets;
+    public Dictionary<SurfaceType, TileSet> TileSets;
     public const int TilePixelSize = 64; // pixels
 
     [Header("Tiles")]
@@ -44,12 +44,13 @@ public class TilemapGenerator : MonoBehaviour
 
     public Texture2D WaterSet1;
 
+    // Chunks
     private Dictionary<Vector2Int, TilemapChunk> Chunks = new Dictionary<Vector2Int, TilemapChunk>();
-    private List<TilemapChunk> LoadedChunks = new List<TilemapChunk>(); // Loaded chunks include all chanks that are within generation are of the player
 
-    [Header("Regions")]
+    // Regions
     private RegionPartitioner Voronoi;
 
+    public List<SurfaceType> SurfaceBlendTypes = new List<SurfaceType>() { SurfaceType.Desert, SurfaceType.Grass };
 
     private void Update()
     {
@@ -69,21 +70,21 @@ public class TilemapGenerator : MonoBehaviour
         TilemapBuildings.gameObject.SetActive(false);
 
         // Tile datas
-        TileSets = new Dictionary<TileType, TileSet>();
+        TileSets = new Dictionary<SurfaceType, TileSet>();
         TileSetData ground = new TileSetData(true, 1);
         TileSetData wall = new TileSetData(false, 0);
 
         // Generate tiles from textures
-        TileGenerator.GenerateSimpleTilset(this, GrassSet1, TileType.Grass, ground, TilePixelSize);
-        TileGenerator.GenerateSimpleTilset(this, DesertSet1, TileType.Desert, ground, TilePixelSize);
-        TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, TileType.WoodFloor, ground, TilePixelSize);
+        TileGenerator.GenerateSimpleTilset(this, GrassSet1, SurfaceType.Grass, ground, TilePixelSize);
+        TileGenerator.GenerateSimpleTilset(this, DesertSet1, SurfaceType.Desert, ground, TilePixelSize);
+        TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, SurfaceType.WoodFloor, ground, TilePixelSize);
 
-        TileGenerator.GenerateSlicedTileset(this, MountainSet1, TileType.Mountain, wall, TilePixelSize);
-        TileGenerator.GenerateSlicedTileset(this, WallSet2, TileType.Wall, wall, TilePixelSize);
+        TileGenerator.GenerateSlicedTileset(this, MountainSet1, SurfaceType.Mountain, wall, TilePixelSize);
+        TileGenerator.GenerateSlicedTileset(this, WallSet2, SurfaceType.Wall, wall, TilePixelSize);
 
-        TileGenerator.GenerateSimpleOverlayTileset(this, GrassSet1, RockSet1, TileType.GrassRock, wall, TilePixelSize);
+        TileGenerator.GenerateSimpleOverlayTileset(this, GrassSet1, RockSet1, SurfaceType.GrassRock, wall, TilePixelSize);
 
-        TileGenerator.GenerateFullSlicedTileset(this, WaterSet1, TileType.Water, ground, TilePixelSize);
+        TileGenerator.GenerateFullSlicedTileset(this, WaterSet1, SurfaceType.Water, ground, TilePixelSize, new List<SurfaceType>() { SurfaceType.Water, SurfaceType.Mountain }, hasOverlayEdges: true);
     }
 
     /// <summary>
@@ -230,7 +231,7 @@ public class TilemapGenerator : MonoBehaviour
     /// <summary>
     /// Sets the type and its corresponding attributes (passability, speed modifier, etc) of the tile at the given position.
     /// </summary>
-    public void SetTileTypeWithInfo(Vector2Int gridPosition, TileType type)
+    public void SetTileTypeWithInfo(Vector2Int gridPosition, SurfaceType type)
     {
         Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
         TilemapChunk chunk = Chunks[chunkCoordinates];
@@ -263,10 +264,10 @@ public class TilemapGenerator : MonoBehaviour
 
     #region Getters
 
-    public TileType GetTileType(int gridX, int gridY)
+    public SurfaceType GetTileType(int gridX, int gridY)
     {
         Vector2Int chunkCoordinates = GetChunkCoordinates(gridX, gridY);
-        if (!Chunks.ContainsKey(chunkCoordinates)) return TileType.Grass;
+        if (!Chunks.ContainsKey(chunkCoordinates)) return SurfaceType.Grass;
         TilemapChunk chunk = Chunks[chunkCoordinates];
 
         int inChunkX = gridX - (chunkCoordinates.x * TilemapChunk.ChunkSize);

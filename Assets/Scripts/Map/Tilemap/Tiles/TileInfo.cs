@@ -8,7 +8,7 @@ using UnityEngine;
 public class TileInfo
 {
     public Vector2Int Position;
-    public TileType Type;
+    public SurfaceType Type;
     public Region Region;
     public Building Building;
     public bool Passable;

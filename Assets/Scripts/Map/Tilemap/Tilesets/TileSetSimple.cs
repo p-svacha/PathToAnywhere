@@ -9,7 +9,7 @@ public class TileSetSimple : TileSet
 
     public TileSetSimple() { }
 
-    public TileSetSimple(TileSetData data, TileType type) : base(data, type)
+    public TileSetSimple(TileSetData data, SurfaceType type) : base(data, type)
     {
         Tiles = new List<TileBase>();
     }
@@ -23,4 +23,5 @@ public class TileSetSimple : TileSet
     {
         return Tiles[Random.Range(0, Tiles.Count)];
     }
+
 }

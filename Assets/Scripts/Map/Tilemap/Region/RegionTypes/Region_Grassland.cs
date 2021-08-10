@@ -22,10 +22,10 @@ public class Region_Grassland : Region
         // Base landscape (grass & grassrock tiles, tree structures)
         foreach (Vector2Int pos in TilePositions)
         {
-            if (Random.value <= ROCK_CHANCE) Generator.SetTileTypeWithInfo(pos, TileType.GrassRock);
+            if (Random.value <= ROCK_CHANCE) Generator.SetTileTypeWithInfo(pos, SurfaceType.GrassRock);
             else
             {
-                Generator.SetTileTypeWithInfo(pos, TileType.Grass);
+                Generator.SetTileTypeWithInfo(pos, SurfaceType.Grass);
                 if(Random.value <= TREE_CHANCE)
                 {
                     Tree tree = TreeGenerator.Instance.GenerateTree(pos);
@@ -48,7 +48,7 @@ public class Region_Grassland : Region
                 canSpawnBuilding = true;
                 Vector2Int buildingPosition = TilePositions[Random.Range(0, TilePositions.Count)];
 
-                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, TileType.Wall, TileType.WoodFloor);
+                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, SurfaceType.Wall, SurfaceType.WoodFloor);
 
                 // Check if building is fully within region
                 if(!building.IsFullyWithinRegion(this))

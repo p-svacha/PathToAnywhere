@@ -13,7 +13,7 @@ public class Region_Lake : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileTypeWithInfo(pos, TileType.Water);
+            Generator.SetTileTypeWithInfo(pos, SurfaceType.Water);
         }
     }
 }

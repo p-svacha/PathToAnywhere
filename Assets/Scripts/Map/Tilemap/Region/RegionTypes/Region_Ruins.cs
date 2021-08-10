@@ -18,11 +18,11 @@ public class Region_Ruins : Region
         }
     }
 
-    private TileType GetRandomTileType()
+    private SurfaceType GetRandomTileType()
     {
         float rng = Random.value;
-        if (rng < 0.5f) return TileType.Grass;
-        else if (rng < 0.6f) return TileType.Desert;
-        else return TileType.Mountain;
+        if (rng < 0.5f) return SurfaceType.Grass;
+        else if (rng < 0.6f) return SurfaceType.Desert;
+        else return SurfaceType.Mountain;
     }
 }

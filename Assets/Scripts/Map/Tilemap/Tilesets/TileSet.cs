@@ -6,11 +6,11 @@ using UnityEngine.Tilemaps;
 public abstract class TileSet
 {
     public TileSetData Data;
-    public TileType Type;
+    public SurfaceType Type;
 
     public TileSet() { }
 
-    public TileSet(TileSetData data, TileType type)
+    public TileSet(TileSetData data, SurfaceType type)
     {
         Data = data;
         Type = type;

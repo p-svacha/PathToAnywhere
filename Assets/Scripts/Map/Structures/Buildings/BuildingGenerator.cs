@@ -7,7 +7,7 @@ public class BuildingGenerator : MonoBehaviour
 {
     public Texture2D RoofSet1;
 
-    public Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, TileType wallType, TileType floorType)
+    public Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, SurfaceType wallType, SurfaceType floorType)
     {
         Building building = new Building(origin, wallType, floorType);
 

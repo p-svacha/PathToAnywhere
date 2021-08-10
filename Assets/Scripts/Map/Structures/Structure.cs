@@ -7,7 +7,7 @@ public abstract class Structure
 {
     public Vector2Int Origin;
 
-    public Dictionary<Vector2Int, TileType> TileTypes; // Tile types of the structure by grid position
+    public Dictionary<Vector2Int, SurfaceType> TileTypes; // Tile types of the structure by grid position
     public Dictionary<Vector2Int, TileBase> OverlayTiles; // Overlay tiles of the structure by grid position
     public Dictionary<Vector2Int, TileBase> FrontOfPlayerTiles; // Front of player tiles of the structure by grid position
 
@@ -18,7 +18,7 @@ public abstract class Structure
     public Structure(Vector2Int origin)
     {
         Origin = origin;
-        TileTypes = new Dictionary<Vector2Int, TileType>();
+        TileTypes = new Dictionary<Vector2Int, SurfaceType>();
         OverlayTiles = new Dictionary<Vector2Int, TileBase>();
         FrontOfPlayerTiles = new Dictionary<Vector2Int, TileBase>();
         BuildingTiles = new Dictionary<Vector2Int, Building>();
@@ -27,7 +27,7 @@ public abstract class Structure
 
     public virtual void PlaceStructure(TilemapGenerator generator)
     {
-        foreach (KeyValuePair<Vector2Int, TileType> kvp in TileTypes) generator.SetTileTypeWithInfo(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, SurfaceType> kvp in TileTypes) generator.SetTileTypeWithInfo(kvp.Key, kvp.Value);
         foreach (KeyValuePair<Vector2Int, TileBase> kvp in OverlayTiles) generator.SetOverlayTile(kvp.Key, kvp.Value);
         foreach (KeyValuePair<Vector2Int, TileBase> kvp in FrontOfPlayerTiles) generator.SetFrontOfPlayerTile(kvp.Key, kvp.Value);
         foreach (KeyValuePair<Vector2Int, Building> kvp in BuildingTiles) generator.GetTileInfo(kvp.Key).Building = kvp.Value;

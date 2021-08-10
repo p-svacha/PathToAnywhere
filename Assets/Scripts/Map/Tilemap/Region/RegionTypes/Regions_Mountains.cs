@@ -14,7 +14,7 @@ public class Regions_Mountains : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileTypeWithInfo(pos, TileType.Mountain);
+            Generator.SetTileTypeWithInfo(pos, SurfaceType.Mountain);
         }
     }
 }
