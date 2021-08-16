@@ -17,6 +17,9 @@ At this point there is very little to show since I'm just building very core sys
 *Example of a generated landscape with a lake, a mountain, a building, some nature and smoothed tiles.*
 <br/><img src="Screenshots/exampleLandscape.png" alt="example landscape" height="200" /><br/>
 
+*Generated characters*
+<br/><img src="Screenshots/characterGeneration.png" alt="generated characters" height="200" /><br/>
+
 *Example of basic interaction*
 <br/><img src="Screenshots/basicInteraction.png" alt="basic interaction" height="200" /><br/>
 
