@@ -14,15 +14,23 @@ public class Character : MonoBehaviour
     public float MovementSpeed;
     public CharacterController Controller;
 
-    public virtual void Awake()
-    {
-        Controller = GetComponentInChildren<CharacterController>();
-    }
+    public BodyPart Body;
+    public BodyPart Head;
 
-    public void Init(GameModel model, int x, int y)
+    public virtual void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, BodyPart body, BodyPart head)
     {
         Model = model;
-        GridPosition = new Vector2Int(x, y);
+        GridPosition = position;
+        FaceDirection = Direction.S;
+        Controller = controller;
+        Controller.Character = this;
+        Controller.MovePoint = movePoint;
+        Body = body;
+        Head = head;
+
+        transform.position = model.TilemapGenerator.GetWorldPosition(position);
+
+        MovementSpeed = 4f;
     }
 
     public TileInfo GetFacedTile()

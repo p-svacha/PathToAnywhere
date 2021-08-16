@@ -4,19 +4,11 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    private Character Character;
+    public Character Character;
     public Transform MovePoint;
-
-    public SpriteRenderer Head;
-    public SpriteRenderer Body;
 
     public bool IsMoving;
     public Direction MoveDirection;
-
-    public virtual void Awake()
-    {
-        Character = GetComponentInParent<Character>();
-    }
 
     // Update is called once per frame
     public virtual void Update()
@@ -81,42 +73,37 @@ public class CharacterController : MonoBehaviour
 
     private void ShowCharacterSide(Direction dir)
     {
-        switch(dir)
+        Character.Body.ShowDirection(dir);
+        Character.Head.ShowDirection(dir);
+
+        switch (dir)
         {
             case Direction.W:
-                Head.transform.localPosition = new Vector3(-0.1f, 0.5f, 0f);
-                Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 1;
-                Body.sortingOrder = 0;
+                Character.Head.SetLocalPoisition(new Vector3(-0.1f, 0.5f, 0f));
+                Character.Head.SetSortingOrder(1);
+                Character.Body.SetSortingOrder(0);
                 break;
 
             case Direction.E:
-                Head.transform.localPosition = new Vector3(0.1f, 0.5f, 0f);
-                Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 1;
-                Body.sortingOrder = 0;
+                Character.Head.SetLocalPoisition(new Vector3(0.1f, 0.5f, 0f));
+                Character.Head.SetSortingOrder(1);
+                Character.Body.SetSortingOrder(0);
                 break;
 
             case Direction.N:
-                Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-                Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 1;
-                Body.sortingOrder = 2;
+                Character.Head.SetLocalPoisition(new Vector3(0f, 0.5f, 0f));
+                Character.Head.SetSortingOrder(1);
+                Character.Body.SetSortingOrder(2);
                 break;
 
             case Direction.S:
-                Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-                Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 1;
-                Body.sortingOrder = 0;
+                Character.Head.SetLocalPoisition(new Vector3(0f, 0.5f, 0f));
+                Character.Head.SetSortingOrder(1);
+                Character.Body.SetSortingOrder(0);
                 break;
 
         }
     }
 
-
-    protected virtual void OnCharacterMove(TileInfo from, TileInfo to) // Add referenced from where to where character is moving1
-    {
-        
-    }
+    protected virtual void OnCharacterMove(TileInfo from, TileInfo to) { }
 }

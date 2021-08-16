@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class PlayerController : CharacterController
 {
-    private Player Player;
+    public Player Player;
 
     private float DirectionChangeTolerance = 0.12f; // When a direcion is pressed for less than this amount, then the player only changes facing direction instead of moving
     private float TimeSinceLastDirectionChange; // Time since last direction change
 
     private PlayerInputMode InputMode;
-
-    public override void Awake()
-    {
-        base.Awake();
-        Player = GetComponentInParent<Player>();
-    }
-
 
     public override void Update()
     {

@@ -1315,6 +1315,7 @@ Transform:
   - {fileID: 558758191}
   - {fileID: 672341473}
   - {fileID: 1497754626}
+  - {fileID: 1711272210}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1497,8 +1498,8 @@ MonoBehaviour:
   Tilemap: {fileID: 1252013868}
   TilemapGenerator: {fileID: 558758190}
   InteractionHandler: {fileID: 893756792}
+  CharacterGenerator: {fileID: 1711272211}
   Player: {fileID: 0}
-  PlayerPrefab: {fileID: 444514033608972604, guid: bf50259155b002a4294ecfb43fbf1f0b, type: 3}
 --- !u!4 &869999487
 Transform:
   m_ObjectHideFlags: 0
@@ -2508,6 +2509,52 @@ Transform:
   m_Father: {fileID: 1064113794}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1711272209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1711272210}
+  - component: {fileID: 1711272211}
+  m_Layer: 0
+  m_Name: CharacterGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1711272210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711272209}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 683608287}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1711272211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711272209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c73e4de232bb8c43a9733b9f7cfd20d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: {fileID: 0}
+  CharacterBodies: {fileID: 2800000, guid: 0cb14d7c8c5779e45acb551573285ee6, type: 3}
+  CharacterHeads: {fileID: 2800000, guid: 411feeebb9ea7f54ea1de76dd4efa082, type: 3}
 --- !u!1 &1780725397
 GameObject:
   m_ObjectHideFlags: 0

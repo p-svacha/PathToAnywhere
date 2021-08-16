@@ -7,9 +7,9 @@ public class GameModel : MonoBehaviour
 {
     [Header("Static Elements")]
     public CameraController CameraController;
-    public Tilemap Tilemap;
     public TilemapGenerator TilemapGenerator;
     public InteractionHandler InteractionHandler;
+    public CharacterGenerator CharacterGenerator;
 
     [Header("Map Rendering Attributes")]
     public static int MapRenderRange = 2;
@@ -17,15 +17,13 @@ public class GameModel : MonoBehaviour
     [Header("Game Elements")]
     public Player Player;
 
-    [Header("Prefabs")]
-    public Player PlayerPrefab;
-
     void Start()
     {
-        InteractionHandler.Init(this);
+        CharacterGenerator.Init(this);
         TilemapGenerator.Init(this);
         TilemapGenerator.LoadChunksAroundPlayer(new Vector2Int(0,0), MapRenderRange);
         SpawnPlayer(0, 0);
+        InteractionHandler.Init(this);
         CameraController.FocusObject(Player.Controller.transform);
     }
 
@@ -33,11 +31,7 @@ public class GameModel : MonoBehaviour
     {
         int curX = x;
         while (!TilemapGenerator.GetTileInfo(curX, y).Passable) curX++;
-        Vector3 cellPos = Tilemap.GetCellCenterWorld(new Vector3Int(curX, y, 1));
-        Vector3 worldSpawn = cellPos + new Vector3(0, 0, -1f);
-        Player = Instantiate(PlayerPrefab);
-        Player.Init(this, curX, y);
-        Player.transform.position = worldSpawn;
+        Player = CharacterGenerator.GeneratePlayer(new Vector2Int(curX, y));
     }
 
     public void OnPlayerMove()
@@ -47,15 +41,7 @@ public class GameModel : MonoBehaviour
     
     public void Interact()
     {
-        TileInfo facedTile = Player.GetFacedTile();
-        string text = "You are looking at " + facedTile.BaseSurfaceType;
-        if (TilemapGenerator.GetOverlayTile(facedTile.Position) != null) text += " with " + TilemapGenerator.GetOverlayTile(facedTile.Position).name;
-        text += ".";
-        if (Player.CurrentTile.Building == null && facedTile.Building != null) text += " A building appears in front of you.";
-        if (Player.CurrentTile.Building != null) text += " You are inside a building.";
-        if (!facedTile.Passable) text += " Something is blocking your way.";
-
-        InteractionHandler.DisplayText(text);
+        InteractionHandler.Interact();
     }
 
     public void EndInteraction()

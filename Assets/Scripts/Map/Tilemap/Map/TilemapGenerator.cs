@@ -47,7 +47,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public Dictionary<BaseSurfaceType, TileSetSimple> BaseSurfaceTilesets;
     public Dictionary<BaseFeatureType, TileSet> BaseFeatureTilesets;
-    public Dictionary<RoofType, TileSetSlicedFull> RoofTilesets;
+    public Dictionary<RoofType, TileSetSliced> RoofTilesets;
 
     // Chunks
     private Dictionary<Vector2Int, TilemapChunk> Chunks = new Dictionary<Vector2Int, TilemapChunk>();
@@ -75,7 +75,7 @@ public class TilemapGenerator : MonoBehaviour
         // Tile datas
         BaseSurfaceTilesets = new Dictionary<BaseSurfaceType, TileSetSimple>();
         BaseFeatureTilesets = new Dictionary<BaseFeatureType, TileSet>();
-        RoofTilesets = new Dictionary<RoofType, TileSetSlicedFull>();
+        RoofTilesets = new Dictionary<RoofType, TileSetSliced>();
         TileSetData ground = new TileSetData(true, 1);
         TileSetData wall = new TileSetData(false, 0);
 
@@ -299,6 +299,11 @@ public class TilemapGenerator : MonoBehaviour
         if (gridX < 0 && gridX % TilemapChunk.ChunkSize != 0) chunkX--;
         if (gridY < 0 && gridY % TilemapChunk.ChunkSize != 0) chunkY--;
         return new Vector2Int(chunkX, chunkY);
+    }
+
+    public Vector3 GetWorldPosition(Vector2Int gridPosition)
+    {
+        return TilemapBaseSurface.GetCellCenterWorld(new Vector3Int(gridPosition.x, gridPosition.y, 1));
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition)

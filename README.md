@@ -14,7 +14,7 @@ I am keeping track of my progress in a [Google Sheets document](https://docs.goo
 # Screenshots
 At this point there is very little to show since I'm just building very core systems. All visuals are just for testing purposes. But since someone asked for it, here we go..
 
-*Example of a generated landscape with a lake, a mountain, a building, some nature and smoothed tiles.
+*Example of a generated landscape with a lake, a mountain, a building, some nature and smoothed tiles.*
 <br/><img src="Screenshots/exampleLandscape.png" alt="example landscape" height="200" /><br/>
 
 *Example of basic interaction*

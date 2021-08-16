@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TileSetSlicedFull : TileSet
+public class TileSetSliced : TileSet
 {
     public List<BaseFeatureType> ConnectionTypes; // The sliced tile will "connect" to all surface types in this list
 
@@ -29,7 +29,7 @@ public class TileSetSlicedFull : TileSet
     public Dictionary<int, TileBase> CenterHalfFullCorners = new Dictionary<int, TileBase>();
     public Dictionary<int, TileBase> Center3QuartersFull = new Dictionary<int, TileBase>();
 
-    public TileSetSlicedFull(List<BaseFeatureType> connectionTypes, TileSetData data) : base(data)
+    public TileSetSliced(List<BaseFeatureType> connectionTypes, TileSetData data) : base(data)
     {
         ConnectionTypes = connectionTypes;
     }

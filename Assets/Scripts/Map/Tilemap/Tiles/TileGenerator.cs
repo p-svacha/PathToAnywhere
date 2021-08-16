@@ -24,14 +24,14 @@ public static class TileGenerator
         return tileset;
     }
 
-    public static TileSetSlicedFull GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileSetData data, int tileSize, List<BaseFeatureType> connectionTypes)
+    public static TileSetSliced GenerateSlicedTileset(TilemapGenerator generator, Texture2D texture, TileSetData data, int tileSize, List<BaseFeatureType> connectionTypes)
     {
-        TileSetSlicedFull tileset = new TileSetSlicedFull(connectionTypes, data);
+        TileSetSliced tileset = new TileSetSliced(connectionTypes, data);
         AddTilesToSlicedSet(generator, tileset, texture, tileSize);
         return tileset;
     }
 
-    private static void AddTilesToSlicedSet(TilemapGenerator generator, TileSetSlicedFull tileset, Texture2D texture, int tileSize)
+    private static void AddTilesToSlicedSet(TilemapGenerator generator, TileSetSliced tileset, Texture2D texture, int tileSize)
     {
         tileset.Surrounded.Add(0, GetTileAt(texture, tileSize, 1, 6));
         AddTileToSlicedSet(generator, tileset, texture, tileSize, tileset.CenterEmpty, 0, 4, 6);
@@ -94,7 +94,7 @@ public static class TileGenerator
         AddTileToSlicedSet(generator, tileset, texture, tileSize, tileset.Center3QuartersFull, 270, 2, 3);
     }
 
-    private static void AddTileToSlicedSet(TilemapGenerator generator, TileSetSlicedFull tileset, Texture2D texture, int tileSize, Dictionary<int, TileBase> slicedTiles, int rotation, int x, int y)
+    private static void AddTileToSlicedSet(TilemapGenerator generator, TileSetSliced tileset, Texture2D texture, int tileSize, Dictionary<int, TileBase> slicedTiles, int rotation, int x, int y)
     {
         TileBase tile = GetTileAt(texture, tileSize, x, y);
         slicedTiles.Add(rotation, tile);      
