@@ -6,15 +6,16 @@ using UnityEngine.Tilemaps;
 
 public class TilemapGenerator : MonoBehaviour
 {
+    public const int TilePixelSize = 64; // pixels
     private GameModel Model;
 
     [Header("Tilemaps")]
     [SerializeField]
-    private Tilemap TilemapBaseBlend;
+    private Tilemap TilemapBaseSurface;
     [SerializeField]
     private Blendmap SurfaceBlendMap;
     [SerializeField]
-    private Tilemap TilemapBaseNoBlend;
+    private Tilemap TilemapBaseFeature;
     [SerializeField]
     private Tilemap TilemapOverlay;
     [SerializeField]
@@ -30,33 +31,29 @@ public class TilemapGenerator : MonoBehaviour
     [SerializeField]
     private Tilemap TilemapBuildings;
 
-
-    public Dictionary<SurfaceType, TileSet> TileSets;
-    public const int TilePixelSize = 64; // pixels
-
     [Header("Tiles")]
     public TileBase TestTile;
 
-    public Texture2D DesertSet1;
+    public Texture2D SandSet1;
     public Texture2D GrassSet1;
     public Texture2D DirtSet1;
+
     public Texture2D WoodFloorSet1;
-
+    public Texture2D RoofSet1;
     public Texture2D MountainSet1;
-    public Texture2D WallSet2;
-
+    public Texture2D WallSet1;
     public Texture2D RockSet1;
-
     public Texture2D WaterSet1;
+
+    public Dictionary<BaseSurfaceType, TileSetSimple> BaseSurfaceTilesets;
+    public Dictionary<BaseFeatureType, TileSet> BaseFeatureTilesets;
+    public Dictionary<RoofType, TileSetSlicedFull> RoofTilesets;
 
     // Chunks
     private Dictionary<Vector2Int, TilemapChunk> Chunks = new Dictionary<Vector2Int, TilemapChunk>();
 
     // Regions
     private RegionPartitioner Voronoi;
-
-    // Blend
-    private List<SurfaceType> SurfaceBlendTypes = new List<SurfaceType>() { SurfaceType.Desert, SurfaceType.Grass, SurfaceType.Dirt };
 
     private void Update()
     {
@@ -76,22 +73,24 @@ public class TilemapGenerator : MonoBehaviour
         TilemapBuildings.gameObject.SetActive(false);
 
         // Tile datas
-        TileSets = new Dictionary<SurfaceType, TileSet>();
+        BaseSurfaceTilesets = new Dictionary<BaseSurfaceType, TileSetSimple>();
+        BaseFeatureTilesets = new Dictionary<BaseFeatureType, TileSet>();
+        RoofTilesets = new Dictionary<RoofType, TileSetSlicedFull>();
         TileSetData ground = new TileSetData(true, 1);
         TileSetData wall = new TileSetData(false, 0);
 
         // Generate tiles from textures
-        TileGenerator.GenerateSimpleTilset(this, GrassSet1, SurfaceType.Grass, ground, TilePixelSize);
-        TileGenerator.GenerateSimpleTilset(this, DesertSet1, SurfaceType.Desert, ground, TilePixelSize);
-        TileGenerator.GenerateSimpleTilset(this, DirtSet1, SurfaceType.Dirt, ground, TilePixelSize);
-        TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, SurfaceType.WoodFloor, ground, TilePixelSize);
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Grass, TileGenerator.GenerateSimpleTilset(this, GrassSet1, ground, TilePixelSize));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Sand, TileGenerator.GenerateSimpleTilset(this, SandSet1, ground, TilePixelSize));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Dirt, TileGenerator.GenerateSimpleTilset(this, DirtSet1, ground, TilePixelSize));
 
-        TileGenerator.GenerateSlicedTileset(this, MountainSet1, SurfaceType.Mountain, wall, TilePixelSize);
-        TileGenerator.GenerateSlicedTileset(this, WallSet2, SurfaceType.Wall, wall, TilePixelSize);
+        BaseFeatureTilesets.Add(BaseFeatureType.Floor, TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, ground, TilePixelSize));
+        BaseFeatureTilesets.Add(BaseFeatureType.Rock, TileGenerator.GenerateSimpleTilset(this, RockSet1, wall, TilePixelSize));
+        BaseFeatureTilesets.Add(BaseFeatureType.Mountain, TileGenerator.GenerateSlicedTileset(this, MountainSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Mountain }));
+        BaseFeatureTilesets.Add(BaseFeatureType.Wall, TileGenerator.GenerateSlicedTileset(this, WallSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Wall }));
+        BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateSlicedTileset(this, WaterSet1, ground, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }));
 
-        TileGenerator.GenerateSimpleOverlayTileset(this, GrassSet1, RockSet1, SurfaceType.GrassRock, wall, TilePixelSize);
-
-        TileGenerator.GenerateFullSlicedTileset(this, WaterSet1, SurfaceType.Water, ground, TilePixelSize, new List<SurfaceType>() { SurfaceType.Water, SurfaceType.Mountain }, hasOverlayEdges: true);
+        RoofTilesets.Add(RoofType.DefaultRoof, TileGenerator.GenerateSlicedTileset(this, RoofSet1, null, TilePixelSize, new List<BaseFeatureType>()));
     }
 
     /// <summary>
@@ -214,18 +213,17 @@ public class TilemapGenerator : MonoBehaviour
         int tileY = chunk.Coordinates.y * TilemapChunk.ChunkSize + y;
         Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
 
-        // Base tilemap
-        SurfaceType tileType = chunk.Tiles[x, y].Type;
-        if(SurfaceBlendTypes.Contains(tileType)) // Blending surface
+        // Base surface tilemap
+        BaseSurfaceType baseSurfaceType = chunk.Tiles[x, y].BaseSurfaceType;
+        if (baseSurfaceType != BaseSurfaceType.None)
         {
-            TileSets[tileType].PlaceTile(this, TilemapBaseBlend, tilePos);
-            SurfaceBlendMap.BlendTile(this, tileX, tileY, tileType, (TileSetSimple)TileSets[tileType]);
+            BaseSurfaceTilesets[baseSurfaceType].PlaceTile(this, TilemapBaseSurface, tilePos);
+            SurfaceBlendMap.BlendTile(this, tileX, tileY, baseSurfaceType, BaseSurfaceTilesets[baseSurfaceType]);
         }
-        else // Non-blending surface
-        {
-            TileSets[tileType].PlaceTile(this, TilemapBaseNoBlend, tilePos);
-        }
-        
+
+        // Base feature tilemap
+        BaseFeatureType baseFeatureType = chunk.Tiles[x, y].BaseFeatureType;
+        if(baseFeatureType != BaseFeatureType.None) BaseFeatureTilesets[baseFeatureType].PlaceTile(this, TilemapBaseFeature, tilePos);
 
         // Region debug tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
@@ -245,28 +243,42 @@ public class TilemapGenerator : MonoBehaviour
     #region Setters
 
     /// <summary>
-    /// Sets the type and its corresponding attributes (passability, speed modifier, etc) of the tile at the given position.
+    /// Sets the base surface type and maybe overrides the tile info (passability, speed modifier, etc) of the tile at the given position.
     /// </summary>
-    public void SetTileTypeWithInfo(Vector2Int gridPosition, SurfaceType type)
+    public void SetBaseSurfaceType(Vector2Int gridPosition, BaseSurfaceType type)
     {
         Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
         TilemapChunk chunk = Chunks[chunkCoordinates];
 
         int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
-        chunk.Tiles[inChunkX, inChunkY].Type = type;
-        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(TileSets[type].Data);
+        chunk.Tiles[inChunkX, inChunkY].BaseSurfaceType = type;
+        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(BaseSurfaceTilesets[type].Data);
     }
+
+    /// <summary>
+    /// Sets the base feature type and maybe overrides the tile info (passability, speed modifier, etc) of the tile at the given position.
+    /// </summary>
+    public void SetBaseFeatureType(Vector2Int gridPosition, BaseFeatureType type)
+    {
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+
+        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        chunk.Tiles[inChunkX, inChunkY].BaseFeatureType = type;
+        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(BaseFeatureTilesets[type].Data);
+    }
+
 
     public void SetOverlayTile(Vector2Int gridPosition, TileBase tile)
     {
         TilemapOverlay.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tile);
     }
 
-    public void SetRoofTile(Vector2Int gridPosition, TileBase tile, int rotation)
+    public void SetRoofTile(Vector2Int gridPosition, TileBase tile)
     {
         TilemapRoof.SetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0), tile);
-        if(rotation != 0) TilemapRoof.SetTransformMatrix(new Vector3Int(gridPosition.x, gridPosition.y, 0), Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 0f, rotation), Vector3.one));
     }
 
     public void SetFrontOfPlayerTile(Vector2Int gridPosition, TileBase tile)
@@ -279,7 +291,6 @@ public class TilemapGenerator : MonoBehaviour
     #endregion
 
     #region Getters
-    public List<SurfaceType> GetBlendTypes() { return SurfaceBlendTypes; }
 
     public Vector2Int GetChunkCoordinates(int gridX, int gridY)
     {
@@ -292,7 +303,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public Vector2Int GetGridPosition(Vector3 worldPosition)
     {
-        Vector3Int gridPos = TilemapBaseBlend.WorldToCell(worldPosition);
+        Vector3Int gridPos = TilemapBaseSurface.WorldToCell(worldPosition);
         return new Vector2Int(gridPos.x, gridPos.y);
     }
 

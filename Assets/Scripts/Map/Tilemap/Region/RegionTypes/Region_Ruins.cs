@@ -14,16 +14,16 @@ public class Region_Ruins : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetTileTypeWithInfo(pos, GetRandomTileType());
+            SetRandomTypesFor(pos);
         }
     }
 
-    private SurfaceType GetRandomTileType()
+    private void SetRandomTypesFor(Vector2Int pos)
     {
         float rng = Random.value;
-        if (rng < 0.25f) return SurfaceType.Grass;
-        else if (rng < 0.5f) return SurfaceType.Desert;
-        else if (rng < 0.75f) return SurfaceType.Dirt;
-        else return SurfaceType.Mountain;
+        if (rng < 0.25f) Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass);
+        else if (rng < 0.5f) Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
+        else if (rng < 0.75f) Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Dirt);
+        else Generator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
     }
 }

@@ -6,14 +6,12 @@ using UnityEngine.Tilemaps;
 public abstract class TileSet
 {
     public TileSetData Data;
-    public SurfaceType Type;
 
     public TileSet() { }
 
-    public TileSet(TileSetData data, SurfaceType type)
+    public TileSet(TileSetData data)
     {
         Data = data;
-        Type = type;
     }
     public abstract void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position);
 }

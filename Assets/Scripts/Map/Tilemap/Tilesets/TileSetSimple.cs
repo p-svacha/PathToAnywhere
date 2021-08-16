@@ -9,7 +9,7 @@ public class TileSetSimple : TileSet
 
     public TileSetSimple() { }
 
-    public TileSetSimple(TileSetData data, SurfaceType type) : base(data, type)
+    public TileSetSimple(TileSetData data) : base(data)
     {
         Tiles = new List<TileBase>();
     }

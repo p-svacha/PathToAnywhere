@@ -48,7 +48,7 @@ public class GameModel : MonoBehaviour
     public void Interact()
     {
         TileInfo facedTile = Player.GetFacedTile();
-        string text = "You are looking at " + facedTile.Type;
+        string text = "You are looking at " + facedTile.BaseSurfaceType;
         if (TilemapGenerator.GetOverlayTile(facedTile.Position) != null) text += " with " + TilemapGenerator.GetOverlayTile(facedTile.Position).name;
         text += ".";
         if (Player.CurrentTile.Building == null && facedTile.Building != null) text += " A building appears in front of you.";

@@ -22,15 +22,13 @@ public class Region_Grassland : Region
         // Base landscape (grass & grassrock tiles, tree structures)
         foreach (Vector2Int pos in TilePositions)
         {
-            if (Random.value <= ROCK_CHANCE) Generator.SetTileTypeWithInfo(pos, SurfaceType.GrassRock);
-            else
+            Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass);
+            float rng = Random.value;
+            if (rng <= ROCK_CHANCE) Generator.SetBaseFeatureType(pos, BaseFeatureType.Rock);
+            else if (rng <= ROCK_CHANCE + TREE_CHANCE)
             {
-                Generator.SetTileTypeWithInfo(pos, SurfaceType.Grass);
-                if(Random.value <= TREE_CHANCE)
-                {
-                    Tree tree = TreeGenerator.Instance.GenerateTree(pos);
-                    Trees.Add(tree);
-                }
+                Tree tree = TreeGenerator.Instance.GenerateTree(pos);
+                Trees.Add(tree);
             }
         }
 
@@ -48,7 +46,7 @@ public class Region_Grassland : Region
                 canSpawnBuilding = true;
                 Vector2Int buildingPosition = TilePositions[Random.Range(0, TilePositions.Count)];
 
-                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, SurfaceType.Wall, SurfaceType.WoodFloor);
+                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, BaseFeatureType.Wall, BaseFeatureType.Floor, RoofType.DefaultRoof);
 
                 // Check if building is fully within region
                 if(!building.IsFullyWithinRegion(this))
@@ -75,7 +73,7 @@ public class Region_Grassland : Region
         foreach(Building b in Buildings)
         {
             // Remove all trees that are within building
-            List<Tree> treesToRemove = Trees.Where(x => b.TileTypes.Keys.Contains(x.Origin)).ToList();
+            List<Tree> treesToRemove = Trees.Where(x => b.BaseTilePositions.Contains(x.Origin)).ToList();
             foreach (Tree t in treesToRemove) Trees.Remove(t);
             b.PlaceStructure(Generator);
         }

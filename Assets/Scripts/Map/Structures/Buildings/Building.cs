@@ -6,32 +6,31 @@ using UnityEngine.Tilemaps;
 
 public class Building : Structure
 {
-    public SurfaceType WallType;
-    public SurfaceType FloorType;
+    public BaseFeatureType WallType;
+    public BaseFeatureType FloorType;
+    public RoofType RoofType;
 
     public Color Color;
 
-    public TileSetSliced RoofTileSet;
     public Dictionary<Vector2Int, TileBase> RoofTiles; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
-    public Dictionary<Vector2Int, int> RoofTilesRotation; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
 
-    public Building(Vector2Int origin, SurfaceType wallType, SurfaceType floorType) : base(origin)
+    public Building(Vector2Int origin, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType) : base(origin)
     {
         WallType = wallType;
         FloorType = floorType;
+        RoofType = roofType;
         Color = ColorManager.GetRandomRedishColor();
         RoofTiles = new Dictionary<Vector2Int, TileBase>();
-        RoofTilesRotation = new Dictionary<Vector2Int, int>();
     }
 
     public bool IntersectsWith(Building other)
     {
-        return TileTypes.Keys.Intersect(other.TileTypes.Keys).Count() > 0;
+        return BaseTilePositions.Intersect(other.BaseTilePositions).Count() > 0;
     }
 
     public bool IsFullyWithinRegion(Region region)
     {
-        foreach(Vector2Int tile in TileTypes.Keys)
+        foreach(Vector2Int tile in BaseTilePositions)
         {
             if (!region.TilePositions.Contains(tile)) return false;
         }
@@ -42,12 +41,8 @@ public class Building : Structure
     {
         foreach (KeyValuePair<Vector2Int, TileBase> kvp in RoofTiles)
         {
-            if (draw)
-            {
-                generator.SetRoofTile(kvp.Key, kvp.Value, RoofTilesRotation[kvp.Key]);
-            }
-            else generator.SetRoofTile(kvp.Key, null, 0);
-            
+            if (draw) generator.SetRoofTile(kvp.Key, kvp.Value);
+            else generator.SetRoofTile(kvp.Key, null);
         }
     }
 

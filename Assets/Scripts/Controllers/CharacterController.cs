@@ -86,29 +86,29 @@ public class CharacterController : MonoBehaviour
             case Direction.W:
                 Head.transform.localPosition = new Vector3(-0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 12;
-                Body.sortingOrder = 11;
+                Head.sortingOrder = 1;
+                Body.sortingOrder = 0;
                 break;
 
             case Direction.E:
                 Head.transform.localPosition = new Vector3(0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 12;
-                Body.sortingOrder = 11;
+                Head.sortingOrder = 1;
+                Body.sortingOrder = 0;
                 break;
 
             case Direction.N:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 12;
-                Body.sortingOrder = 13;
+                Head.sortingOrder = 1;
+                Body.sortingOrder = 2;
                 break;
 
             case Direction.S:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 12;
-                Body.sortingOrder = 11;
+                Head.sortingOrder = 1;
+                Body.sortingOrder = 0;
                 break;
 
         }

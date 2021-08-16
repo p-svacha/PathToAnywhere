@@ -6,8 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class TileSetSlicedFull : TileSet
 {
-    public List<SurfaceType> ConnectionTypes; // The sliced tile will "connect" to all surface types in this list
-    public bool HasOverlayEdges; // If this flag is true, the edges of the sliced tiles have transparency in them and are required to be overlayed over a surface texture
+    public List<BaseFeatureType> ConnectionTypes; // The sliced tile will "connect" to all surface types in this list
 
     // Single tiles of sliced set (the int refers to the rotation, the TileBase to the kind of tile)
     public Dictionary<int, TileBase> Surrounded = new Dictionary<int, TileBase>();
@@ -30,17 +29,9 @@ public class TileSetSlicedFull : TileSet
     public Dictionary<int, TileBase> CenterHalfFullCorners = new Dictionary<int, TileBase>();
     public Dictionary<int, TileBase> Center3QuartersFull = new Dictionary<int, TileBase>();
 
-    public Dictionary<System.Tuple<TileBase, SurfaceType>, TileBase> OverlayTiles = new Dictionary<System.Tuple<TileBase, SurfaceType>, TileBase>(); // This maps a specific tile + surfacetype combination to the resulting tile
-
-    public TileSetSlicedFull(List<SurfaceType> connectionTypes, bool hasOverlayEdges)
+    public TileSetSlicedFull(List<BaseFeatureType> connectionTypes, TileSetData data) : base(data)
     {
         ConnectionTypes = connectionTypes;
-        HasOverlayEdges = hasOverlayEdges;
-    }
-    public TileSetSlicedFull(List<SurfaceType> connectionTypes, TileSetData data, SurfaceType type, bool hasOverlayEdges) : base(data, type)
-    {
-        ConnectionTypes = connectionTypes;
-        HasOverlayEdges = hasOverlayEdges;
     }
 
     public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
@@ -50,28 +41,26 @@ public class TileSetSlicedFull : TileSet
 
     private void PlaceSlicedTile(TilemapGenerator generator, Tilemap tilemap, int tileX, int tileY)
     {
-        bool hasNorthNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX, tileY + 1).Type);
-        bool hasSouthNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX, tileY - 1).Type);
-        bool hasEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY).Type);
-        bool hasWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY).Type);
+        bool hasNorthNeighbour = HasNeighbour(generator, tileX, tileY + 1);
+        bool hasSouthNeighbour = HasNeighbour(generator, tileX, tileY - 1);
+        bool hasEastNeighbour = HasNeighbour(generator, tileX + 1, tileY);
+        bool hasWestNeighbour = HasNeighbour(generator, tileX - 1, tileY);
 
-        bool hasNorthWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY + 1).Type);
-        bool hasNorthEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY + 1).Type);
-        bool hasSouthWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY - 1).Type);
-        bool hasSouthEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY - 1).Type);
+        bool hasNorthWestNeighbour = HasNeighbour(generator, tileX - 1, tileY + 1);
+        bool hasNorthEastNeighbour = HasNeighbour(generator, tileX + 1, tileY + 1);
+        bool hasSouthWestNeighbour = HasNeighbour(generator, tileX - 1, tileY - 1);
+        bool hasSouthEastNeighbour = HasNeighbour(generator, tileX + 1, tileY - 1);
 
         TileBase tileToPlace = GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour);
 
-        if(HasOverlayEdges && tileToPlace != Surrounded[0])
-        {
-            SurfaceType overlayType = GetOverlayType(generator, tileX, tileY);
-            System.Tuple<TileBase, SurfaceType> overlayTile = new System.Tuple<TileBase, SurfaceType>(tileToPlace, overlayType);
-
-            tileToPlace = OverlayTiles[overlayTile];
-        }
-
         Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
         tilemap.SetTile(tilePos, tileToPlace);
+    }
+
+    private bool HasNeighbour(TilemapGenerator generator, int x, int y)
+    {
+        if(ConnectionTypes.Contains(generator.GetTileInfo(x, y).BaseFeatureType)) return true;
+        return false;
     }
 
     private TileBase GetTileAt(bool hasNorthNeighbour, bool hasSouthNeighbour, bool hasEastNeighbour, bool hasWestNeighbour, bool hasNorthEastNeighbour, bool hasNorthWestNeighbour, bool hasSouthEastNeighbour, bool hasSouthWestNeighbour)
@@ -250,23 +239,22 @@ public class TileSetSlicedFull : TileSet
         else return Single[0];
     }
 
-    private SurfaceType GetOverlayType(TilemapGenerator generator, int tileX, int tileY)
+    /// <summary>
+    /// This method returns the correct tile and rotation at the given position. The list param contains all positions of where tiles of this type also occur.
+    /// </summary>
+    public TileBase GetTileAt(Vector2Int gridPosition, List<Vector2Int> tiles)
     {
-        Dictionary<SurfaceType, int> neighbourTypes = new Dictionary<SurfaceType, int>();
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX - 1, tileY).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX + 1, tileY).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX, tileY - 1).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX, tileY + 1).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX - 1, tileY - 1).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX - 1, tileY + 1).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX + 1, tileY - 1).Type);
-        AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX + 1, tileY + 1).Type);
-        if (neighbourTypes.Where(x => generator.GetBlendTypes().Contains(x.Key)).Count() == 0) return SurfaceType.Grass;
-        else return neighbourTypes.Where(x => generator.GetBlendTypes().Contains(x.Key)).OrderByDescending(x => x.Value).First().Key;
+        bool hasNorthNeighbour = tiles.Contains(gridPosition + new Vector2Int(0, 1));
+        bool hasSouthNeighbour = tiles.Contains(gridPosition + new Vector2Int(0, -1));
+        bool hasEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1, 0));
+        bool hasWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, 0));
+
+        bool hasNorthEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1, 1));
+        bool hasNorthWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, 1));
+        bool hasSouthEastNeighbour = tiles.Contains(gridPosition + new Vector2Int(1, -1));
+        bool hasSouthWestNeighbour = tiles.Contains(gridPosition + new Vector2Int(-1, -1));
+
+        return GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour);
     }
-    private void AddNeighbourType(Dictionary<SurfaceType, int> neighbourTypes, SurfaceType type)
-    {
-        if (neighbourTypes.ContainsKey(type)) neighbourTypes[type]++;
-        else neighbourTypes.Add(type, 1);
-    }
+
 }

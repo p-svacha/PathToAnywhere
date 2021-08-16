@@ -18,34 +18,36 @@ public class Blendmap : MonoBehaviour
     public Tilemap BlendTilemap_NW;
 
 
-    public void BlendTile(TilemapGenerator generator, int x, int y, SurfaceType type, TileSetSimple tileset)
+    public void BlendTile(TilemapGenerator generator, int x, int y, BaseSurfaceType type, TileSetSimple tileset)
     {
+        // Todo: Only blend when type is != null
+
         // N
-        if (generator.GetTileInfo(new Vector2Int(x, y - 1)).Type != type) BlendTilemap_N.SetTile(new Vector3Int(x, y - 1, 0), tileset.GetRandomTile());
+        if (generator.GetTileInfo(new Vector2Int(x, y - 1)).BaseSurfaceType != type) BlendTilemap_N.SetTile(new Vector3Int(x, y - 1, 0), tileset.GetRandomTile());
 
         // NE
-        if (generator.GetTileInfo(new Vector2Int(x - 1, y - 1)).Type != type && generator.GetTileInfo(new Vector2Int(x, y - 1)).Type != type && generator.GetTileInfo(new Vector2Int(x - 1, y)).Type != type) 
+        if (generator.GetTileInfo(new Vector2Int(x - 1, y - 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x, y - 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x - 1, y)).BaseSurfaceType != type) 
             BlendTilemap_NE.SetTile(new Vector3Int(x - 1, y - 1, 0), tileset.GetRandomTile());
 
         // E
-        if (generator.GetTileInfo(new Vector2Int(x - 1, y)).Type != type) BlendTilemap_E.SetTile(new Vector3Int(x - 1, y, 0), tileset.GetRandomTile());
+        if (generator.GetTileInfo(new Vector2Int(x - 1, y)).BaseSurfaceType != type) BlendTilemap_E.SetTile(new Vector3Int(x - 1, y, 0), tileset.GetRandomTile());
 
         // SE
-        if (generator.GetTileInfo(new Vector2Int(x - 1, y + 1)).Type != type && generator.GetTileInfo(new Vector2Int(x - 1, y)).Type != type && generator.GetTileInfo(new Vector2Int(x, y + 1)).Type != type) 
+        if (generator.GetTileInfo(new Vector2Int(x - 1, y + 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x - 1, y)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x, y + 1)).BaseSurfaceType != type) 
             BlendTilemap_SE.SetTile(new Vector3Int(x - 1, y + 1, 0), tileset.GetRandomTile());
 
         // S
-        if (generator.GetTileInfo(new Vector2Int(x, y + 1)).Type != type) BlendTilemap_S.SetTile(new Vector3Int(x, y + 1, 0), tileset.GetRandomTile());
+        if (generator.GetTileInfo(new Vector2Int(x, y + 1)).BaseSurfaceType != type) BlendTilemap_S.SetTile(new Vector3Int(x, y + 1, 0), tileset.GetRandomTile());
 
         // SW
-        if (generator.GetTileInfo(new Vector2Int(x + 1, y + 1)).Type != type && generator.GetTileInfo(new Vector2Int(x, y + 1)).Type != type && generator.GetTileInfo(new Vector2Int(x + 1, y)).Type != type)
+        if (generator.GetTileInfo(new Vector2Int(x + 1, y + 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x, y + 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x + 1, y)).BaseSurfaceType != type)
             BlendTilemap_SW.SetTile(new Vector3Int(x + 1, y + 1, 0), tileset.GetRandomTile());
 
         // W
-        if (generator.GetTileInfo(new Vector2Int(x + 1, y)).Type != type) BlendTilemap_W.SetTile(new Vector3Int(x + 1, y, 0), tileset.GetRandomTile());
+        if (generator.GetTileInfo(new Vector2Int(x + 1, y)).BaseSurfaceType != type) BlendTilemap_W.SetTile(new Vector3Int(x + 1, y, 0), tileset.GetRandomTile());
 
         // NW
-        if (generator.GetTileInfo(new Vector2Int(x + 1, y - 1)).Type != type && generator.GetTileInfo(new Vector2Int(x + 1, y)).Type != type && generator.GetTileInfo(new Vector2Int(x, y - 1)).Type != type)
+        if (generator.GetTileInfo(new Vector2Int(x + 1, y - 1)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x + 1, y)).BaseSurfaceType != type && generator.GetTileInfo(new Vector2Int(x, y - 1)).BaseSurfaceType != type)
             BlendTilemap_NW.SetTile(new Vector3Int(x + 1, y - 1, 0), tileset.GetRandomTile());
     }
 

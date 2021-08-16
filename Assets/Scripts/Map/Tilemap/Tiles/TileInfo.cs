@@ -8,20 +8,26 @@ using UnityEngine;
 public class TileInfo
 {
     public Vector2Int Position;
-    public SurfaceType Type;
+
+    public BaseSurfaceType BaseSurfaceType;
+    public BaseFeatureType BaseFeatureType;
+
     public Region Region;
     public Building Building;
+
     public bool Passable;
     public float SpeedModifier;
 
     public TileInfo(Vector2Int position)
     {
         Position = position;
+        Passable = true;
+        SpeedModifier = 1f;
     }
 
     public void SetInfoFromTileSetData(TileSetData data)
     {
-        Passable = data.Passable;
-        SpeedModifier = data.SpeedModifier;
+        if (!data.Passable) Passable = false;
+        if (data.SpeedModifier < SpeedModifier) SpeedModifier = data.SpeedModifier;
     }
 }

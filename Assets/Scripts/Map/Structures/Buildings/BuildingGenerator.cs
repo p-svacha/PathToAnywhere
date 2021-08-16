@@ -5,27 +5,26 @@ using UnityEngine.Tilemaps;
 
 public class BuildingGenerator : MonoBehaviour
 {
-    public Texture2D RoofSet1;
-
-    public Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, SurfaceType wallType, SurfaceType floorType)
+    public Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType)
     {
-        Building building = new Building(origin, wallType, floorType);
+        Building building = new Building(origin, wallType, floorType, roofType);
 
         List<Vector2Int> roofTiles = new List<Vector2Int>();
-        building.RoofTileSet = TileGenerator.GenerateSlicedTileset(RoofSet1, TilemapGenerator.TilePixelSize);
 
         int width = Random.Range(4, 10);
         int height = Random.Range(4, 10);
 
+        // Floor
         for (int y = 1; y < height - 1; y++)
         {
             for(int x = 1; x < width - 1; x++)
             {
                 Vector2Int relativePos = new Vector2Int(x, y);
-                building.TileTypes.Add(origin + relativePos, floorType);
+                building.BaseFeatureTypes.Add(origin + relativePos, floorType);
             }
         }
 
+        // Walls
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -37,20 +36,20 @@ public class BuildingGenerator : MonoBehaviour
                 roofTiles.Add(absolutePos);
                 
 
-                if (!building.TileTypes.ContainsKey(absolutePos))
+                if (!building.BaseFeatureTypes.ContainsKey(absolutePos))
                 {
-                    if(Random.value < 0.9f) building.TileTypes.Add(absolutePos, wallType);
-                    else building.TileTypes.Add(absolutePos, floorType);
+                    if(Random.value < 0.9f) building.BaseFeatureTypes.Add(absolutePos, wallType);
+                    else building.BaseFeatureTypes.Add(absolutePos, floorType);
                 }
             }
         }
 
+        // Roof
         foreach(Vector2Int roofPos in roofTiles)
         {
-            building.RoofTileSet.GetTileAt(roofPos, roofTiles, out TileBase roofTile, out int rotation);
+            TileBase roofTile = generator.RoofTilesets[roofType].GetTileAt(roofPos, roofTiles);
 
             building.RoofTiles.Add(roofPos, roofTile);
-            building.RoofTilesRotation.Add(roofPos, rotation);
         }
 
         return building;
