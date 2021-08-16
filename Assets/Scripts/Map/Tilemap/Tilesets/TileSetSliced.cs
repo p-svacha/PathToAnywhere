@@ -38,15 +38,15 @@ public class TileSetSliced : TileSet
         TileBase tileToPlace;
         int tileRotation = 0;
 
-        bool hasNorthNeighbour = generator.GetTileType(tileX, tileY + 1) == Type;
-        bool hasSouthNeighbour = generator.GetTileType(tileX, tileY - 1) == Type;
-        bool hasEastNeighbour = generator.GetTileType(tileX + 1, tileY) == Type;
-        bool hasWestNeighbour = generator.GetTileType(tileX - 1, tileY) == Type;
+        bool hasNorthNeighbour = generator.GetTileInfo(tileX, tileY + 1).Type == Type;
+        bool hasSouthNeighbour = generator.GetTileInfo(tileX, tileY - 1).Type == Type;
+        bool hasEastNeighbour = generator.GetTileInfo(tileX + 1, tileY).Type == Type;
+        bool hasWestNeighbour = generator.GetTileInfo(tileX - 1, tileY).Type == Type;
 
-        bool hasNorthWestNeighbour = generator.GetTileType(tileX - 1, tileY + 1) == Type;
-        bool hasNorthEastNeighbour = generator.GetTileType(tileX + 1, tileY + 1) == Type;
-        bool hasSouthWestNeighbour = generator.GetTileType(tileX - 1, tileY - 1) == Type;
-        bool hasSouthEastNeighbour = generator.GetTileType(tileX + 1, tileY - 1) == Type;
+        bool hasNorthWestNeighbour = generator.GetTileInfo(tileX - 1, tileY + 1).Type == Type;
+        bool hasNorthEastNeighbour = generator.GetTileInfo(tileX + 1, tileY + 1).Type == Type;
+        bool hasSouthWestNeighbour = generator.GetTileInfo(tileX - 1, tileY - 1).Type == Type;
+        bool hasSouthEastNeighbour = generator.GetTileInfo(tileX + 1, tileY - 1).Type == Type;
 
         GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour, out tileToPlace, out tileRotation);
 

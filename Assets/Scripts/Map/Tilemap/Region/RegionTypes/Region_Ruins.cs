@@ -21,8 +21,9 @@ public class Region_Ruins : Region
     private SurfaceType GetRandomTileType()
     {
         float rng = Random.value;
-        if (rng < 0.5f) return SurfaceType.Grass;
-        else if (rng < 0.6f) return SurfaceType.Desert;
+        if (rng < 0.25f) return SurfaceType.Grass;
+        else if (rng < 0.5f) return SurfaceType.Desert;
+        else if (rng < 0.75f) return SurfaceType.Dirt;
         else return SurfaceType.Mountain;
     }
 }

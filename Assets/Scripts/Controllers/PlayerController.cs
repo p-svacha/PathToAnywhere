@@ -45,10 +45,10 @@ public class PlayerController : CharacterController
     {
         if (InputMode == PlayerInputMode.Movement)
         {
-            if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.East);
-            else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.West);
-            else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.North);
-            else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.South);
+            if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.E);
+            else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.W);
+            else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.N);
+            else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.S);
             else MoveDirection = Direction.None;
         }
     }

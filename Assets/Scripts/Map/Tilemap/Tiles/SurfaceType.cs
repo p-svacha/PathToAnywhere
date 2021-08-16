@@ -8,6 +8,7 @@ public enum SurfaceType
     Mountain,
     Grass,
     Desert,
+    Dirt,
     Wall,
     WoodFloor,
     GrassRock,

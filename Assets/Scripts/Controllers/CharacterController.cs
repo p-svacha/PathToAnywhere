@@ -31,14 +31,14 @@ public class CharacterController : MonoBehaviour
 
             GetCharacterMovement();
 
-            if (MoveDirection == Direction.West && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
-                Move(Direction.West);
-            else if (MoveDirection == Direction.East && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
-                Move(Direction.East);
-            else if (MoveDirection == Direction.North && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
-                Move(Direction.North);
-            else if (MoveDirection == Direction.South && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
-                Move(Direction.South);
+            if (MoveDirection == Direction.W && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
+                Move(Direction.W);
+            else if (MoveDirection == Direction.E && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
+                Move(Direction.E);
+            else if (MoveDirection == Direction.N && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
+                Move(Direction.N);
+            else if (MoveDirection == Direction.S && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
+                Move(Direction.S);
         }
 
         ShowCharacterSide(Character.FaceDirection);
@@ -54,22 +54,22 @@ public class CharacterController : MonoBehaviour
 
         switch(moveDirection)
         {
-            case Direction.West:
+            case Direction.W:
                 Character.GridPosition.x -= 1;
                 MovePoint.position += new Vector3(-1, 0, 0);
                 break;
 
-            case Direction.East:
+            case Direction.E:
                 Character.GridPosition.x += 1;
                 MovePoint.position += new Vector3(1, 0, 0);
                 break;
 
-            case Direction.North:
+            case Direction.N:
                 Character.GridPosition.y += 1;
                 MovePoint.position += new Vector3(0, 1, 0);
                 break;
 
-            case Direction.South:
+            case Direction.S:
                 Character.GridPosition.y -= 1;
                 MovePoint.position += new Vector3(0, -1, 0);
                 break;
@@ -83,32 +83,32 @@ public class CharacterController : MonoBehaviour
     {
         switch(dir)
         {
-            case Direction.West:
+            case Direction.W:
                 Head.transform.localPosition = new Vector3(-0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 11;
-                Body.sortingOrder = 10;
+                Head.sortingOrder = 12;
+                Body.sortingOrder = 11;
                 break;
 
-            case Direction.East:
+            case Direction.E:
                 Head.transform.localPosition = new Vector3(0.1f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(0.5f, 1f, 1f);
-                Head.sortingOrder = 11;
-                Body.sortingOrder = 10;
+                Head.sortingOrder = 12;
+                Body.sortingOrder = 11;
                 break;
 
-            case Direction.North:
+            case Direction.N:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 11;
-                Body.sortingOrder = 12;
+                Head.sortingOrder = 12;
+                Body.sortingOrder = 13;
                 break;
 
-            case Direction.South:
+            case Direction.S:
                 Head.transform.localPosition = new Vector3(0f, 0.5f, 0f);
                 Body.transform.localScale = new Vector3(1f, 1f, 1f);
-                Head.sortingOrder = 11;
-                Body.sortingOrder = 10;
+                Head.sortingOrder = 12;
+                Body.sortingOrder = 11;
                 break;
 
         }

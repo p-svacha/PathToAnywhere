@@ -5,8 +5,12 @@ using UnityEngine;
 public enum Direction
 {
     None,
-    North,
-    East,
-    South,
-    West
+    N,
+    E,
+    S,
+    W,
+    NE,
+    NW,
+    SE,
+    SW
 }

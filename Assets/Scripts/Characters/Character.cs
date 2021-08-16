@@ -27,10 +27,10 @@ public class Character : MonoBehaviour
 
     public TileInfo GetFacedTile()
     {
-        if (FaceDirection == Direction.North) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, 1));
-        if (FaceDirection == Direction.East) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(1, 0));
-        if (FaceDirection == Direction.South) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, -1));
-        if (FaceDirection == Direction.West) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(-1, 0));
+        if (FaceDirection == Direction.N) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, 1));
+        if (FaceDirection == Direction.E) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(1, 0));
+        if (FaceDirection == Direction.S) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, -1));
+        if (FaceDirection == Direction.W) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(-1, 0));
         throw new System.Exception();
     }
 }

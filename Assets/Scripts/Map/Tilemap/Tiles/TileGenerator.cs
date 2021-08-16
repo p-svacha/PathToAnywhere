@@ -183,7 +183,8 @@ public static class TileGenerator
     {
         Tile tile = new Tile();
         tile.name = texture.name + "_" + x + "_" + y;
-        tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), tileSize, 1, SpriteMeshType.Tight, Vector4.zero);
+
+        tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), TilemapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);
         return tile;
     }
 
@@ -210,4 +211,5 @@ public static class TileGenerator
         tile.sprite = Sprite.Create(tileTexture, new Rect(0, 0, tileSize, tileSize), new Vector2(0.5f, 0.5f), tileSize, 1, SpriteMeshType.Tight, Vector4.zero);
         return tile;
     }
+
 }

@@ -50,15 +50,15 @@ public class TileSetSlicedFull : TileSet
 
     private void PlaceSlicedTile(TilemapGenerator generator, Tilemap tilemap, int tileX, int tileY)
     {
-        bool hasNorthNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX, tileY + 1));
-        bool hasSouthNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX, tileY - 1));
-        bool hasEastNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX + 1, tileY));
-        bool hasWestNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX - 1, tileY));
+        bool hasNorthNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX, tileY + 1).Type);
+        bool hasSouthNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX, tileY - 1).Type);
+        bool hasEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY).Type);
+        bool hasWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY).Type);
 
-        bool hasNorthWestNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX - 1, tileY + 1));
-        bool hasNorthEastNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX + 1, tileY + 1));
-        bool hasSouthWestNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX - 1, tileY - 1));
-        bool hasSouthEastNeighbour = ConnectionTypes.Contains(generator.GetTileType(tileX + 1, tileY - 1));
+        bool hasNorthWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY + 1).Type);
+        bool hasNorthEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY + 1).Type);
+        bool hasSouthWestNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX - 1, tileY - 1).Type);
+        bool hasSouthEastNeighbour = ConnectionTypes.Contains(generator.GetTileInfo(tileX + 1, tileY - 1).Type);
 
         TileBase tileToPlace = GetTileAt(hasNorthNeighbour, hasSouthNeighbour, hasEastNeighbour, hasWestNeighbour, hasNorthEastNeighbour, hasNorthWestNeighbour, hasSouthEastNeighbour, hasSouthWestNeighbour);
 
@@ -261,8 +261,8 @@ public class TileSetSlicedFull : TileSet
         AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX - 1, tileY + 1).Type);
         AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX + 1, tileY - 1).Type);
         AddNeighbourType(neighbourTypes, generator.GetTileInfo(tileX + 1, tileY + 1).Type);
-        if (neighbourTypes.Where(x => generator.SurfaceBlendTypes.Contains(x.Key)).Count() == 0) return SurfaceType.Grass;
-        else return neighbourTypes.Where(x => generator.SurfaceBlendTypes.Contains(x.Key)).OrderByDescending(x => x.Value).First().Key;
+        if (neighbourTypes.Where(x => generator.GetBlendTypes().Contains(x.Key)).Count() == 0) return SurfaceType.Grass;
+        else return neighbourTypes.Where(x => generator.GetBlendTypes().Contains(x.Key)).OrderByDescending(x => x.Value).First().Key;
     }
     private void AddNeighbourType(Dictionary<SurfaceType, int> neighbourTypes, SurfaceType type)
     {

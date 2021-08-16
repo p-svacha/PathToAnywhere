@@ -10,7 +10,11 @@ public class TilemapGenerator : MonoBehaviour
 
     [Header("Tilemaps")]
     [SerializeField]
-    private Tilemap TilemapBase;
+    private Tilemap TilemapBaseBlend;
+    [SerializeField]
+    private Blendmap SurfaceBlendMap;
+    [SerializeField]
+    private Tilemap TilemapBaseNoBlend;
     [SerializeField]
     private Tilemap TilemapOverlay;
     [SerializeField]
@@ -35,6 +39,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public Texture2D DesertSet1;
     public Texture2D GrassSet1;
+    public Texture2D DirtSet1;
     public Texture2D WoodFloorSet1;
 
     public Texture2D MountainSet1;
@@ -50,7 +55,8 @@ public class TilemapGenerator : MonoBehaviour
     // Regions
     private RegionPartitioner Voronoi;
 
-    public List<SurfaceType> SurfaceBlendTypes = new List<SurfaceType>() { SurfaceType.Desert, SurfaceType.Grass };
+    // Blend
+    private List<SurfaceType> SurfaceBlendTypes = new List<SurfaceType>() { SurfaceType.Desert, SurfaceType.Grass, SurfaceType.Dirt };
 
     private void Update()
     {
@@ -77,6 +83,7 @@ public class TilemapGenerator : MonoBehaviour
         // Generate tiles from textures
         TileGenerator.GenerateSimpleTilset(this, GrassSet1, SurfaceType.Grass, ground, TilePixelSize);
         TileGenerator.GenerateSimpleTilset(this, DesertSet1, SurfaceType.Desert, ground, TilePixelSize);
+        TileGenerator.GenerateSimpleTilset(this, DirtSet1, SurfaceType.Dirt, ground, TilePixelSize);
         TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, SurfaceType.WoodFloor, ground, TilePixelSize);
 
         TileGenerator.GenerateSlicedTileset(this, MountainSet1, SurfaceType.Mountain, wall, TilePixelSize);
@@ -206,9 +213,19 @@ public class TilemapGenerator : MonoBehaviour
         int tileX = chunk.Coordinates.x * TilemapChunk.ChunkSize + x;
         int tileY = chunk.Coordinates.y * TilemapChunk.ChunkSize + y;
         Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
-        
+
         // Base tilemap
-        TileSets[chunk.Tiles[x, y].Type].PlaceTile(this, TilemapBase, tilePos);
+        SurfaceType tileType = chunk.Tiles[x, y].Type;
+        if(SurfaceBlendTypes.Contains(tileType)) // Blending surface
+        {
+            TileSets[tileType].PlaceTile(this, TilemapBaseBlend, tilePos);
+            SurfaceBlendMap.BlendTile(this, tileX, tileY, tileType, (TileSetSimple)TileSets[tileType]);
+        }
+        else // Non-blending surface
+        {
+            TileSets[tileType].PlaceTile(this, TilemapBaseNoBlend, tilePos);
+        }
+        
 
         // Region debug tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
@@ -224,7 +241,6 @@ public class TilemapGenerator : MonoBehaviour
         }
 
     }
-
 
     #region Setters
 
@@ -263,17 +279,7 @@ public class TilemapGenerator : MonoBehaviour
     #endregion
 
     #region Getters
-
-    public SurfaceType GetTileType(int gridX, int gridY)
-    {
-        Vector2Int chunkCoordinates = GetChunkCoordinates(gridX, gridY);
-        if (!Chunks.ContainsKey(chunkCoordinates)) return SurfaceType.Grass;
-        TilemapChunk chunk = Chunks[chunkCoordinates];
-
-        int inChunkX = gridX - (chunkCoordinates.x * TilemapChunk.ChunkSize);
-        int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
-        return chunk.Tiles[inChunkX, inChunkY].Type;
-    }
+    public List<SurfaceType> GetBlendTypes() { return SurfaceBlendTypes; }
 
     public Vector2Int GetChunkCoordinates(int gridX, int gridY)
     {
@@ -286,7 +292,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public Vector2Int GetGridPosition(Vector3 worldPosition)
     {
-        Vector3Int gridPos = TilemapBase.WorldToCell(worldPosition);
+        Vector3Int gridPos = TilemapBaseBlend.WorldToCell(worldPosition);
         return new Vector2Int(gridPos.x, gridPos.y);
     }
 
@@ -307,6 +313,7 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkY = gridY - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         return chunk.Tiles[inChunkX, inChunkY]; // we need tileinfo here, not tilesetdata
     }
+
     public TileBase GetOverlayTile(Vector2Int gridPosition)
     {
         return TilemapOverlay.GetTile(new Vector3Int(gridPosition.x, gridPosition.y, 0));
