@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public abstract class Region
 {
-    protected TilemapGenerator Generator;
+    protected GameModel Model;
+    protected TilemapGenerator MapGenerator;
+    protected CharacterGenerator CharacterGenerator;
     public Vector2Int Id;
     public RegionType Type;
     public Color Color;
@@ -13,9 +15,11 @@ public abstract class Region
     public List<TilemapChunk> Chunks;
     public List<Vector2Int> TilePositions;
 
-    public Region(TilemapGenerator generator, Vector2Int id)
+    public Region(GameModel model, Vector2Int id)
     {
-        Generator = generator;
+        Model = model;
+        MapGenerator = model.TilemapGenerator;
+        CharacterGenerator = model.CharacterGenerator;
         Id = id;
         Color = ColorManager.GetRandomGreenishColor();
         Chunks = new List<TilemapChunk>();

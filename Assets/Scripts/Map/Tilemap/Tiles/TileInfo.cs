@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -12,22 +13,31 @@ public class TileInfo
     public BaseSurfaceType BaseSurfaceType;
     public BaseFeatureType BaseFeatureType;
 
+    public Character Character;
     public Region Region;
     public Building Building;
 
-    public bool Passable;
-    public float SpeedModifier;
+    public bool Blocked;
 
     public TileInfo(Vector2Int position)
     {
         Position = position;
-        Passable = true;
-        SpeedModifier = 1f;
     }
 
-    public void SetInfoFromTileSetData(TileSetData data)
+    public bool IsPassable(TilemapGenerator generator)
     {
-        if (!data.Passable) Passable = false;
-        if (data.SpeedModifier < SpeedModifier) SpeedModifier = data.SpeedModifier;
+        if (Blocked) return false;
+        if (BaseSurfaceType != BaseSurfaceType.None && !generator.BaseSurfaceTilesets[BaseSurfaceType].Data.Passable) return false;
+        if (BaseFeatureType != BaseFeatureType.None && !generator.BaseFeatureTilesets[BaseFeatureType].Data.Passable) return false;
+        if (Character != null) return false;
+        return true;
+    }
+
+    public float GetSpeedModifier(TilemapGenerator generator)
+    {
+        List<float> modifiers = new List<float>();
+        if (BaseSurfaceType != BaseSurfaceType.None) modifiers.Add(generator.BaseSurfaceTilesets[BaseSurfaceType].Data.SpeedModifier);
+        if (BaseFeatureType != BaseFeatureType.None) modifiers.Add(generator.BaseFeatureTilesets[BaseFeatureType].Data.SpeedModifier);
+        return modifiers.Min();
     }
 }

@@ -13,8 +13,9 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        Character.CurrentTile = Character.Model.TilemapGenerator.GetTileInfo(transform.position);
-        transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.SpeedModifier);
+        TileInfo currentTile = Character.Model.TilemapGenerator.GetTileInfo(transform.position);
+        if (Character.CurrentTile != currentTile) Character.SetCurrentTile(currentTile);
+        transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.GetSpeedModifier(Character.Model.TilemapGenerator));
 
 
         if (Vector3.Distance(transform.position, MovePoint.position) <= 0.05f) // Character is near the destination and next movement command can be given
@@ -23,13 +24,13 @@ public class CharacterController : MonoBehaviour
 
             GetCharacterMovement();
 
-            if (MoveDirection == Direction.W && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).Passable)
+            if (MoveDirection == Direction.W && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x - 1, Character.GridPosition.y).IsPassable(Character.Model.TilemapGenerator))
                 Move(Direction.W);
-            else if (MoveDirection == Direction.E && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).Passable)
+            else if (MoveDirection == Direction.E && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x + 1, Character.GridPosition.y).IsPassable(Character.Model.TilemapGenerator))
                 Move(Direction.E);
-            else if (MoveDirection == Direction.N && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).Passable)
+            else if (MoveDirection == Direction.N && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y + 1).IsPassable(Character.Model.TilemapGenerator))
                 Move(Direction.N);
-            else if (MoveDirection == Direction.S && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).Passable)
+            else if (MoveDirection == Direction.S && Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition.x, Character.GridPosition.y - 1).IsPassable(Character.Model.TilemapGenerator))
                 Move(Direction.S);
         }
 

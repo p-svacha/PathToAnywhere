@@ -7,13 +7,18 @@ public class Character : MonoBehaviour
 {
     public GameModel Model;
 
+    // ATtributes
+    public string Name;
+    public float MovementSpeed;
+    public Building Home;
+
+    // Controls
+    public CharacterController Controller;
     public TileInfo CurrentTile; // The data of the exact tile the character is on at this moment
     public Vector2Int GridPosition; // The position of the character after he is done moving
     public Direction FaceDirection;
 
-    public float MovementSpeed;
-    public CharacterController Controller;
-
+    // Body Parts
     public BodyPart Body;
     public BodyPart Head;
 
@@ -29,6 +34,7 @@ public class Character : MonoBehaviour
         Head = head;
 
         transform.position = model.TilemapGenerator.GetWorldPosition(position);
+        SetCurrentTile(Model.TilemapGenerator.GetTileInfo(position));
 
         MovementSpeed = 4f;
     }
@@ -40,5 +46,28 @@ public class Character : MonoBehaviour
         if (FaceDirection == Direction.S) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, -1));
         if (FaceDirection == Direction.W) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(-1, 0));
         throw new System.Exception();
+    }
+
+    public virtual void SetCurrentTile(TileInfo tile)
+    {
+        if (CurrentTile != null) CurrentTile.Character = null;
+        CurrentTile = tile;
+        CurrentTile.Character = this;
+    }
+
+    public void FacePosition(Vector2Int position)
+    {
+        int xDistance = position.x - GridPosition.x;
+        int yDistance = position.y - GridPosition.y;
+        if(Mathf.Abs(xDistance) > Mathf.Abs(yDistance))
+        {
+            if (xDistance > 0) FaceDirection = Direction.E;
+            else FaceDirection = Direction.W;
+        }
+        else
+        {
+            if (yDistance > 0) FaceDirection = Direction.N;
+            else FaceDirection = Direction.S;
+        }
     }
 }

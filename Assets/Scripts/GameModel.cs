@@ -30,7 +30,7 @@ public class GameModel : MonoBehaviour
     private void SpawnPlayer(int x, int y)
     {
         int curX = x;
-        while (!TilemapGenerator.GetTileInfo(curX, y).Passable) curX++;
+        while (!TilemapGenerator.GetTileInfo(curX, y).IsPassable(TilemapGenerator)) curX++;
         Player = CharacterGenerator.GeneratePlayer(new Vector2Int(curX, y));
     }
 
@@ -38,14 +38,17 @@ public class GameModel : MonoBehaviour
     {
         TilemapGenerator.LoadChunksAroundPlayer(Player.GridPosition, MapRenderRange);
     }
-    
+
+    #region Interaction
+
     public void Interact()
     {
         InteractionHandler.Interact();
     }
-
     public void EndInteraction()
     {
-        InteractionHandler.HideInteractionBox();
+        InteractionHandler.EndInteraction();
     }
+
+    #endregion
 }

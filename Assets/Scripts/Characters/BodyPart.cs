@@ -4,59 +4,80 @@ using UnityEngine;
 
 public class BodyPart : MonoBehaviour
 {
-    public SpriteRenderer FrontSprite; // south facing
-    public SpriteRenderer SideSprite; // east facing
-    public SpriteRenderer BackSprite; // north facing
+    public Color Color;
 
-    public void Init(SpriteRenderer frontSprite, SpriteRenderer sideSprite, SpriteRenderer backSprite)
+    public Sprite FrontSprite;
+    public Sprite SideSprite;
+    public Sprite BackSprite;
+
+    public SpriteRenderer FrontSpriteRenderer; // south facing
+    public SpriteRenderer SideSpriteRenderer; // east facing
+    public SpriteRenderer BackSpriteRenderer; // north facing
+
+    public void Init(Color color, Sprite frontSprite, Sprite sideSprite, Sprite backSprite)
     {
+        Color = color;
         FrontSprite = frontSprite;
         SideSprite = sideSprite;
         BackSprite = backSprite;
+        FrontSpriteRenderer = CreateRenderer(FrontSprite);
+        SideSpriteRenderer = CreateRenderer(SideSprite);
+        BackSpriteRenderer = CreateRenderer(BackSprite);
         ShowDirection(Direction.S);
+    }
+
+    private SpriteRenderer CreateRenderer(Sprite sprite)
+    {
+        GameObject rendererObject = new GameObject("BodyPartRenderer");
+        rendererObject.transform.SetParent(transform);
+        SpriteRenderer renderer = rendererObject.AddComponent<SpriteRenderer>();
+        renderer.sprite = sprite;
+        renderer.color = Color;
+        renderer.sortingLayerName = CharacterGenerator.PlayerLayerName;
+        return renderer;
     }
 
     public void ShowDirection(Direction dir)
     {
         if(dir == Direction.N)
         {
-            FrontSprite.gameObject.SetActive(false);
-            SideSprite.gameObject.SetActive(false);
-            BackSprite.gameObject.SetActive(true);
+            FrontSpriteRenderer.gameObject.SetActive(false);
+            SideSpriteRenderer.gameObject.SetActive(false);
+            BackSpriteRenderer.gameObject.SetActive(true);
         }
         else if (dir == Direction.E)
         {
-            FrontSprite.gameObject.SetActive(false);
-            SideSprite.gameObject.SetActive(true);
-            SideSprite.transform.localScale = new Vector3(1f, 1f, 1f);
-            BackSprite.gameObject.SetActive(false);
+            FrontSpriteRenderer.gameObject.SetActive(false);
+            SideSpriteRenderer.gameObject.SetActive(true);
+            SideSpriteRenderer.transform.localScale = new Vector3(1f, 1f, 1f);
+            BackSpriteRenderer.gameObject.SetActive(false);
         }
         else if (dir == Direction.W)
         {
-            FrontSprite.gameObject.SetActive(false);
-            SideSprite.gameObject.SetActive(true);
-            SideSprite.transform.localScale = new Vector3(-1f, 1f, 1f);
-            BackSprite.gameObject.SetActive(false);
+            FrontSpriteRenderer.gameObject.SetActive(false);
+            SideSpriteRenderer.gameObject.SetActive(true);
+            SideSpriteRenderer.transform.localScale = new Vector3(-1f, 1f, 1f);
+            BackSpriteRenderer.gameObject.SetActive(false);
         }
         else if (dir == Direction.S)
         {
-            FrontSprite.gameObject.SetActive(true);
-            SideSprite.gameObject.SetActive(false);
-            BackSprite.gameObject.SetActive(false);
+            FrontSpriteRenderer.gameObject.SetActive(true);
+            SideSpriteRenderer.gameObject.SetActive(false);
+            BackSpriteRenderer.gameObject.SetActive(false);
         }
     }
 
     public void SetSortingOrder(int order)
     {
-        FrontSprite.sortingOrder = order;
-        SideSprite.sortingOrder = order;
-        BackSprite.sortingOrder = order;
+        FrontSpriteRenderer.sortingOrder = order;
+        SideSpriteRenderer.sortingOrder = order;
+        BackSpriteRenderer.sortingOrder = order;
     }
 
     public void SetLocalPoisition(Vector3 pos)
     {
-        FrontSprite.transform.localPosition = pos;
-        SideSprite.transform.localPosition = pos;
-        BackSprite.transform.localPosition = pos;
+        FrontSpriteRenderer.transform.localPosition = pos;
+        SideSpriteRenderer.transform.localPosition = pos;
+        BackSpriteRenderer.transform.localPosition = pos;
     }
 }

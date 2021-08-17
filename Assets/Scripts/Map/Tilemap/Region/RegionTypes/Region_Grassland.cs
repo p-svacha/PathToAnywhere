@@ -12,7 +12,7 @@ public class Region_Grassland : Region
     private List<Building> Buildings = new List<Building>();
     private List<Tree> Trees = new List<Tree>();
 
-    public Region_Grassland(TilemapGenerator generator, Vector2Int id) : base(generator, id)
+    public Region_Grassland(GameModel model, Vector2Int id) : base(model, id)
     {
         Type = RegionType.Grassland;
     }
@@ -22,9 +22,9 @@ public class Region_Grassland : Region
         // Base landscape (grass & grassrock tiles, tree structures)
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass);
+            MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass);
             float rng = Random.value;
-            if (rng <= ROCK_CHANCE) Generator.SetBaseFeatureType(pos, BaseFeatureType.Rock);
+            if (rng <= ROCK_CHANCE) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Rock);
             else if (rng <= ROCK_CHANCE + TREE_CHANCE)
             {
                 Tree tree = TreeGenerator.Instance.GenerateTree(pos);
@@ -46,7 +46,7 @@ public class Region_Grassland : Region
                 canSpawnBuilding = true;
                 Vector2Int buildingPosition = TilePositions[Random.Range(0, TilePositions.Count)];
 
-                building = BuildingGenerator.Instance.GenerateBuilding(Generator, buildingPosition, BaseFeatureType.Wall, BaseFeatureType.Floor, RoofType.DefaultRoof);
+                building = BuildingGenerator.Instance.GenerateBuilding(MapGenerator, buildingPosition, BaseFeatureType.Wall, BaseFeatureType.Floor, RoofType.DefaultRoof);
 
                 // Check if building is fully within region
                 if(!building.IsFullyWithinRegion(this))
@@ -75,10 +75,10 @@ public class Region_Grassland : Region
             // Remove all trees that are within building
             List<Tree> treesToRemove = Trees.Where(x => b.BaseTilePositions.Contains(x.Origin)).ToList();
             foreach (Tree t in treesToRemove) Trees.Remove(t);
-            b.PlaceStructure(Generator);
+            b.PlaceStructure(Model);
         }
 
         // Place trees
-        foreach (Tree t in Trees) t.PlaceStructure(Generator);
+        foreach (Tree t in Trees) t.PlaceStructure(Model);
     }
 }

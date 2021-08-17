@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Region_Lake : Region
 {
-    public Region_Lake(TilemapGenerator generator, Vector2Int id) : base(generator, id)
+    public Region_Lake(GameModel model, Vector2Int id) : base(model, id)
     {
         Type = RegionType.Lake;
     }
@@ -13,8 +13,8 @@ public class Region_Lake : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
-            Generator.SetBaseFeatureType(pos, BaseFeatureType.Water);
+            MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
+            MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Water);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Region_Desert : Region
 {
-    public Region_Desert(TilemapGenerator generator, Vector2Int id) : base(generator, id)
+    public Region_Desert(GameModel model, Vector2Int id) : base(model, id)
     {
         Type = RegionType.Desert;
     }
@@ -14,9 +14,9 @@ public class Region_Desert : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
-            if (Random.value <= 0.002f) Generator.SetBaseFeatureType(pos, BaseFeatureType.Wall);
-            if (Random.value <= 0.004f) Generator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
+            MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
+            if (Random.value <= 0.002f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Wall);
+            if (Random.value <= 0.004f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
         }
     }
 }

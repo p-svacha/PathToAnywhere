@@ -9,7 +9,7 @@ public class PlayerController : CharacterController
     private float DirectionChangeTolerance = 0.12f; // When a direcion is pressed for less than this amount, then the player only changes facing direction instead of moving
     private float TimeSinceLastDirectionChange; // Time since last direction change
 
-    private PlayerInputMode InputMode;
+    public PlayerInputMode InputMode;
 
     public override void Update()
     {
@@ -20,7 +20,6 @@ public class PlayerController : CharacterController
                 if(!IsMoving && Input.GetKeyDown(KeyCode.Space))
                 {
                     Player.Model.Interact();
-                    InputMode = PlayerInputMode.Interaction;
                 }
                 break;
 
@@ -28,7 +27,6 @@ public class PlayerController : CharacterController
                 if(Input.GetKeyDown(KeyCode.Space))
                 {
                     Player.Model.EndInteraction();
-                    InputMode = PlayerInputMode.Movement;
                 }
                 break;
         }

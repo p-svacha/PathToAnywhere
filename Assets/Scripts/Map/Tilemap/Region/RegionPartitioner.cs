@@ -15,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class RegionPartitioner
 {
+    private GameModel Model;
     private TilemapGenerator Generator;
     private MapHash RegionVoronoiPointHash;
     private MapHash ParcelVoronoiPointHashSmall;
@@ -31,9 +32,10 @@ public class RegionPartitioner
         {RegionType.Lake, 100 },
     };
 
-    public RegionPartitioner(TilemapGenerator generator)
+    public RegionPartitioner(GameModel model)
     {
-        Generator = generator;
+        Model = model;
+        Generator = model.TilemapGenerator;
         RegionVoronoiPointHash = new MapHash(256, 10);
         ParcelVoronoiPointHashSmall = new MapHash(16, 40); // 1 in 16 tiles is a voronoi point
     }
@@ -111,15 +113,15 @@ public class RegionPartitioner
         switch(type)
         {
             case RegionType.Grassland:
-                return new Region_Grassland(Generator, id);
+                return new Region_Grassland(Model, id);
             case RegionType.Desert:
-                return new Region_Desert(Generator, id);
+                return new Region_Desert(Model, id);
             case RegionType.Mountain:
-                return new Regions_Mountains(Generator, id);
+                return new Regions_Mountains(Model, id);
             case RegionType.Ruins:
-                return new Region_Ruins(Generator, id);
+                return new Region_Ruins(Model, id);
             case RegionType.Lake:
-                return new Region_Lake(Generator, id);
+                return new Region_Lake(Model, id);
             default:
                 throw new System.Exception("Region type not handled");
         }

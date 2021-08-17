@@ -46,10 +46,16 @@ public class Building : Structure
         }
     }
 
-    public override void PlaceStructure(TilemapGenerator generator)
+    public override void PlaceStructure(GameModel model)
     {
-        base.PlaceStructure(generator);
-        SetDrawRoof(generator, true);
+        base.PlaceStructure(model);
+        SetDrawRoof(model.TilemapGenerator, true);
+
+        // Place character
+        List<Vector2Int> insideTiles = BaseFeatureTypes.Where(x => x.Value == FloorType).Select(x => x.Key).ToList();
+        Vector2Int characterPosition = insideTiles[Random.Range(0, insideTiles.Count)];
+        Character character = model.CharacterGenerator.GenerateCharacter(characterPosition);
+        character.Home = this;
     }
 
 }

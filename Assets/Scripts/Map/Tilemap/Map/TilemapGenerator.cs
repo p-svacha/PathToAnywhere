@@ -68,7 +68,7 @@ public class TilemapGenerator : MonoBehaviour
     public void Init(GameModel model)
     {
         Model = model;
-        Voronoi = new RegionPartitioner(this);
+        Voronoi = new RegionPartitioner(model);
         TilemapRegions.gameObject.SetActive(false);
         TilemapBuildings.gameObject.SetActive(false);
 
@@ -253,7 +253,6 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         chunk.Tiles[inChunkX, inChunkY].BaseSurfaceType = type;
-        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(BaseSurfaceTilesets[type].Data);
     }
 
     /// <summary>
@@ -267,7 +266,6 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         chunk.Tiles[inChunkX, inChunkY].BaseFeatureType = type;
-        chunk.Tiles[inChunkX, inChunkY].SetInfoFromTileSetData(BaseFeatureTilesets[type].Data);
     }
 
 

@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Regions_Mountains : Region
 {
-    public Regions_Mountains(TilemapGenerator generator, Vector2Int id) : base(generator, id)
+    public Regions_Mountains(GameModel model, Vector2Int id) : base(model, id)
     {
         Type = RegionType.Mountain;
     }
@@ -14,7 +14,7 @@ public class Regions_Mountains : Region
     {
         foreach (Vector2Int pos in TilePositions)
         {
-            Generator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
+            MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
         }
     }
 }

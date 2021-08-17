@@ -28,14 +28,14 @@ public abstract class Structure
         ImpassableTiles = new List<Vector2Int>();
     }
 
-    public virtual void PlaceStructure(TilemapGenerator generator)
+    public virtual void PlaceStructure(GameModel model)
     {
-        foreach (KeyValuePair<Vector2Int, BaseSurfaceType> kvp in BaseSurfaceTypes) generator.SetBaseSurfaceType(kvp.Key, kvp.Value);
-        foreach (KeyValuePair<Vector2Int, BaseFeatureType> kvp in BaseFeatureTypes) generator.SetBaseFeatureType(kvp.Key, kvp.Value);
-        foreach (KeyValuePair<Vector2Int, TileBase> kvp in OverlayTiles) generator.SetOverlayTile(kvp.Key, kvp.Value);
-        foreach (KeyValuePair<Vector2Int, TileBase> kvp in FrontOfPlayerTiles) generator.SetFrontOfPlayerTile(kvp.Key, kvp.Value);
-        foreach (KeyValuePair<Vector2Int, Building> kvp in BuildingTiles) generator.GetTileInfo(kvp.Key).Building = kvp.Value;
-        foreach (Vector2Int impassableTilePos in ImpassableTiles) generator.GetTileInfo(impassableTilePos).Passable = false;
+        foreach (KeyValuePair<Vector2Int, BaseSurfaceType> kvp in BaseSurfaceTypes) model.TilemapGenerator.SetBaseSurfaceType(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, BaseFeatureType> kvp in BaseFeatureTypes) model.TilemapGenerator.SetBaseFeatureType(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, TileBase> kvp in OverlayTiles) model.TilemapGenerator.SetOverlayTile(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, TileBase> kvp in FrontOfPlayerTiles) model.TilemapGenerator.SetFrontOfPlayerTile(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, Building> kvp in BuildingTiles) model.TilemapGenerator.GetTileInfo(kvp.Key).Building = kvp.Value;
+        foreach (Vector2Int impassableTilePos in ImpassableTiles) model.TilemapGenerator.GetTileInfo(impassableTilePos).Blocked = true;
     }
 
     public List<Vector2Int> BaseTilePositions

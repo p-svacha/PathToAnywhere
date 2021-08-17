@@ -9,7 +9,7 @@ public class CharacterGenerator : MonoBehaviour
     public Texture2D CharacterBodies;
     public Texture2D CharacterHeads;
 
-    private const string PlayerLayerName = "Player";
+    public const string PlayerLayerName = "Player";
 
     private const int BodyPixelSize = 128;
     private List<List<Sprite>> CharacterBodySprites;
@@ -61,38 +61,16 @@ public class CharacterGenerator : MonoBehaviour
         GameObject characterBodyObject = new GameObject("Body");
         characterBodyObject.transform.SetParent(bodyParts.transform);
         BodyPart characterBody = characterBodyObject.AddComponent<BodyPart>();
-        List<Sprite> bodySpritePrefabs = CharacterBodySprites[Random.Range(0, CharacterBodySprites.Count)];
-        List<SpriteRenderer> bodySprites = new List<SpriteRenderer>();
-        foreach (Sprite bodySpritePrefab in bodySpritePrefabs)
-        {
-            GameObject bodyRendererObject = new GameObject("BodyRenderer");
-            bodyRendererObject.transform.SetParent(characterBodyObject.transform);
-            SpriteRenderer bodyRenderer = bodyRendererObject.AddComponent<SpriteRenderer>();
-            bodyRenderer.sprite = bodySpritePrefab;
-            bodyRenderer.color = bodyColor;
-            bodyRenderer.sortingLayerName = PlayerLayerName;
-            bodySprites.Add(bodyRenderer);
-        }
-        characterBody.Init(bodySprites[0], bodySprites[1], bodySprites[2]);
+        List<Sprite> bodySprites = CharacterBodySprites[Random.Range(0, CharacterBodySprites.Count)];
+        characterBody.Init(bodyColor, bodySprites[0], bodySprites[1], bodySprites[2]);
 
         // Head
         Color headColor = ColorManager.GetRandomSkinColor();
         GameObject characterHeadObject = new GameObject("Head");
         characterHeadObject.transform.SetParent(bodyParts.transform);
         BodyPart characterHead = characterHeadObject.AddComponent<BodyPart>();
-        Sprite headSpritePrefab = CharacterHeadSprites[Random.Range(0, CharacterHeadSprites.Count)];
-        List<SpriteRenderer> headSprites = new List<SpriteRenderer>();
-        for(int i = 0; i < 3; i++)
-        {
-            GameObject headRendererObject = new GameObject("HeadRenderer");
-            headRendererObject.transform.SetParent(characterHeadObject.transform);
-            SpriteRenderer headRenderer = headRendererObject.AddComponent<SpriteRenderer>();
-            headRenderer.sprite = headSpritePrefab;
-            headRenderer.color = headColor;
-            headRenderer.sortingLayerName = PlayerLayerName;
-            headSprites.Add(headRenderer);
-        }
-        characterHead.Init(headSprites[0], headSprites[1], headSprites[2]);
+        Sprite headSprite = CharacterHeadSprites[Random.Range(0, CharacterHeadSprites.Count)];
+        characterHead.Init(headColor, headSprite, headSprite, headSprite);
 
         // Character
         Character character = null;
@@ -101,11 +79,13 @@ public class CharacterGenerator : MonoBehaviour
             Player player = characterObject.AddComponent<Player>();
             player.Init(Model, gridPosition, (PlayerController) controller, movePoint.transform, characterBody, characterHead);
             character = player;
+            player.Name = "Player";
         }
         else
         {
             character = characterObject.AddComponent<Character>();
             character.Init(Model, gridPosition, controller, movePoint.transform, characterBody, characterHead);
+            character.Name = "Fluberto";
         }
 
         return character;
