@@ -6,6 +6,7 @@ public class PlayerController : CharacterController
 {
     public Player Player;
 
+    private bool WasMoving; // Flag used for fluid movement, so character doesn't always have to re-tap after changing direction
     private float DirectionChangeTolerance = 0.12f; // When a direcion is pressed for less than this amount, then the player only changes facing direction instead of moving
     private float TimeSinceLastDirectionChange; // Time since last direction change
 
@@ -34,28 +35,42 @@ public class PlayerController : CharacterController
 
     protected override void GetCharacterMovement()
     {
+        base.GetCharacterMovement();
+
         if (InputMode == PlayerInputMode.Movement)
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                TileInfo info = Player.Model.TilemapGenerator.GetTileInfo(mousePosition);
+                SetTargetPath(Pathfinder.GetPath(Player.Model.TilemapGenerator, Player.GridPosition, info.Position));
+            }
+
             if (Input.GetAxisRaw("Horizontal") == 1f) OnInputAxis(Direction.E);
             else if (Input.GetAxisRaw("Horizontal") == -1f) OnInputAxis(Direction.W);
             else if (Input.GetAxisRaw("Vertical") == 1f) OnInputAxis(Direction.N);
             else if (Input.GetAxisRaw("Vertical") == -1f) OnInputAxis(Direction.S);
-            else MoveDirection = Direction.None;
+            else WasMoving = false;
         }
     }
 
     private void OnInputAxis(Direction dir)
     {
+        ClearTargetPath();
         if (!IsMoving)
         {
-            if (MoveDirection == Direction.None && dir != Player.FaceDirection)
+            if (!WasMoving && dir != Player.FaceDirection)
             {
                 TimeSinceLastDirectionChange = 0f;
             }
             else
             {
                 if (TimeSinceLastDirectionChange < DirectionChangeTolerance) TimeSinceLastDirectionChange += Time.deltaTime;
-                else MoveDirection = dir;
+                else
+                {
+                    WasMoving = true;
+                    MoveDirection = dir;
+                }
             }
             Player.FaceDirection = dir;
         }
@@ -63,6 +78,7 @@ public class PlayerController : CharacterController
 
     protected override void OnCharacterMove(TileInfo from, TileInfo to)
     {
+        base.OnCharacterMove(from, to);
         Player.Model.OnPlayerMove();
         if(from.Building != to.Building)
         {

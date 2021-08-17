@@ -26,9 +26,9 @@ public class TileInfo
 
     public bool IsPassable(TilemapGenerator generator)
     {
+        if (BaseFeatureType != BaseFeatureType.None && !generator.BaseFeatureTilesets[BaseFeatureType].Data.Passable) return false;
         if (Blocked) return false;
         if (BaseSurfaceType != BaseSurfaceType.None && !generator.BaseSurfaceTilesets[BaseSurfaceType].Data.Passable) return false;
-        if (BaseFeatureType != BaseFeatureType.None && !generator.BaseFeatureTilesets[BaseFeatureType].Data.Passable) return false;
         if (Character != null) return false;
         return true;
     }
@@ -38,6 +38,8 @@ public class TileInfo
         List<float> modifiers = new List<float>();
         if (BaseSurfaceType != BaseSurfaceType.None) modifiers.Add(generator.BaseSurfaceTilesets[BaseSurfaceType].Data.SpeedModifier);
         if (BaseFeatureType != BaseFeatureType.None) modifiers.Add(generator.BaseFeatureTilesets[BaseFeatureType].Data.SpeedModifier);
-        return modifiers.Min();
+
+        if (modifiers.Count == 0) return 1f;
+        else return modifiers.Min();
     }
 }

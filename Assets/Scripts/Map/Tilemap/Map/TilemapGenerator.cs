@@ -162,7 +162,7 @@ public class TilemapGenerator : MonoBehaviour
     private TilemapChunk GenerateChunk(Vector2Int chunkCoordinates)
     {
         TilemapChunk chunk = new TilemapChunk(chunkCoordinates);
-        Debug.Log("creating chunk at " + chunkCoordinates);
+        //Debug.Log("creating chunk at " + chunkCoordinates);
         Chunks.Add(chunkCoordinates, chunk);
         return chunk;
     }

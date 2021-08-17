@@ -7,14 +7,13 @@ public class Character : MonoBehaviour
 {
     public GameModel Model;
 
-    // ATtributes
+    // Attributes
     public string Name;
     public float MovementSpeed;
-    public Building Home;
 
     // Controls
     public CharacterController Controller;
-    public TileInfo CurrentTile; // The data of the exact tile the character is on at this moment
+    public TileInfo CurrentTile;// The data of the exact tile the character is on at this moment
     public Vector2Int GridPosition; // The position of the character after he is done moving
     public Direction FaceDirection;
 
@@ -34,7 +33,7 @@ public class Character : MonoBehaviour
         Head = head;
 
         transform.position = model.TilemapGenerator.GetWorldPosition(position);
-        SetCurrentTile(Model.TilemapGenerator.GetTileInfo(position));
+        CurrentTile = Model.TilemapGenerator.GetTileInfo(position);
 
         MovementSpeed = 4f;
     }
@@ -48,14 +47,7 @@ public class Character : MonoBehaviour
         throw new System.Exception();
     }
 
-    public virtual void SetCurrentTile(TileInfo tile)
-    {
-        if (CurrentTile != null) CurrentTile.Character = null;
-        CurrentTile = tile;
-        CurrentTile.Character = this;
-    }
-
-    public void FacePosition(Vector2Int position)
+    protected void FacePosition(Vector2Int position)
     {
         int xDistance = position.x - GridPosition.x;
         int yDistance = position.y - GridPosition.y;
@@ -70,4 +62,5 @@ public class Character : MonoBehaviour
             else FaceDirection = Direction.S;
         }
     }
+
 }

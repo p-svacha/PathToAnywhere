@@ -8,6 +8,7 @@ public class InteractionHandler : MonoBehaviour
     public Camera InteractionCamera;
     private GameModel Model;
     private Player Player;
+    private NPC InteractionTargetNPC;
 
     public UI_InteractionBox InteractionBox;
 
@@ -23,9 +24,10 @@ public class InteractionHandler : MonoBehaviour
         TileInfo targetTile = Player.GetFacedTile();
         Character targetCharacter = targetTile.Character;
 
-        if(targetCharacter != null)
+        if(targetCharacter != null && targetCharacter.GetType() == typeof(NPC))
         {
-            targetCharacter.FacePosition(Player.GridPosition);
+            InteractionTargetNPC = (NPC)targetCharacter;
+            InteractionTargetNPC.StartInteractionWith(Player);
             DisplayText(targetTile, targetCharacter.Name, "„Hey“");
         }
         else
@@ -66,7 +68,11 @@ public class InteractionHandler : MonoBehaviour
     public void EndInteraction()
     {
         Player.PlayerController.InputMode = PlayerInputMode.Movement;
-
+        if (InteractionTargetNPC != null)
+        {
+            InteractionTargetNPC.EndInteraction();
+            InteractionTargetNPC = null;
+        }
         InteractionBox.gameObject.SetActive(false);
     }
 }

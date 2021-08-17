@@ -21,6 +21,7 @@ public class BuildingGenerator : MonoBehaviour
             {
                 Vector2Int relativePos = new Vector2Int(x, y);
                 building.BaseFeatureTypes.Add(origin + relativePos, floorType);
+                building.InsideTiles.Add(origin + relativePos);
             }
         }
 

@@ -13,6 +13,7 @@ public class Building : Structure
     public Color Color;
 
     public Dictionary<Vector2Int, TileBase> RoofTiles; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
+    public List<Vector2Int> InsideTiles;
 
     public Building(Vector2Int origin, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType) : base(origin)
     {
@@ -21,6 +22,7 @@ public class Building : Structure
         RoofType = roofType;
         Color = ColorManager.GetRandomRedishColor();
         RoofTiles = new Dictionary<Vector2Int, TileBase>();
+        InsideTiles = new List<Vector2Int>();
     }
 
     public bool IntersectsWith(Building other)
@@ -52,10 +54,14 @@ public class Building : Structure
         SetDrawRoof(model.TilemapGenerator, true);
 
         // Place character
-        List<Vector2Int> insideTiles = BaseFeatureTypes.Where(x => x.Value == FloorType).Select(x => x.Key).ToList();
-        Vector2Int characterPosition = insideTiles[Random.Range(0, insideTiles.Count)];
-        Character character = model.CharacterGenerator.GenerateCharacter(characterPosition);
+        Vector2Int characterPosition = GetRandomInsidePosition();
+        NPC character = model.CharacterGenerator.GenerateNPC(characterPosition);
         character.Home = this;
+    }
+
+    public Vector2Int GetRandomInsidePosition()
+    {
+        return InsideTiles[Random.Range(0, InsideTiles.Count)]; ;
     }
 
 }

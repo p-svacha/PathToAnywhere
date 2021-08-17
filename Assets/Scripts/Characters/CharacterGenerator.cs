@@ -41,7 +41,7 @@ public class CharacterGenerator : MonoBehaviour
         }
     }
 
-    public Character GenerateCharacter(Vector2Int gridPosition, bool isPlayer = false)
+    private Character GenerateCharacter(Vector2Int gridPosition, bool isPlayer = false)
     {
         GameObject characterObject = new GameObject("Character");
 
@@ -54,7 +54,7 @@ public class CharacterGenerator : MonoBehaviour
         bodyParts.transform.SetParent(characterObject.transform);
         CharacterController controller;
         if(isPlayer) controller = bodyParts.AddComponent<PlayerController>();
-        else controller = bodyParts.AddComponent<CharacterController>();
+        else controller = bodyParts.AddComponent<NPCController>();
 
         // Body
         Color bodyColor = ColorManager.GetRandomColor();
@@ -78,14 +78,15 @@ public class CharacterGenerator : MonoBehaviour
         {
             Player player = characterObject.AddComponent<Player>();
             player.Init(Model, gridPosition, (PlayerController) controller, movePoint.transform, characterBody, characterHead);
-            character = player;
             player.Name = "Player";
+            character = player;
         }
         else
         {
-            character = characterObject.AddComponent<Character>();
-            character.Init(Model, gridPosition, controller, movePoint.transform, characterBody, characterHead);
-            character.Name = "Fluberto";
+            NPC npc = characterObject.AddComponent<NPC>();
+            npc.Init(Model, gridPosition, (NPCController) controller, movePoint.transform, characterBody, characterHead);
+            npc.Name = "Fluberto";
+            character = npc;
         }
 
         return character;
@@ -94,5 +95,9 @@ public class CharacterGenerator : MonoBehaviour
     public Player GeneratePlayer(Vector2Int gridPosition)
     {
         return (Player)GenerateCharacter(gridPosition, isPlayer: true);
+    }
+    public NPC GenerateNPC(Vector2Int gridPosition)
+    {
+        return (NPC)GenerateCharacter(gridPosition, isPlayer: false);
     }
 }

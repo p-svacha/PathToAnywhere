@@ -14,16 +14,13 @@ I am keeping track of my progress in a [Google Sheets document](https://docs.goo
 # Screenshots
 At this point there is very little to show since I'm just building very core systems. All visuals are just for testing purposes. But since someone asked for it, here we go..
 
-*Example of a generated landscape with a lake, a mountain, a building, some nature and smoothed tiles.*
-<br/><img src="Screenshots/exampleLandscape.png" alt="example landscape" height="200" /><br/>
+*Procedurally generated world*
+<br/><img src="Screenshots/exampleLandscape.png" alt="generated landscape" height="200" /><br/>
 
-*Generated characters*
+*Procedurally generated NPCs*
 <br/><img src="Screenshots/characterGeneration.png" alt="generated characters" height="200" /><br/>
 
-*Example of basic interaction*
-<br/><img src="Screenshots/basicInteraction.png" alt="basic interaction" height="200" /><br/>
-
-*Region partitioning with nested voronoi*
-<br/><img src="Screenshots/regions.png" alt="region partitioning" height="200"  /><br/>
+*NPC Interaction*
+<br/><img src="Screenshots/npcInteraction.png" alt="npc interaction" height="200" /><br/>
 
 

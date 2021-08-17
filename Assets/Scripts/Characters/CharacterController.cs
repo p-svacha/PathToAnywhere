@@ -10,11 +10,13 @@ public class CharacterController : MonoBehaviour
     public bool IsMoving;
     public Direction MoveDirection;
 
+    private List<Vector2Int> TargetPath = new List<Vector2Int>(); // The path the character will walk
+
     // Update is called once per frame
     public virtual void Update()
     {
         TileInfo currentTile = Character.Model.TilemapGenerator.GetTileInfo(transform.position);
-        if (Character.CurrentTile != currentTile) Character.SetCurrentTile(currentTile);
+        if (Character.CurrentTile != currentTile) Character.CurrentTile = currentTile;
         transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, Character.MovementSpeed * Time.deltaTime * Character.CurrentTile.GetSpeedModifier(Character.Model.TilemapGenerator));
 
 
@@ -37,7 +39,37 @@ public class CharacterController : MonoBehaviour
         ShowCharacterSide(Character.FaceDirection);
     }
 
-    protected virtual void GetCharacterMovement() { }
+    protected virtual void GetCharacterMovement()
+    {
+        MoveDirection = Direction.None;
+        FollowTargetPath();
+    }
+
+    protected void FollowTargetPath()
+    {
+        if (TargetPath.Count > 0)
+        {
+            if (TargetPath[0] == Character.GridPosition)
+            {
+                TargetPath.RemoveAt(0);
+                if(TargetPath.Count > 0)
+                {
+                    Direction dir = GetDirectionTo(TargetPath[0]);
+                    MoveDirection = dir;
+                    Character.FaceDirection = dir;
+                }
+            }
+        }
+    }
+
+    private Direction GetDirectionTo(Vector2Int pos)
+    {
+        if (pos == Character.GridPosition + new Vector2Int(1, 0)) return Direction.E;
+        if (pos == Character.GridPosition + new Vector2Int(-1, 0)) return Direction.W;
+        if (pos == Character.GridPosition + new Vector2Int(0, 1)) return Direction.N;
+        if (pos == Character.GridPosition + new Vector2Int(0, -1)) return Direction.S;
+        throw new System.Exception("Position is not adjacent to character position.");
+    }
 
     private void Move(Direction moveDirection)
     {
@@ -106,5 +138,19 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    protected virtual void OnCharacterMove(TileInfo from, TileInfo to) { }
+    protected virtual void OnCharacterMove(TileInfo from, TileInfo to)
+    {
+        from.Character = null;
+        to.Character = Character;
+    }
+
+    public void SetTargetPath(List<Vector2Int> path)
+    {
+        //if(path.Count > 0) Debug.Log("Setting target path from " + path[0].ToString() + " to " + path[path.Count - 1].ToString() + " over " + path.Count + " tiles.");
+        TargetPath = path;
+    }
+    public void ClearTargetPath()
+    {
+        TargetPath.Clear();
+    }
 }
