@@ -5,7 +5,8 @@ using UnityEngine;
 public enum BaseSurfaceType
 { 
     None,
-    Grass,
+    Grass1,
+    Grass2,
     Sand,
     Dirt
 }

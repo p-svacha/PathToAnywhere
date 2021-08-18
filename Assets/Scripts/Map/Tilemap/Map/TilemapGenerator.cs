@@ -36,6 +36,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public Texture2D SandSet1;
     public Texture2D GrassSet1;
+    public Texture2D GrassSet2;
     public Texture2D DirtSet1;
 
     public Texture2D WoodFloorSet1;
@@ -80,17 +81,18 @@ public class TilemapGenerator : MonoBehaviour
         TileSetData wall = new TileSetData(false, 0);
 
         // Generate tiles from textures
-        BaseSurfaceTilesets.Add(BaseSurfaceType.Grass, TileGenerator.GenerateSimpleTilset(this, GrassSet1, ground, TilePixelSize));
-        BaseSurfaceTilesets.Add(BaseSurfaceType.Sand, TileGenerator.GenerateSimpleTilset(this, SandSet1, ground, TilePixelSize));
-        BaseSurfaceTilesets.Add(BaseSurfaceType.Dirt, TileGenerator.GenerateSimpleTilset(this, DirtSet1, ground, TilePixelSize));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Grass1, TileGenerator.GenerateSimpleTilset(GrassSet1, ground, TilePixelSize, 2, 2));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Grass2, TileGenerator.GenerateAnimatedSimpleTileset(GrassSet2, ground, TilePixelSize, 4, 2, 1.5f));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Sand, TileGenerator.GenerateSimpleTilset(SandSet1, ground, TilePixelSize, 2, 2));
+        BaseSurfaceTilesets.Add(BaseSurfaceType.Dirt, TileGenerator.GenerateSimpleTilset(DirtSet1, ground, TilePixelSize, 2, 2));
 
-        BaseFeatureTilesets.Add(BaseFeatureType.Floor, TileGenerator.GenerateSimpleTilset(this, WoodFloorSet1, ground, TilePixelSize));
-        BaseFeatureTilesets.Add(BaseFeatureType.Rock, TileGenerator.GenerateSimpleTilset(this, RockSet1, wall, TilePixelSize));
-        BaseFeatureTilesets.Add(BaseFeatureType.Mountain, TileGenerator.GenerateSlicedTileset(this, MountainSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Mountain }));
-        BaseFeatureTilesets.Add(BaseFeatureType.Wall, TileGenerator.GenerateSlicedTileset(this, WallSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Wall }));
-        BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateSlicedTileset(this, WaterSet1, ground, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }));
+        BaseFeatureTilesets.Add(BaseFeatureType.Floor, TileGenerator.GenerateSimpleTilset(WoodFloorSet1, ground, TilePixelSize, 1, 1));
+        BaseFeatureTilesets.Add(BaseFeatureType.Rock, TileGenerator.GenerateSimpleTilset(RockSet1, wall, TilePixelSize, 1, 2));
+        BaseFeatureTilesets.Add(BaseFeatureType.Mountain, TileGenerator.GenerateSlicedTileset(MountainSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Mountain }));
+        BaseFeatureTilesets.Add(BaseFeatureType.Wall, TileGenerator.GenerateSlicedTileset(WallSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Wall }));
+        BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateAnimatedSlicedTileset(WaterSet1, ground, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }, 1f));
 
-        RoofTilesets.Add(RoofType.DefaultRoof, TileGenerator.GenerateSlicedTileset(this, RoofSet1, null, TilePixelSize, new List<BaseFeatureType>()));
+        RoofTilesets.Add(RoofType.DefaultRoof, TileGenerator.GenerateSlicedTileset(RoofSet1, null, TilePixelSize, new List<BaseFeatureType>()));
     }
 
     /// <summary>

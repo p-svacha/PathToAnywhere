@@ -22,7 +22,9 @@ public class Region_Grassland : Region
         // Base landscape (grass & grassrock tiles, tree structures)
         foreach (Vector2Int pos in TilePositions)
         {
-            MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass);
+            if(Mathf.PerlinNoise(5000f + pos.x * 0.1f, 90000f + pos.y * 0.1f) < 0.5f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass1);
+            else MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass2);
+
             float rng = Random.value;
             if (rng <= ROCK_CHANCE) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Rock);
             else if (rng <= ROCK_CHANCE + TREE_CHANCE)

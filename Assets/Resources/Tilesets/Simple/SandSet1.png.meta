@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 054c606527db84b44b2414c3e3d645da
+guid: b603ae509be14fd4d9d6f95ac6a4ccf3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3080834817872842344
-    second: grassSet1_0
+      213: 7463431649672893130
+    second: desertSet1_0
   - first:
-      213: -6306935952017968482
-    second: grassSet1_1
+      213: 175982756026645491
+    second: desertSet1_1
   - first:
-      213: -256551281271665112
-    second: grassSet1_2
+      213: -5853265189656583663
+    second: desertSet1_2
   - first:
-      213: 8599851076008361191
-    second: grassSet1_3
+      213: -2450551914711146327
+    second: desertSet1_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -53,7 +53,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -62,7 +62,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 0
   textureShape: 1
@@ -80,7 +80,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -92,7 +92,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -103,7 +103,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: grassSet1_0
+      name: desertSet1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -117,14 +117,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 86e47f2a1f251ca20800000000000000
-      internalID: 3080834817872842344
+      spriteID: ac2192cda8f639760800000000000000
+      internalID: 7463431649672893130
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grassSet1_1
+      name: desertSet1_1
       rect:
         serializedVersion: 2
         x: 64
@@ -138,14 +138,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e9234deca234978a0800000000000000
-      internalID: -6306935952017968482
+      spriteID: 3fbff8b5267317200800000000000000
+      internalID: 175982756026645491
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grassSet1_2
+      name: desertSet1_2
       rect:
         serializedVersion: 2
         x: 0
@@ -159,14 +159,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82e812d08fb807cf0800000000000000
-      internalID: -256551281271665112
+      spriteID: 1122c5a625605cea0800000000000000
+      internalID: -5853265189656583663
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grassSet1_3
+      name: desertSet1_3
       rect:
         serializedVersion: 2
         x: 64
@@ -180,8 +180,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ec3dba5dfec85770800000000000000
-      internalID: 8599851076008361191
+      spriteID: 9a02df36404edfdd0800000000000000
+      internalID: -2450551914711146327
       vertices: []
       indices: 
       edges: []

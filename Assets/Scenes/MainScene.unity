@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 32662364}
   - component: {fileID: 32662367}
-  - component: {fileID: 32662366}
   - component: {fileID: 32662365}
   m_Layer: 0
   m_Name: InteractionCamera
@@ -168,14 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69618de01da24654e9a16db0fa59edd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!81 &32662366
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 32662363}
-  m_Enabled: 1
 --- !u!20 &32662367
 Camera:
   m_ObjectHideFlags: 0
@@ -1427,6 +1418,7 @@ MonoBehaviour:
   TestTile: {fileID: 11400000, guid: 393d38f67c44b7b4bbe9110f729a3005, type: 2}
   SandSet1: {fileID: 2800000, guid: b603ae509be14fd4d9d6f95ac6a4ccf3, type: 3}
   GrassSet1: {fileID: 2800000, guid: 054c606527db84b44b2414c3e3d645da, type: 3}
+  GrassSet2: {fileID: 2800000, guid: 34d032dde127a1a4ab89c90a583c709c, type: 3}
   DirtSet1: {fileID: 2800000, guid: 9c25943ea6e312442ae9525eb29dcf52, type: 3}
   WoodFloorSet1: {fileID: 2800000, guid: 73936e6fbc160574e82a0dec10d35f1c, type: 3}
   RoofSet1: {fileID: 2800000, guid: 2bf18da46f1aa82439203b116225b44f, type: 3}
@@ -1434,6 +1426,7 @@ MonoBehaviour:
   WallSet1: {fileID: 2800000, guid: 31d1e7cf16990374fb42c5ea5d55a447, type: 3}
   RockSet1: {fileID: 2800000, guid: 4aef8ffaddc54c24da2e421a1d220893, type: 3}
   WaterSet1: {fileID: 2800000, guid: 9076ae9814daca343a5459b42edadff1, type: 3}
+  PortalSet1: {fileID: 2800000, guid: 982817fb063efe4439b22d92c8c88495, type: 3}
 --- !u!4 &558758191
 Transform:
   m_ObjectHideFlags: 0

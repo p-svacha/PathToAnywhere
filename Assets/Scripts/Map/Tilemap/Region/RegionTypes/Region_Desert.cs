@@ -15,8 +15,10 @@ public class Region_Desert : Region
         foreach (Vector2Int pos in TilePositions)
         {
             MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
-            if (Random.value <= 0.002f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Wall);
-            if (Random.value <= 0.004f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
+
+            float rng = Random.value;
+            if (rng <= 0.002f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Wall);
+            else if (rng <= 0.004f) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
         }
     }
 }
