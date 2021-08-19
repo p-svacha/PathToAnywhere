@@ -21,9 +21,9 @@ public class Region_Ruins : Region
     private void SetRandomTypesFor(Vector2Int pos)
     {
         float rng = Random.value;
-        if (rng < 0.25f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass1);
-        else if (rng < 0.5f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
-        else if (rng < 0.75f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Dirt);
-        else MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
+        if (rng < 0.33f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Grass1);
+        else if (rng < 0.66f) MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Sand);
+        else MapGenerator.SetBaseSurfaceType(pos, BaseSurfaceType.Dirt);
+        if(Random.value < 0.2) MapGenerator.SetBaseFeatureType(pos, BaseFeatureType.Mountain);
     }
 }
