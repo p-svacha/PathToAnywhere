@@ -12,6 +12,10 @@ public class InteractionHandler : MonoBehaviour
 
     public UI_InteractionBox InteractionBox;
 
+    // Dialogue
+    public Dialogue ActiveDialogue;
+    public int CurrentDialogueOptionId;
+
     public void Init(GameModel model)
     {
         Model = model;
@@ -27,9 +31,11 @@ public class InteractionHandler : MonoBehaviour
         if(targetCharacter != null && targetCharacter.GetType() == typeof(NPC))
         {
             InteractionTargetNPC = (NPC)targetCharacter;
-            InteractionTargetNPC.StartInteractionWith(Player);
-            DisplayText(targetTile, targetCharacter.Name, "„Hey“");
+            Dialogue dialogue = InteractionTargetNPC.StartInteractionWith(Player);
+            StartDialogue(dialogue);
         }
+
+        /*
         else
         {
             string targetName = targetTile.BaseFeatureType != BaseFeatureType.None ? targetTile.BaseFeatureType.ToString() : targetTile.BaseSurfaceType.ToString();
@@ -53,19 +59,65 @@ public class InteractionHandler : MonoBehaviour
 
             DisplayText(targetTile, targetName, text);
         }
-
+        */
     }
 
-    public void DisplayText(TileInfo targetTile, string targetName, string text)
+    public void GetInteractionInput()
     {
-        InteractionCamera.transform.position = Model.TilemapGenerator.GetWorldPosition(targetTile.Position) + new Vector3(0f, 0f, -1f);
-        Player.PlayerController.InputMode = PlayerInputMode.Interaction;
+        int pressedNumber = GetPressedNumber();
 
-        InteractionBox.gameObject.SetActive(true);
-        InteractionBox.DisplayText(targetName, text);
+        if (Input.GetKeyDown(KeyCode.Space)) // Select
+        {
+            ContinueInteraction(CurrentDialogueOptionId);
+        }
+        else if(Input.GetKeyDown(KeyCode.DownArrow)) // Option down
+        {
+            CurrentDialogueOptionId++;
+            if (CurrentDialogueOptionId >= ActiveDialogue.ActiveStep.DialogueOptions.Count) CurrentDialogueOptionId = 0;
+            SetCurrentDialogueOptionId(CurrentDialogueOptionId);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) // Option up
+        {
+            CurrentDialogueOptionId--;
+            if (CurrentDialogueOptionId < 0) CurrentDialogueOptionId = ActiveDialogue.ActiveStep.DialogueOptions.Count - 1;
+            SetCurrentDialogueOptionId(CurrentDialogueOptionId);
+        }
+        else if(pressedNumber > 0 && pressedNumber <= ActiveDialogue.ActiveStep.DialogueOptions.Count)
+        {
+            ContinueInteraction(pressedNumber - 1);
+        }
     }
 
-    public void EndInteraction()
+    private void SetCurrentDialogueOptionId(int optionId)
+    {
+        CurrentDialogueOptionId = optionId;
+        InteractionBox.SetCurrentDialogueOptionId(optionId);
+    }
+
+    private void StartDialogue(Dialogue dialogue)
+    {
+        ActiveDialogue = dialogue;
+        Player.PlayerController.InputMode = PlayerInputMode.Interaction;
+        InteractionBox.gameObject.SetActive(true);
+
+        ShowStep(ActiveDialogue.ActiveStep);
+    }
+
+    private void ShowStep(DialogueStep step)
+    {
+        InteractionCamera.transform.position = Model.TilemapGenerator.GetWorldPosition(step.TargetPosition) + new Vector3(0f, 0f, -1f);
+        InteractionBox.DisplayDialogueStep(step);
+        SetCurrentDialogueOptionId(0);
+    }
+
+    private void ContinueInteraction(int optionId)
+    {
+        ActiveDialogue.SubmitPlayerOption(optionId);
+        if (ActiveDialogue.ActiveStep == null) EndInteraction();
+        else ShowStep(ActiveDialogue.ActiveStep);
+    }
+
+    private void EndInteraction()
     {
         Player.PlayerController.InputMode = PlayerInputMode.Movement;
         if (InteractionTargetNPC != null)
@@ -74,5 +126,16 @@ public class InteractionHandler : MonoBehaviour
             InteractionTargetNPC = null;
         }
         InteractionBox.gameObject.SetActive(false);
+    }
+
+    private int GetPressedNumber()
+    {
+        for (int number = 0; number <= 9; number++)
+        {
+            if (Input.GetKeyDown(number.ToString()))
+                return number;
+        }
+
+        return -1;
     }
 }

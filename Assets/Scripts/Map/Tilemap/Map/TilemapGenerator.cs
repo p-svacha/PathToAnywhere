@@ -90,7 +90,7 @@ public class TilemapGenerator : MonoBehaviour
         BaseFeatureTilesets.Add(BaseFeatureType.Rock, TileGenerator.GenerateSimpleTilset(RockSet1, wall, TilePixelSize, 1, 2));
         BaseFeatureTilesets.Add(BaseFeatureType.Mountain, TileGenerator.GenerateSlicedTileset(MountainSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Mountain }));
         BaseFeatureTilesets.Add(BaseFeatureType.Wall, TileGenerator.GenerateSlicedTileset(WallSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Wall }));
-        BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateAnimatedSlicedTileset(WaterSet1, ground, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }, 1f));
+        BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateAnimatedSlicedTileset(WaterSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }, 1f));
 
         RoofTilesets.Add(RoofType.DefaultRoof, TileGenerator.GenerateSlicedTileset(RoofSet1, null, TilePixelSize, new List<BaseFeatureType>()));
     }

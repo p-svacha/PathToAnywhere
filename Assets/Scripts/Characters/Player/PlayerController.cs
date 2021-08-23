@@ -25,10 +25,7 @@ public class PlayerController : CharacterController
                 break;
 
             case PlayerInputMode.Interaction:
-                if(Input.GetKeyDown(KeyCode.Space))
-                {
-                    Player.Model.EndInteraction();
-                }
+                Player.Model.InteractionHandler.GetInteractionInput();
                 break;
         }
     }

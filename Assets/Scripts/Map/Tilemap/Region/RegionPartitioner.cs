@@ -43,7 +43,7 @@ public class RegionPartitioner
     public Region GetRegionAt(Vector2Int gridPosition)
     {
         Vector2Int parcelId = GetNearestVoronoiPoint(ParcelVoronoiPointHashSmall, gridPosition, 10);
-        Vector2Int regionId = GetNearestVoronoiPoint(RegionVoronoiPointHash, parcelId, 40);
+        Vector2Int regionId = GetNearestVoronoiPoint(RegionVoronoiPointHash, parcelId, 45);
 
         Region region;
         Regions.TryGetValue(regionId, out region);

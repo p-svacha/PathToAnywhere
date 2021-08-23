@@ -45,10 +45,6 @@ public class GameModel : MonoBehaviour
     {
         InteractionHandler.Interact();
     }
-    public void EndInteraction()
-    {
-        InteractionHandler.EndInteraction();
-    }
 
     #endregion
 }
