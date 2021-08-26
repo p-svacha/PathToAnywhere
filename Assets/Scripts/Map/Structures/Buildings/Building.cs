@@ -10,7 +10,7 @@ public class Building : Structure
     public BaseFeatureType FloorType;
     public RoofType RoofType;
 
-    public Color Color;
+    public Color DebugColor;
 
     public Dictionary<Vector2Int, TileBase> RoofTiles; // Tiles that are rendered on the roof tilemap but only when player is outside of the building
     public List<Vector2Int> InsideTiles;
@@ -20,7 +20,8 @@ public class Building : Structure
         WallType = wallType;
         FloorType = floorType;
         RoofType = roofType;
-        Color = ColorManager.GetRandomRedishColor();
+
+        DebugColor = ColorManager.GetRandomRedishColor();
         RoofTiles = new Dictionary<Vector2Int, TileBase>();
         InsideTiles = new List<Vector2Int>();
     }

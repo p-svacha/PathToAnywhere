@@ -34,6 +34,7 @@ public class Character : MonoBehaviour
 
         transform.position = model.TilemapGenerator.GetWorldPosition(position);
         CurrentTile = Model.TilemapGenerator.GetTileInfo(position);
+        CurrentTile.Character = this;
 
         MovementSpeed = 4f;
     }

@@ -17,6 +17,11 @@ public abstract class Structure
 
     public List<Vector2Int> ImpassableTiles; // List of tiles by their grid position that become impassable
 
+    public Dictionary<Vector2Int, Color?> BaseSurfaceColor; // Color of base surface tiles that are not default
+    public Dictionary<Vector2Int, Color?> BaseFeatureColor; // Color of base feature tiles that are not default
+
+    public Settlement Settlement;
+
     public Structure(Vector2Int origin)
     {
         Origin = origin;
@@ -26,6 +31,8 @@ public abstract class Structure
         FrontOfPlayerTiles = new Dictionary<Vector2Int, TileBase>();
         BuildingTiles = new Dictionary<Vector2Int, Building>();
         ImpassableTiles = new List<Vector2Int>();
+        BaseSurfaceColor = new Dictionary<Vector2Int, Color?>();
+        BaseFeatureColor = new Dictionary<Vector2Int, Color?>();
     }
 
     public virtual void PlaceStructure(GameModel model)
@@ -36,6 +43,8 @@ public abstract class Structure
         foreach (KeyValuePair<Vector2Int, TileBase> kvp in FrontOfPlayerTiles) model.TilemapGenerator.SetFrontOfPlayerTile(kvp.Key, kvp.Value);
         foreach (KeyValuePair<Vector2Int, Building> kvp in BuildingTiles) model.TilemapGenerator.GetTileInfo(kvp.Key).Building = kvp.Value;
         foreach (Vector2Int impassableTilePos in ImpassableTiles) model.TilemapGenerator.GetTileInfo(impassableTilePos).Blocked = true;
+        foreach (KeyValuePair<Vector2Int, Color?> kvp in BaseSurfaceColor) model.TilemapGenerator.SetBaseSurfaceColor(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<Vector2Int, Color?> kvp in BaseFeatureColor) model.TilemapGenerator.SetBaseFeatureColor(kvp.Key, kvp.Value);
     }
 
     public List<Vector2Int> BaseTilePositions

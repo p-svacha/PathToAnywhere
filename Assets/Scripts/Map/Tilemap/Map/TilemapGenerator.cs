@@ -106,7 +106,7 @@ public class TilemapGenerator : MonoBehaviour
             for (int x = -visualRange; x <= visualRange; x++)
             {
                 TilemapChunk chunk = LoadChunk(playerChunkCoordinates + new Vector2Int(x, y), true);
-                if (chunk.State == ChunkLoadingState.RegionsGenerated) PlaceTiles(chunk);
+                if (chunk.State == ChunkLoadingState.RegionsGenerated) PlaceChunkTiles(chunk);
             }
         }
     }
@@ -190,12 +190,14 @@ public class TilemapGenerator : MonoBehaviour
         chunk.OnRegionsGenerated();
     }
 
+    #region Place Chunk Tiles
+
     /// <summary>
     /// Places the actual tiles for a chunk on the map according to a previously generated layout.
     /// Also places edge tiles on adjacent chunks that were waiting on information on neighbouring tiles.
     /// This method can change the loading state of neighbouring chunks by checking if all their neighbours are generated.
     /// </summary>
-    private void PlaceTiles(TilemapChunk chunk)
+    private void PlaceChunkTiles(TilemapChunk chunk)
     {
         chunk.State = ChunkLoadingState.Rendered;
 
@@ -214,33 +216,51 @@ public class TilemapGenerator : MonoBehaviour
         int tileX = chunk.Coordinates.x * TilemapChunk.ChunkSize + x;
         int tileY = chunk.Coordinates.y * TilemapChunk.ChunkSize + y;
         Vector3Int tilePos = new Vector3Int(tileX, tileY, 0);
+        TileInfo tile = chunk.Tiles[x, y];
+
 
         // Base surface tilemap
-        BaseSurfaceType baseSurfaceType = chunk.Tiles[x, y].BaseSurfaceType;
+        BaseSurfaceType baseSurfaceType = tile.BaseSurfaceType;
         if (baseSurfaceType != BaseSurfaceType.None)
         {
             BaseSurfaceTilesets[baseSurfaceType].PlaceTile(this, TilemapBaseSurface, tilePos);
             SurfaceBlendMap.BlendTile(this, tileX, tileY, baseSurfaceType, BaseSurfaceTilesets[baseSurfaceType]);
+            SetTileColor(TilemapBaseSurface, tilePos, tile.BaseSurfaceColor);
         }
+        
 
         // Base feature tilemap
-        BaseFeatureType baseFeatureType = chunk.Tiles[x, y].BaseFeatureType;
-        if(baseFeatureType != BaseFeatureType.None) BaseFeatureTilesets[baseFeatureType].PlaceTile(this, TilemapBaseFeature, tilePos);
+        BaseFeatureType baseFeatureType = tile.BaseFeatureType;
+        if (baseFeatureType != BaseFeatureType.None)
+        {
+            BaseFeatureTilesets[baseFeatureType].PlaceTile(this, TilemapBaseFeature, tilePos);
+            SetTileColor(TilemapBaseFeature, tilePos, tile.BaseFeautureColor);
+        }
 
         // Region debug tilemap
         TilemapRegions.SetTile(tilePos, TestTile);
         TilemapRegions.SetTileFlags(tilePos, TileFlags.None);
-        TilemapRegions.SetColor(tilePos, chunk.Tiles[x,y].Region.Color);
+        TilemapRegions.SetColor(tilePos, tile.Region.Color);
 
         // Building debug tilemap
         if(chunk.Tiles[x, y].Building != null)
         {
             TilemapBuildings.SetTile(tilePos, TestTile);
             TilemapBuildings.SetTileFlags(tilePos, TileFlags.None);
-            TilemapBuildings.SetColor(tilePos, chunk.Tiles[x, y].Building.Color);
+            TilemapBuildings.SetColor(tilePos, tile.Building.DebugColor);
         }
-
     }
+
+    private void SetTileColor(Tilemap tilemap, Vector3Int tilePos, Color? c)
+    {
+        if (c != null)
+        {
+            tilemap.SetTileFlags(tilePos, TileFlags.None);
+            tilemap.SetColor(tilePos, (Color)c);
+        }
+    }
+
+    #endregion
 
     #region Setters
 
@@ -256,6 +276,15 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         chunk.Tiles[inChunkX, inChunkY].BaseSurfaceType = type;
     }
+    public void SetBaseSurfaceColor(Vector2Int gridPosition, Color? color)
+    {
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+
+        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        chunk.Tiles[inChunkX, inChunkY].BaseSurfaceColor = color;
+    }
 
     /// <summary>
     /// Sets the base feature type and maybe overrides the tile info (passability, speed modifier, etc) of the tile at the given position.
@@ -268,6 +297,15 @@ public class TilemapGenerator : MonoBehaviour
         int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
         int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
         chunk.Tiles[inChunkX, inChunkY].BaseFeatureType = type;
+    }
+    public void SetBaseFeatureColor(Vector2Int gridPosition, Color? color)
+    {
+        Vector2Int chunkCoordinates = GetChunkCoordinates(gridPosition.x, gridPosition.y);
+        TilemapChunk chunk = Chunks[chunkCoordinates];
+
+        int inChunkX = gridPosition.x - (chunkCoordinates.x * TilemapChunk.ChunkSize);
+        int inChunkY = gridPosition.y - (chunkCoordinates.y * TilemapChunk.ChunkSize);
+        chunk.Tiles[inChunkX, inChunkY].BaseFeautureColor = color;
     }
 
 

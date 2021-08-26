@@ -13,6 +13,9 @@ public class TileInfo
     public BaseSurfaceType BaseSurfaceType;
     public BaseFeatureType BaseFeatureType;
 
+    public Color? BaseSurfaceColor;
+    public Color? BaseFeautureColor;
+
     public Character Character;
     public Region Region;
     public Building Building;

@@ -56,7 +56,10 @@ public class NPC : Character
             }
             options.Add(new DialogueOption(text, () => { }, nextStep));
         }
-        DialogueStep step = new DialogueStep(GridPosition, Name, "Hello, I am mr. " + Name + ". Nice to meet you." + Random.value, options);
+        string helloText = "Hello, I am " + Name;
+        if (Home.Settlement != null) helloText += " and I live in " + Home.Settlement.Name;
+        helloText += ".";
+        DialogueStep step = new DialogueStep(GridPosition, Name, helloText, options);
         return step;
     }
 }

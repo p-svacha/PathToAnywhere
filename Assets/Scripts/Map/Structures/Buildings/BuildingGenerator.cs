@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BuildingGenerator : MonoBehaviour
+public static class BuildingGenerator
 {
-    public Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType)
+    /// <summary>
+    /// Generates the metadata for a building without yet placing it on the map
+    /// </summary>
+    public static Building GenerateBuilding(TilemapGenerator generator, Vector2Int origin, BuildingGenerationSettings settings)
     {
-        Building building = new Building(origin, wallType, floorType, roofType);
+        Building building = new Building(origin, settings.WallType, settings.FloorType, settings.RoofType);
 
         List<Vector2Int> roofTiles = new List<Vector2Int>();
 
-        int width = Random.Range(4, 10);
-        int height = Random.Range(4, 10);
+        int width = Random.Range(settings.MinWidth, settings.MaxWidth);
+        int height = Random.Range(settings.MinHeight, settings.MaxHeight);
 
         // Floor
         for (int y = 1; y < height - 1; y++)
@@ -20,7 +23,7 @@ public class BuildingGenerator : MonoBehaviour
             for(int x = 1; x < width - 1; x++)
             {
                 Vector2Int relativePos = new Vector2Int(x, y);
-                building.BaseFeatureTypes.Add(origin + relativePos, floorType);
+                building.BaseFeatureTypes.Add(origin + relativePos, settings.FloorType);
                 building.InsideTiles.Add(origin + relativePos);
             }
         }
@@ -39,8 +42,12 @@ public class BuildingGenerator : MonoBehaviour
 
                 if (!building.BaseFeatureTypes.ContainsKey(absolutePos))
                 {
-                    if(Random.value < 0.9f) building.BaseFeatureTypes.Add(absolutePos, wallType);
-                    else building.BaseFeatureTypes.Add(absolutePos, floorType);
+                    if (Random.value < 0.9f)
+                    {
+                        building.BaseFeatureTypes.Add(absolutePos, settings.WallType);
+                        building.BaseFeatureColor.Add(absolutePos, settings.WallColor);
+                    }
+                    else building.BaseFeatureTypes.Add(absolutePos, settings.FloorType);
                 }
             }
         }
@@ -48,19 +55,11 @@ public class BuildingGenerator : MonoBehaviour
         // Roof
         foreach(Vector2Int roofPos in roofTiles)
         {
-            TileBase roofTile = generator.RoofTilesets[roofType].GetTileAt(roofPos, roofTiles);
+            TileBase roofTile = generator.RoofTilesets[settings.RoofType].GetTileAt(roofPos, roofTiles);
 
             building.RoofTiles.Add(roofPos, roofTile);
         }
 
         return building;
-    }
-
-    public static BuildingGenerator Instance
-    {
-        get
-        {
-            return GameObject.Find("BuildingGenerator").GetComponent<BuildingGenerator>();
-        }
     }
 }

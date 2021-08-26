@@ -16,11 +16,11 @@ using UnityEngine;
 public class RegionPartitioner
 {
     private GameModel Model;
-    private TilemapGenerator Generator;
     private MapHash RegionVoronoiPointHash;
     private MapHash ParcelVoronoiPointHashSmall;
     private int Resolution = 4;
 
+    // Regions by their voronoi point
     public Dictionary<Vector2Int, Region> Regions = new Dictionary<Vector2Int, Region>();
 
     private Dictionary<RegionType, int> RegionTable = new Dictionary<RegionType, int>()
@@ -35,9 +35,16 @@ public class RegionPartitioner
     public RegionPartitioner(GameModel model)
     {
         Model = model;
-        Generator = model.TilemapGenerator;
         RegionVoronoiPointHash = new MapHash(256, 10);
         ParcelVoronoiPointHashSmall = new MapHash(16, 40); // 1 in 16 tiles is a voronoi point
+        GenerateStartRegion();
+    }
+
+    private void GenerateStartRegion()
+    {
+        Vector2Int parcelId = GetNearestVoronoiPoint(ParcelVoronoiPointHashSmall, Vector2Int.zero, 10);
+        Vector2Int regionId = GetNearestVoronoiPoint(RegionVoronoiPointHash, parcelId, 45);
+        Regions.Add(regionId, new Region_Grassland(Model, regionId));
     }
 
     public Region GetRegionAt(Vector2Int gridPosition)
@@ -45,8 +52,7 @@ public class RegionPartitioner
         Vector2Int parcelId = GetNearestVoronoiPoint(ParcelVoronoiPointHashSmall, gridPosition, 10);
         Vector2Int regionId = GetNearestVoronoiPoint(RegionVoronoiPointHash, parcelId, 45);
 
-        Region region;
-        Regions.TryGetValue(regionId, out region);
+        Regions.TryGetValue(regionId, out Region region);
         if (region != null) return region;
         else
         {

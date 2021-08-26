@@ -11,5 +11,6 @@ public class Player : Character
         base.Init(model, position, controller, movePoint, body, head);
         PlayerController = (PlayerController)controller;
         PlayerController.Player = this;
+        if(CurrentTile.Building != null) CurrentTile.Building.SetDrawRoof(Model.TilemapGenerator, false);
     }
 }
