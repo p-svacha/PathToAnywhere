@@ -19,6 +19,7 @@ public class GameModel : MonoBehaviour
 
     void Start()
     {
+        NameGenerator.Init();
         CharacterGenerator.Init(this);
         TilemapGenerator.Init(this);
         TilemapGenerator.LoadChunksAroundPlayer(new Vector2Int(0,0), MapRenderRange);

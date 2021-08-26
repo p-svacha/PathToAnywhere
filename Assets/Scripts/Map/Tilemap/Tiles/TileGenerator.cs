@@ -188,7 +188,7 @@ public static class TileGenerator
 
     public static AnimatedTile GetAnimatedTile(Texture2D texture, int tileSize, int animationLength, float animationSpeed, int startX, int startY, int deltaX, int deltaY)
     {
-        AnimatedTile tile = new AnimatedTile();
+        AnimatedTile tile = ScriptableObject.CreateInstance<AnimatedTile>();
         List<Sprite> frames = new List<Sprite>();
         for(int i = 0; i < animationLength; i++)
         {
@@ -203,7 +203,7 @@ public static class TileGenerator
 
     public static Tile GetTileAt(Texture2D texture, int tileSize, int x, int y)
     {
-        Tile tile = new Tile();
+        Tile tile = ScriptableObject.CreateInstance<Tile>();
         tile.name = texture.name + "_" + x + "_" + y;
 
         tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), TilemapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);

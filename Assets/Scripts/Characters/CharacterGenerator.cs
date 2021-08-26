@@ -85,7 +85,7 @@ public class CharacterGenerator : MonoBehaviour
         {
             NPC npc = characterObject.AddComponent<NPC>();
             npc.Init(Model, gridPosition, (NPCController) controller, movePoint.transform, characterBody, characterHead);
-            npc.Name = "Fluberto";
+            npc.Name = NameGenerator.GenerateName(NameGenerationType.Character);
             character = npc;
         }
 
