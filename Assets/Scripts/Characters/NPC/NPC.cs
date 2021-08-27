@@ -24,11 +24,15 @@ public class NPC : Character
     /// </summary>
     public Dialogue StartInteractionWith(Character target)
     {
+        // Stop movement and look at target
         NPCController.ClearTargetPath();
         NPCController.ActionState = ActionState.Interacting;
         FacePosition(target.GridPosition);
 
-        return GetDialogue();
+        // Create relationship towards target if not existing
+        if (!OutRelationships.ContainsKey(target)) new Relationship(this, target);
+
+        return GetDialogue(target);
     }
 
     public void EndInteraction()
@@ -36,30 +40,33 @@ public class NPC : Character
         NPCController.ActionState = ActionState.Idle;
     }
 
-    private Dialogue GetDialogue()
+    #region Dialogue
+
+    private Dialogue GetDialogue(Character target)
     {
-        return new Dialogue(GetDialogueStep());
+        return new Dialogue(GetInitialDialogueStep(target));
     }
 
-    private DialogueStep GetDialogueStep()
+    private DialogueStep GetInitialDialogueStep(Character target)
     {
-        List<DialogueOption> options = new List<DialogueOption>();
-        int numOptions = Random.Range(1, 4);
-        for (int i = 0; i < numOptions; i++)
-        {
-            DialogueStep nextStep = null;
-            string text = "This dialogue option will end the dialogue";
-            if (Random.value < 0.25f)
-            {
-                nextStep = GetDialogueStep();
-                text = "This dialogue option will continue the interaction.";
-            }
-            options.Add(new DialogueOption(text, () => { }, nextStep));
-        }
+        Relationship rel = OutRelationships[target];
+
         string helloText = "Hello, I am " + Name;
         if (Home.Settlement != null) helloText += " and I live in " + Home.Settlement.Name;
         helloText += ".";
-        DialogueStep step = new DialogueStep(GridPosition, Name, helloText, options);
-        return step;
+
+        List<DialogueOption> options = new List<DialogueOption>();
+        options.Add(new DialogueOption("I love you", () => Model.ChangeAttitude(this, target, 10), GetEndDialogueStep("Aw, that is sweet.")));
+        options.Add(new DialogueOption("I hate you", () => Model.ChangeAttitude(this, target, -10), GetEndDialogueStep("Fuck off.")));
+        options.Add(new DialogueOption("Ok", () => { }, GetEndDialogueStep("Ok Bye.")));
+
+        return new DialogueStep(this, helloText, options);
     }
+
+    private DialogueStep GetEndDialogueStep(string text)
+    {
+        return new DialogueStep(this, text, new List<DialogueOption>() { new DialogueOption("Leave", () => { }, null) });
+    }
+
+    #endregion
 }

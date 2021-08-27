@@ -48,4 +48,9 @@ public class GameModel : MonoBehaviour
     }
 
     #endregion
+
+    public void ChangeAttitude(Character source, Character target, int value)
+    {
+        source.OutRelationships[target].Attitude += value;
+    }
 }

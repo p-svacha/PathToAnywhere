@@ -105,8 +105,8 @@ public class InteractionHandler : MonoBehaviour
 
     private void ShowStep(DialogueStep step)
     {
-        InteractionCamera.transform.position = Model.TilemapGenerator.GetWorldPosition(step.TargetPosition) + new Vector3(0f, 0f, -1f);
-        InteractionBox.DisplayDialogueStep(step);
+        InteractionCamera.transform.position = Model.TilemapGenerator.GetWorldPosition(step.Target.GridPosition) + new Vector3(0f, 0f, -1f);
+        InteractionBox.DisplayDialogueStep(step, Player);
         SetCurrentDialogueOptionId(0);
     }
 

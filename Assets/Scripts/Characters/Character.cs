@@ -21,6 +21,17 @@ public class Character : MonoBehaviour
     public BodyPart Body;
     public BodyPart Head;
 
+    // Relationships
+    /// <summary>
+    /// Relationships this character has towards other characters.
+    /// </summary>
+    public Dictionary<Character, Relationship> OutRelationships;
+
+    /// <summary>
+    /// Relationships other characters have towards this character.
+    /// </summary>
+    public Dictionary<Character, Relationship> InRelationships;
+
     public virtual void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, BodyPart body, BodyPart head)
     {
         Model = model;
@@ -31,6 +42,8 @@ public class Character : MonoBehaviour
         Controller.MovePoint = movePoint;
         Body = body;
         Head = head;
+        OutRelationships = new Dictionary<Character, Relationship>();
+        InRelationships = new Dictionary<Character, Relationship>();
 
         transform.position = model.TilemapGenerator.GetWorldPosition(position);
         CurrentTile = Model.TilemapGenerator.GetTileInfo(position);

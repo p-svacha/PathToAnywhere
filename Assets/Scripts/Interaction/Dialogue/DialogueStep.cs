@@ -7,16 +7,14 @@ using UnityEngine;
 /// </summary>
 public class DialogueStep
 {
-    public Vector2Int TargetPosition;
-    public string TargetName;
+    public Character Target;
 
     public string Text;
     public List<DialogueOption> DialogueOptions;
 
-    public DialogueStep(Vector2Int targetPosition, string targetName, string text, List<DialogueOption> dialogueOptions)
+    public DialogueStep(Character target, string text, List<DialogueOption> dialogueOptions)
     {
-        TargetPosition = targetPosition;
-        TargetName = targetName;
+        Target = target;
         Text = text;
         DialogueOptions = dialogueOptions;
     }

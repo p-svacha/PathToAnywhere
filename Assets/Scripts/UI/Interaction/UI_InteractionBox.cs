@@ -10,13 +10,15 @@ public class UI_InteractionBox : MonoBehaviour
 
     [Header("Elements")]
     public Text TargetName;
+    public Text TargetAttitude;
     public Text Text;
     public GameObject OptionsContainer;
     public List<UI_DialogueOption> DialogueOptions = new List<UI_DialogueOption>();
 
-    public void DisplayDialogueStep(DialogueStep step)
+    public void DisplayDialogueStep(DialogueStep step, Player player)
     {
-        TargetName.text = step.TargetName;
+        TargetName.text = step.Target.Name;
+        TargetAttitude.text = "Attitude: " + step.Target.OutRelationships[player].Attitude;
         Text.text = step.Text;
 
         foreach(UI_DialogueOption option in DialogueOptions) GameObject.Destroy(option.gameObject);
