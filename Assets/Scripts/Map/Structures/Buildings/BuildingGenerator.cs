@@ -14,8 +14,8 @@ public static class BuildingGenerator
 
         List<Vector2Int> roofTiles = new List<Vector2Int>();
 
-        int width = Random.Range(settings.MinWidth, settings.MaxWidth);
-        int height = Random.Range(settings.MinHeight, settings.MaxHeight);
+        int width = Random.Range(settings.MinWidth, settings.MaxWidth + 1);
+        int height = Random.Range(settings.MinHeight, settings.MaxHeight + 1);
 
         // Floor
         for (int y = 1; y < height - 1; y++)

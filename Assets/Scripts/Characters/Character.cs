@@ -17,9 +17,7 @@ public class Character : MonoBehaviour
     public Vector2Int GridPosition; // The position of the character after he is done moving
     public Direction FaceDirection;
 
-    // Body Parts
-    public BodyPart Body;
-    public BodyPart Head;
+    public CharacterAppearance Appearance;
 
     // Relationships
     /// <summary>
@@ -32,7 +30,7 @@ public class Character : MonoBehaviour
     /// </summary>
     public Dictionary<Character, Relationship> InRelationships;
 
-    public virtual void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, BodyPart body, BodyPart head)
+    public virtual void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, CharacterAppearance appearance)
     {
         Model = model;
         GridPosition = position;
@@ -40,8 +38,7 @@ public class Character : MonoBehaviour
         Controller = controller;
         Controller.Character = this;
         Controller.MovePoint = movePoint;
-        Body = body;
-        Head = head;
+        Appearance = appearance;
         OutRelationships = new Dictionary<Character, Relationship>();
         InRelationships = new Dictionary<Character, Relationship>();
 

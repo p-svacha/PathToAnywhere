@@ -36,7 +36,7 @@ public class CharacterController : MonoBehaviour
                 Move(Direction.S);
         }
 
-        ShowCharacterSide(Character.FaceDirection);
+        Character.Appearance.ShowCharacterSide(Character.FaceDirection);
     }
 
     protected virtual void GetCharacterMovement()
@@ -104,39 +104,7 @@ public class CharacterController : MonoBehaviour
         OnCharacterMove(Character.Model.TilemapGenerator.GetTileInfo(fromPosition), Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition));
     }
 
-    private void ShowCharacterSide(Direction dir)
-    {
-        Character.Body.ShowDirection(dir);
-        Character.Head.ShowDirection(dir);
 
-        switch (dir)
-        {
-            case Direction.W:
-                Character.Head.SetLocalPoisition(new Vector3(-0.1f, 0.5f, 0f));
-                Character.Head.SetSortingOrder(1);
-                Character.Body.SetSortingOrder(0);
-                break;
-
-            case Direction.E:
-                Character.Head.SetLocalPoisition(new Vector3(0.1f, 0.5f, 0f));
-                Character.Head.SetSortingOrder(1);
-                Character.Body.SetSortingOrder(0);
-                break;
-
-            case Direction.N:
-                Character.Head.SetLocalPoisition(new Vector3(0f, 0.5f, 0f));
-                Character.Head.SetSortingOrder(1);
-                Character.Body.SetSortingOrder(2);
-                break;
-
-            case Direction.S:
-                Character.Head.SetLocalPoisition(new Vector3(0f, 0.5f, 0f));
-                Character.Head.SetSortingOrder(1);
-                Character.Body.SetSortingOrder(0);
-                break;
-
-        }
-    }
 
     protected virtual void OnCharacterMove(TileInfo from, TileInfo to)
     {

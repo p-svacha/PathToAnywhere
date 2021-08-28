@@ -6,8 +6,9 @@ public class CharacterGenerator : MonoBehaviour
 {
     public GameModel Model;
 
-    public Texture2D CharacterBodies;
-    public Texture2D CharacterHeads;
+    public Texture2D CharacterBodiesTexture;
+    public Texture2D CharacterHeadsTexture;
+    public Texture2D CharacterHairsTexture;
 
     public const string PlayerLayerName = "Player";
 
@@ -15,30 +16,33 @@ public class CharacterGenerator : MonoBehaviour
     private List<List<Sprite>> CharacterBodySprites;
 
     private const int HeadPixelSize = 64;
-    private List<Sprite> CharacterHeadSprites;
+    private List<List<Sprite>> CharacterHeadSprites;
+
+    private const int HairPixelSize = 64;
+    private List<List<Sprite>> CharacterHairSprites;
 
     public void Init(GameModel model)
     {
         Model = model;
 
-        CharacterBodySprites = new List<List<Sprite>>();
-        CharacterHeadSprites = new List<Sprite>();
+        CharacterBodySprites = LoadBodyPartAtlas(CharacterBodiesTexture, BodyPixelSize, BodyPixelSize);
+        CharacterHeadSprites = LoadBodyPartAtlas(CharacterHeadsTexture, HeadPixelSize, BodyPixelSize);
+        CharacterHairSprites = LoadBodyPartAtlas(CharacterHairsTexture, HairPixelSize, BodyPixelSize);
+    }
 
-        int numBodies = CharacterBodies.height / BodyPixelSize;
-        for(int i = 0; i < numBodies; i++)
+    private List<List<Sprite>> LoadBodyPartAtlas(Texture2D atlas, int spritePixelSize, int referencePixelSize)
+    {
+        List<List<Sprite>> sprites = new List<List<Sprite>>();
+        int numSprites = atlas.height / spritePixelSize;
+        for (int i = 0; i < numSprites; i++)
         {
-            List<Sprite> bodySprites = new List<Sprite>();
-            bodySprites.Add(Sprite.Create(CharacterBodies, new Rect(0, i * BodyPixelSize, BodyPixelSize, BodyPixelSize), new Vector2(0.5f, 0.5f), BodyPixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
-            bodySprites.Add(Sprite.Create(CharacterBodies, new Rect(BodyPixelSize, i * BodyPixelSize, BodyPixelSize, BodyPixelSize), new Vector2(0.5f, 0.5f), BodyPixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
-            bodySprites.Add(Sprite.Create(CharacterBodies, new Rect(2 * BodyPixelSize, i * BodyPixelSize, BodyPixelSize, BodyPixelSize), new Vector2(0.5f, 0.5f), BodyPixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
-            CharacterBodySprites.Add(bodySprites);
+            List<Sprite> partSprites = new List<Sprite>();
+            partSprites.Add(Sprite.Create(atlas, new Rect(0, i * spritePixelSize, spritePixelSize, spritePixelSize), new Vector2(0.5f, 0.5f), referencePixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
+            partSprites.Add(Sprite.Create(atlas, new Rect(spritePixelSize, i * spritePixelSize, spritePixelSize, spritePixelSize), new Vector2(0.5f, 0.5f), referencePixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
+            partSprites.Add(Sprite.Create(atlas, new Rect(2 * spritePixelSize, i * spritePixelSize, spritePixelSize, spritePixelSize), new Vector2(0.5f, 0.5f), referencePixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
+            sprites.Add(partSprites);
         }
-
-        int numHeads = CharacterHeads.width / HeadPixelSize;
-        for(int i = 0; i < numHeads; i++)
-        {
-            CharacterHeadSprites.Add(Sprite.Create(CharacterHeads, new Rect(i * HeadPixelSize, 0, HeadPixelSize, HeadPixelSize), new Vector2(0.5f, 0.5f), BodyPixelSize, 1, SpriteMeshType.Tight, Vector4.zero));
-        }
+        return sprites;
     }
 
     private Character GenerateCharacter(Vector2Int gridPosition, bool isPlayer = false)
@@ -56,40 +60,40 @@ public class CharacterGenerator : MonoBehaviour
         if(isPlayer) controller = bodyParts.AddComponent<PlayerController>();
         else controller = bodyParts.AddComponent<NPCController>();
 
-        // Body
-        Color bodyColor = ColorManager.GetRandomColor();
-        GameObject characterBodyObject = new GameObject("Body");
-        characterBodyObject.transform.SetParent(bodyParts.transform);
-        BodyPart characterBody = characterBodyObject.AddComponent<BodyPart>();
-        List<Sprite> bodySprites = CharacterBodySprites[Random.Range(0, CharacterBodySprites.Count)];
-        characterBody.Init(bodyColor, bodySprites[0], bodySprites[1], bodySprites[2]);
+        BodyPart body = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterBodySprites); // Body
+        BodyPart head = AddRandomBodyPart(ColorManager.GetRandomSkinColor(), bodyParts, CharacterHeadSprites); // Head
+        BodyPart hair = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterHairSprites); // Hair
 
-        // Head
-        Color headColor = ColorManager.GetRandomSkinColor();
-        GameObject characterHeadObject = new GameObject("Head");
-        characterHeadObject.transform.SetParent(bodyParts.transform);
-        BodyPart characterHead = characterHeadObject.AddComponent<BodyPart>();
-        Sprite headSprite = CharacterHeadSprites[Random.Range(0, CharacterHeadSprites.Count)];
-        characterHead.Init(headColor, headSprite, headSprite, headSprite);
+        CharacterAppearance appearance = new CharacterAppearance(body, head, hair);
 
         // Character
         Character character = null;
         if (isPlayer)
         {
             Player player = characterObject.AddComponent<Player>();
-            player.Init(Model, gridPosition, (PlayerController) controller, movePoint.transform, characterBody, characterHead);
+            player.Init(Model, gridPosition, (PlayerController) controller, movePoint.transform, appearance);
             player.Name = "Player";
             character = player;
         }
         else
         {
             NPC npc = characterObject.AddComponent<NPC>();
-            npc.Init(Model, gridPosition, (NPCController) controller, movePoint.transform, characterBody, characterHead);
+            npc.Init(Model, gridPosition, (NPCController) controller, movePoint.transform, appearance);
             npc.Name = NameGenerator.GenerateName(NameGenerationType.Character);
             character = npc;
         }
 
         return character;
+    }
+
+    private BodyPart AddRandomBodyPart(Color color, GameObject bodyParts, List<List<Sprite>> sprites)
+    {
+        GameObject bodyPartObject = new GameObject("BodyPart");
+        bodyPartObject.transform.SetParent(bodyParts.transform);
+        BodyPart bodyPart = bodyPartObject.AddComponent<BodyPart>();
+        List<Sprite> chosenSprites = sprites[Random.Range(0, sprites.Count)];
+        bodyPart.Init(color, chosenSprites[0], chosenSprites[1], chosenSprites[2]);
+        return bodyPart;
     }
 
     public Player GeneratePlayer(Vector2Int gridPosition)

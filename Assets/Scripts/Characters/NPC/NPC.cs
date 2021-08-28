@@ -11,9 +11,9 @@ public class NPC : Character
 
     public Building Home;
 
-    public override void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, BodyPart body, BodyPart head)
+    public override void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, CharacterAppearance appearance)
     {
-        base.Init(model, position, controller, movePoint, body, head);
+        base.Init(model, position, controller, movePoint, appearance);
         MovementSpeed = Random.Range(1f, 2f);
         NPCController = (NPCController)controller;
         NPCController.NPC = this;

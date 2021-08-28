@@ -6804,8 +6804,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Model: {fileID: 0}
-  CharacterBodies: {fileID: 2800000, guid: 0cb14d7c8c5779e45acb551573285ee6, type: 3}
-  CharacterHeads: {fileID: 2800000, guid: 411feeebb9ea7f54ea1de76dd4efa082, type: 3}
+  CharacterBodiesTexture: {fileID: 2800000, guid: 0cb14d7c8c5779e45acb551573285ee6, type: 3}
+  CharacterHeadsTexture: {fileID: 2800000, guid: 411feeebb9ea7f54ea1de76dd4efa082, type: 3}
+  CharacterHairsTexture: {fileID: 2800000, guid: 01157e65d26c1294890e59f05bc50c4c, type: 3}
 --- !u!1 &1770246503
 GameObject:
   m_ObjectHideFlags: 0
