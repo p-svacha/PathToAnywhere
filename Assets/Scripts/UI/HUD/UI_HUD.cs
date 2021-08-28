@@ -7,5 +7,8 @@ using UnityEngine;
 /// </summary>
 public class UI_HUD : MonoBehaviour
 {
-
+    [Header("Elements")]
+    public UI_HudIcon ObjectivesIcon;
+    public UI_HudIcon RelationshipsIcon;
+    public UI_HudIcon MapIcon;
 }

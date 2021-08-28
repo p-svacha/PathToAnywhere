@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : CharacterController
 {
@@ -36,7 +37,7 @@ public class PlayerController : CharacterController
 
         if (InputMode == PlayerInputMode.Movement)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 TileInfo info = Player.Model.TilemapGenerator.GetTileInfo(mousePosition);
