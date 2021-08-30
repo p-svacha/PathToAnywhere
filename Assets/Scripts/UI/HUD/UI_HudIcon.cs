@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UI_HudIcon : MonoBehaviour
 {
+    private GameModel Model;
+
     [Header("Elements")]
     public Button Button;
     public Text HotkeyText;
@@ -13,10 +15,11 @@ public class UI_HudIcon : MonoBehaviour
     [Header("Misc")]
     public KeyCode Hotkey;
 
-    private bool IsWindowActive;
+    public bool IsWindowActive;
 
-    void Start()
+    public void Init(GameModel model)
     {
+        Model = model;
         HotkeyText.text = Hotkey.ToString();
         Button.onClick.AddListener(ToggleWindow);
         Window.gameObject.SetActive(false);
@@ -32,5 +35,7 @@ public class UI_HudIcon : MonoBehaviour
     {
         IsWindowActive = !IsWindowActive;
         Window.gameObject.SetActive(IsWindowActive);
+
+        if (IsWindowActive) Window.Init(Model);
     }
 }

@@ -14,9 +14,23 @@ public class CharacterGenerator : MonoBehaviour
 
     private const int BodyPixelSize = 128;
     private List<List<Sprite>> CharacterBodySprites;
+    private Dictionary<Direction, Vector3> BodyPositions = new Dictionary<Direction, Vector3>()
+    {
+        {Direction.N, new Vector3(0f, 0f, 0f) },
+        {Direction.E, new Vector3(0f, 0f, 0f) },
+        {Direction.S, new Vector3(0f, 0f, 0f) },
+        {Direction.W, new Vector3(0f, 0f, 0f) }
+    };
 
     private const int HeadPixelSize = 64;
     private List<List<Sprite>> CharacterHeadSprites;
+    private Dictionary<Direction, Vector3> HeadPositions = new Dictionary<Direction, Vector3>()
+    {
+        {Direction.N, new Vector3(0f, 0.5f, 0f) },
+        {Direction.E, new Vector3(0.1f, 0.5f, 0f) },
+        {Direction.S, new Vector3(0f, 0.5f, 0f)},
+        {Direction.W, new Vector3(-0.1f, 0.5f, 0f)}
+    };
 
     private const int HairPixelSize = 64;
     private List<List<Sprite>> CharacterHairSprites;
@@ -60,9 +74,12 @@ public class CharacterGenerator : MonoBehaviour
         if(isPlayer) controller = bodyParts.AddComponent<PlayerController>();
         else controller = bodyParts.AddComponent<NPCController>();
 
-        BodyPart body = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterBodySprites); // Body
-        BodyPart head = AddRandomBodyPart(ColorManager.GetRandomSkinColor(), bodyParts, CharacterHeadSprites); // Head
-        BodyPart hair = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterHairSprites); // Hair
+        float bodyScale = 1f * BodyPixelSize / BodyPixelSize;
+        float headScale = 1f * HeadPixelSize / BodyPixelSize;
+
+        BodyPart body = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterBodySprites, bodyScale, BodyPositions); // Body
+        BodyPart head = AddRandomBodyPart(ColorManager.GetRandomSkinColor(), bodyParts, CharacterHeadSprites, headScale, HeadPositions); // Head
+        BodyPart hair = AddRandomBodyPart(ColorManager.GetRandomColor(), bodyParts, CharacterHairSprites, headScale, HeadPositions); // Hair
 
         CharacterAppearance appearance = new CharacterAppearance(body, head, hair);
 
@@ -86,13 +103,13 @@ public class CharacterGenerator : MonoBehaviour
         return character;
     }
 
-    private BodyPart AddRandomBodyPart(Color color, GameObject bodyParts, List<List<Sprite>> sprites)
+    private BodyPart AddRandomBodyPart(Color color, GameObject bodyParts, List<List<Sprite>> sprites, float spriteScale, Dictionary<Direction, Vector3> spritePositions)
     {
         GameObject bodyPartObject = new GameObject("BodyPart");
         bodyPartObject.transform.SetParent(bodyParts.transform);
         BodyPart bodyPart = bodyPartObject.AddComponent<BodyPart>();
         List<Sprite> chosenSprites = sprites[Random.Range(0, sprites.Count)];
-        bodyPart.Init(color, chosenSprites[0], chosenSprites[1], chosenSprites[2]);
+        bodyPart.Init(color, chosenSprites[0], chosenSprites[1], chosenSprites[2], spriteScale, spritePositions);
         return bodyPart;
     }
 

@@ -19,8 +19,6 @@ public class Relationship
     {
         SourceCharacter = source;
         TargetCharacter = target;
-        SourceCharacter.OutRelationships.Add(target, this);
-        TargetCharacter.InRelationships.Add(source, this);
         Attitude = 0;
     }
 }

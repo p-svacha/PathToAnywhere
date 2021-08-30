@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
     // Attributes
     public string Name;
     public float MovementSpeed;
+    public Building Home;
 
     // Controls
     public CharacterController Controller;
@@ -74,4 +75,9 @@ public class Character : MonoBehaviour
         }
     }
 
+    public string GetHome()
+    {
+        if (Home != null && Home.Settlement != null) return Home.Settlement.Name;
+        else return "";
+    }
 }

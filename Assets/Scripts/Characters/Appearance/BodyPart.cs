@@ -14,12 +14,17 @@ public class BodyPart : MonoBehaviour
     public SpriteRenderer SideSpriteRenderer; // east facing
     public SpriteRenderer BackSpriteRenderer; // north facing
 
-    public void Init(Color color, Sprite frontSprite, Sprite sideSprite, Sprite backSprite)
+    public Dictionary<Direction, Vector3> SpritePositions;
+    public float SpriteScale;
+
+    public void Init(Color color, Sprite frontSprite, Sprite sideSprite, Sprite backSprite, float spriteScale, Dictionary<Direction, Vector3> spritePositions)
     {
         Color = color;
         FrontSprite = frontSprite;
         SideSprite = sideSprite;
         BackSprite = backSprite;
+        SpriteScale = spriteScale;
+        SpritePositions = spritePositions;
         FrontSpriteRenderer = CreateRenderer(FrontSprite);
         SideSpriteRenderer = CreateRenderer(SideSprite);
         BackSpriteRenderer = CreateRenderer(BackSprite);
@@ -39,6 +44,8 @@ public class BodyPart : MonoBehaviour
 
     public void ShowDirection(Direction dir)
     {
+        SetLocalPoisition(SpritePositions[dir]);
+
         if(dir == Direction.N)
         {
             FrontSpriteRenderer.gameObject.SetActive(false);

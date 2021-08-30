@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class GameModel : MonoBehaviour
 {
     [Header("Static Elements")]
+    public UI_HUD UI;
     public CameraController CameraController;
     public TilemapGenerator TilemapGenerator;
     public InteractionHandler InteractionHandler;
@@ -20,6 +21,7 @@ public class GameModel : MonoBehaviour
     void Start()
     {
         NameGenerator.Init();
+        UI.Init(this);
         CharacterGenerator.Init(this);
         TilemapGenerator.Init(this);
         TilemapGenerator.LoadChunksAroundPlayer(new Vector2Int(0,0), MapRenderRange);
@@ -49,8 +51,17 @@ public class GameModel : MonoBehaviour
 
     #endregion
 
+    public void AddRelationship(Character source, Character target)
+    {
+        Relationship newRelationship = new Relationship(source, target);
+        source.OutRelationships.Add(target, newRelationship);
+        target.InRelationships.Add(source, newRelationship);
+        UI.OnRelationshipUpdate();
+    }
+
     public void ChangeAttitude(Character source, Character target, int value)
     {
-        source.OutRelationships[target].Attitude += value;
+        source.OutRelationships[target].Attitude += value; // Change attitude
+        UI.OnRelationshipUpdate();
     }
 }

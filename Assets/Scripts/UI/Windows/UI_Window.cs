@@ -14,6 +14,8 @@ public class UI_Window : MonoBehaviour, IDragHandler, IPointerDownHandler
         Canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
     }
 
+    public virtual void Init(GameModel model) { }
+
     public void OnDrag(PointerEventData eventData)
     {
         DragRectTransform.anchoredPosition += eventData.delta / Canvas.scaleFactor;

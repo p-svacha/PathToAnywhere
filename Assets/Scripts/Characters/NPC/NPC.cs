@@ -9,8 +9,6 @@ public class NPC : Character
 {
     public NPCController NPCController;
 
-    public Building Home;
-
     public override void Init(GameModel model, Vector2Int position, CharacterController controller, Transform movePoint, CharacterAppearance appearance)
     {
         base.Init(model, position, controller, movePoint, appearance);
@@ -30,7 +28,7 @@ public class NPC : Character
         FacePosition(target.GridPosition);
 
         // Create relationship towards target if not existing
-        if (!OutRelationships.ContainsKey(target)) new Relationship(this, target);
+        if (!OutRelationships.ContainsKey(target)) Model.AddRelationship(this, target);
 
         return GetDialogue(target);
     }
