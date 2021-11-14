@@ -26,20 +26,6 @@ public class Building : Structure
         InsideTiles = new List<Vector2Int>();
     }
 
-    public bool IntersectsWith(Building other)
-    {
-        return BaseTilePositions.Intersect(other.BaseTilePositions).Count() > 0;
-    }
-
-    public bool IsFullyWithinRegion(Region region)
-    {
-        foreach(Vector2Int tile in BaseTilePositions)
-        {
-            if (!region.TilePositions.Contains(tile)) return false;
-        }
-        return true;
-    }
-
     public void SetDrawRoof(TilemapGenerator generator, bool draw)
     {
         foreach (KeyValuePair<Vector2Int, TileBase> kvp in RoofTiles)
@@ -62,7 +48,11 @@ public class Building : Structure
 
     public Vector2Int GetRandomInsidePosition()
     {
-        return InsideTiles[Random.Range(0, InsideTiles.Count)]; ;
+        return InsideTiles[Random.Range(0, InsideTiles.Count)];
     }
 
+    public override List<Vector2Int> GetCollisionTiles()
+    {
+        return BaseTiles;
+    }
 }

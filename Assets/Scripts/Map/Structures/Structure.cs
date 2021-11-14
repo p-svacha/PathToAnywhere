@@ -47,7 +47,23 @@ public abstract class Structure
         foreach (KeyValuePair<Vector2Int, Color?> kvp in BaseFeatureColor) model.TilemapGenerator.SetBaseFeatureColor(kvp.Key, kvp.Value);
     }
 
-    public List<Vector2Int> BaseTilePositions
+    public bool IsColliding(Structure other)
+    {
+        return GetCollisionTiles().Intersect(other.GetCollisionTiles()).Count() > 0;
+    }
+
+    public bool IsFullyWithinRegion(Region region)
+    {
+        foreach (Vector2Int tile in GetCollisionTiles())
+        {
+            if (!region.TilePositions.Contains(tile)) return false;
+        }
+        return true;
+    }
+
+    public abstract List<Vector2Int> GetCollisionTiles();
+
+    public List<Vector2Int> BaseTiles
     {
         get
         {

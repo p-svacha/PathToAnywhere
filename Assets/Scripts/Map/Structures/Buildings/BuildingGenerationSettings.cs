@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Instructions for the BuildingGenerator to what kind of building it should generate.
+/// </summary>
 public class BuildingGenerationSettings
 {
-    public int MinWidth;
-    public int MaxWidth;
-    public int MinHeight;
-    public int MaxHeight;
+    public Vector2Int Origin;
+    public Vector2Int BoundsSwCorner;
+    public Vector2Int BoundsDimensions;
 
     public BaseFeatureType WallType;
     public BaseFeatureType FloorType;
     public RoofType RoofType;
     public Color? WallColor;
 
-    public BuildingGenerationSettings(int minWidth, int maxWidth, int minHeight, int maxHeight, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType, Color? wallColor = null)
+    public BuildingGenerationSettings(Vector2Int origin,Vector2Int boundsSwCorner, Vector2Int boundsDimensions, BaseFeatureType wallType, BaseFeatureType floorType, RoofType roofType, Color? wallColor = null)
     {
-        MinWidth = minWidth;
-        MaxWidth = maxWidth;
-        MinHeight = minHeight;
-        MaxHeight = maxHeight;
+        Origin = origin;
+        BoundsSwCorner = boundsSwCorner;
+        BoundsDimensions = boundsDimensions;
         WallType = wallType;
         FloorType = floorType;
         RoofType = roofType;

@@ -2,22 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Settlement
+public class Settlement : Structure
 {
-    private GameModel Model;
     public string Name;
+    public Region Region;
     public List<Structure> Structures;
+    public List<Vector2Int> PathPositions;
 
-    public Settlement(GameModel model, string name, List<Structure> structures)
+    public Settlement(Vector2Int origin, string name, Region region) : base(origin)
     {
-        Model = model;
         Name = name;
-        Structures = structures;
-        foreach (Structure s in structures) s.Settlement = this;
+        Region = region;
     }
 
-    public void PlaceStructures()
+    public void InitSettlement()
     {
-        foreach (Structure s in Structures) s.PlaceStructure(Model);
+        foreach (Structure s in Structures) s.Settlement = this;
+        foreach (Vector2Int path in PathPositions) BaseFeatureTypes.Add(path, BaseFeatureType.Path);
+    }
+
+    public override void PlaceStructure(GameModel model)
+    {
+        base.PlaceStructure(model);
+        foreach (Structure s in Structures) s.PlaceStructure(model);
+    }
+
+    public override List<Vector2Int> GetCollisionTiles()
+    {
+        List<Vector2Int> collisionTiles = new List<Vector2Int>();
+        foreach (Structure s in Structures) collisionTiles.AddRange(s.GetCollisionTiles());
+        collisionTiles.AddRange(PathPositions);
+        return collisionTiles;
     }
 }

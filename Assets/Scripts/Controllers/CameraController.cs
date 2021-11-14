@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     // Zoom
     private float CurrentZoom = 8f;
     private float MinZoom = 4f;
-    private float MaxZoom = 12f;
+    private float MaxZoom = 20f;
     private float ZoomSpeed = 200f;
 
     public void FocusObject(Transform t)

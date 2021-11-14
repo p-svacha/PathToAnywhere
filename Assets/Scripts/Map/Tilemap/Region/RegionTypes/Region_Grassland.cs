@@ -47,8 +47,8 @@ public class Region_Grassland : Region
                 canSpawnBuilding = true;
                 Vector2Int buildingPosition = TilePositions[Random.Range(0, TilePositions.Count)];
 
-                BuildingGenerationSettings settings = new BuildingGenerationSettings(3, 4, 3, 4, BaseFeatureType.Wall, BaseFeatureType.Floor, RoofType.DefaultRoof, ColorManager.GetRandomColor());
-                building = BuildingGenerator.GenerateBuilding(MapGenerator, buildingPosition, settings);
+                BuildingGenerationSettings settings = new BuildingGenerationSettings(buildingPosition, buildingPosition, new Vector2Int(4, 4), BaseFeatureType.Wall, BaseFeatureType.Floor, RoofType.DefaultRoof, ColorManager.GetRandomColor());
+                building = BuildingGenerator.GenerateBuilding(MapGenerator, settings);
 
                 // Check if building is fully within region
                 if (!building.IsFullyWithinRegion(this))
@@ -60,7 +60,7 @@ public class Region_Grassland : Region
                 // Check if building overlaps with any other building
                 foreach (Building b in Buildings)
                 {
-                    if (building.IntersectsWith(b))
+                    if (building.IsColliding(b))
                     {
                         canSpawnBuilding = false;
                         continue;
@@ -69,7 +69,7 @@ public class Region_Grassland : Region
             }
 
             // Remove trees that were in the way of the building
-            List<Tree> treesToRemove = Trees.Where(x => building.BaseTilePositions.Contains(x.Origin)).ToList();
+            List<Tree> treesToRemove = Trees.Where(x => building.IsColliding(x)).ToList();
             foreach (Tree t in treesToRemove) Trees.Remove(t);
 
             Buildings.Add(building);

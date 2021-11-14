@@ -9,5 +9,6 @@ public enum BaseFeatureType
     Wall,
     Mountain,
     Rock,
-    Floor
+    Floor,
+    Path
 }

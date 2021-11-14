@@ -13,7 +13,7 @@ public class GameModel : MonoBehaviour
     public CharacterGenerator CharacterGenerator;
 
     [Header("Map Rendering Attributes")]
-    public static int MapRenderRange = 2;
+    public static int MapRenderRange = 3;
 
     [Header("Game Elements")]
     public Player Player;

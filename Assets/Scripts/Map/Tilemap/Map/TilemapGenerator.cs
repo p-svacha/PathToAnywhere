@@ -45,6 +45,7 @@ public class TilemapGenerator : MonoBehaviour
     public Texture2D WallSet1;
     public Texture2D RockSet1;
     public Texture2D WaterSet1;
+    public Texture2D PathSet1;
 
     public Dictionary<BaseSurfaceType, TileSetSimple> BaseSurfaceTilesets;
     public Dictionary<BaseFeatureType, TileSet> BaseFeatureTilesets;
@@ -91,6 +92,7 @@ public class TilemapGenerator : MonoBehaviour
         BaseFeatureTilesets.Add(BaseFeatureType.Mountain, TileGenerator.GenerateSlicedTileset(MountainSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Mountain }));
         BaseFeatureTilesets.Add(BaseFeatureType.Wall, TileGenerator.GenerateSlicedTileset(WallSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Wall }));
         BaseFeatureTilesets.Add(BaseFeatureType.Water, TileGenerator.GenerateAnimatedSlicedTileset(WaterSet1, wall, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Water, BaseFeatureType.Mountain }, 1f));
+        BaseFeatureTilesets.Add(BaseFeatureType.Path, TileGenerator.GenerateSlicedTileset(PathSet1, ground, TilePixelSize, new List<BaseFeatureType>() { BaseFeatureType.Path, BaseFeatureType.Floor }));
 
         RoofTilesets.Add(RoofType.DefaultRoof, TileGenerator.GenerateSlicedTileset(RoofSet1, null, TilePixelSize, new List<BaseFeatureType>()));
     }

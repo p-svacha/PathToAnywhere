@@ -2031,6 +2031,7 @@ MonoBehaviour:
   WallSet1: {fileID: 2800000, guid: 31d1e7cf16990374fb42c5ea5d55a447, type: 3}
   RockSet1: {fileID: 2800000, guid: 4aef8ffaddc54c24da2e421a1d220893, type: 3}
   WaterSet1: {fileID: 2800000, guid: 9076ae9814daca343a5459b42edadff1, type: 3}
+  PathSet1: {fileID: 2800000, guid: 4e097c6ad3739af49b68c0724b6e0c58, type: 3}
 --- !u!4 &558758191
 Transform:
   m_ObjectHideFlags: 0
@@ -2374,6 +2375,7 @@ MonoBehaviour:
   HotkeyText: {fileID: 1379041471}
   Window: {fileID: 1234003509}
   Hotkey: 109
+  IsWindowActive: 0
 --- !u!1 &731967451
 GameObject:
   m_ObjectHideFlags: 0
@@ -5649,6 +5651,7 @@ MonoBehaviour:
   HotkeyText: {fileID: 1391646105}
   Window: {fileID: 1300602279}
   Hotkey: 114
+  IsWindowActive: 0
 --- !u!1 &1686325201
 GameObject:
   m_ObjectHideFlags: 0
@@ -6698,6 +6701,7 @@ MonoBehaviour:
   HotkeyText: {fileID: 765430239}
   Window: {fileID: 772525113}
   Hotkey: 111
+  IsWindowActive: 0
 --- !u!1 &1901989988
 GameObject:
   m_ObjectHideFlags: 0

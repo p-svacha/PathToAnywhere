@@ -64,6 +64,6 @@ public abstract class Region
     {
         foreach (Building b in Buildings) b.PlaceStructure(Model);
         foreach (Tree t in Trees) t.PlaceStructure(Model);
-        if (Settlement != null) Settlement.PlaceStructures();
+        if (Settlement != null) Settlement.PlaceStructure(Model);
     }
 }
