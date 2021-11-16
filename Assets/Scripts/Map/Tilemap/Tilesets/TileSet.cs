@@ -13,5 +13,5 @@ public abstract class TileSet
     {
         Data = data;
     }
-    public abstract void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position);
+    public abstract void PlaceTile(MapGenerator generator, Tilemap tilemap, Vector3Int position);
 }

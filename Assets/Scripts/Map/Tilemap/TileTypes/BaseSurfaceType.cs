@@ -8,5 +8,6 @@ public enum BaseSurfaceType
     Grass1,
     Grass2,
     Sand,
-    Dirt
+    Dirt,
+    Water
 }

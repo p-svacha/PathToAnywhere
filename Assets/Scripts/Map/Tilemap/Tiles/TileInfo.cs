@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// An instance of this class provides info for a single tile.
+/// An instance of this class provides all info for a single tile.
 /// </summary>
 public class TileInfo
 {
@@ -17,17 +17,21 @@ public class TileInfo
     public Color? BaseFeautureColor;
 
     public Character Character;
-    public Region Region;
-    public Building Building;
-
     public bool Blocked;
+
+    // Only used in infinite maps
+    public MapGeneration.Infinite.Region Region;
+    public MapGeneration.Infinite.Building Building;
+
 
     public TileInfo(Vector2Int position)
     {
         Position = position;
+        BaseSurfaceType = BaseSurfaceType.None;
+        BaseFeatureType = BaseFeatureType.None;
     }
 
-    public bool IsPassable(TilemapGenerator generator)
+    public bool IsPassable(MapGenerator generator)
     {
         if (BaseFeatureType != BaseFeatureType.None && !generator.BaseFeatureTilesets[BaseFeatureType].Data.Passable) return false;
         if (Blocked) return false;
@@ -36,7 +40,7 @@ public class TileInfo
         return true;
     }
 
-    public float GetSpeedModifier(TilemapGenerator generator)
+    public float GetSpeedModifier(MapGenerator generator)
     {
         List<float> modifiers = new List<float>();
         if (BaseSurfaceType != BaseSurfaceType.None) modifiers.Add(generator.BaseSurfaceTilesets[BaseSurfaceType].Data.SpeedModifier);

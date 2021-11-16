@@ -101,7 +101,7 @@ public class CharacterController : MonoBehaviour
         }
 
         
-        OnCharacterMove(Character.Model.TilemapGenerator.GetTileInfo(fromPosition), Character.Model.TilemapGenerator.GetTileInfo(Character.GridPosition));
+        OnCharacterMove(Character.Model.TilemapGenerator.GetTile(fromPosition), Character.Model.TilemapGenerator.GetTile(Character.GridPosition));
     }
 
 

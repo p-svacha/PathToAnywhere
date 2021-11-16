@@ -34,12 +34,12 @@ public class TileSetSliced : TileSet
         ConnectionTypes = connectionTypes;
     }
 
-    public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
+    public override void PlaceTile(MapGenerator generator, Tilemap tilemap, Vector3Int position)
     {
         PlaceSlicedTile(generator, tilemap, position.x, position.y);
     }
 
-    private void PlaceSlicedTile(TilemapGenerator generator, Tilemap tilemap, int tileX, int tileY)
+    private void PlaceSlicedTile(MapGenerator generator, Tilemap tilemap, int tileX, int tileY)
     {
         bool hasNorthNeighbour = HasNeighbour(generator, tileX, tileY + 1);
         bool hasSouthNeighbour = HasNeighbour(generator, tileX, tileY - 1);
@@ -57,9 +57,9 @@ public class TileSetSliced : TileSet
         tilemap.SetTile(tilePos, tileToPlace);
     }
 
-    private bool HasNeighbour(TilemapGenerator generator, int x, int y)
+    private bool HasNeighbour(MapGenerator generator, int x, int y)
     {
-        if(ConnectionTypes.Contains(generator.GetTileInfo(x, y).BaseFeatureType)) return true;
+        if(ConnectionTypes.Contains(generator.GetTile(x, y).BaseFeatureType)) return true;
         return false;
     }
 

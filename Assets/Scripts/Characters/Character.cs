@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
     // Attributes
     public string Name;
     public float MovementSpeed;
-    public Building Home;
+    public MapGeneration.Infinite.Building Home;
 
     // Controls
     public CharacterController Controller;
@@ -44,7 +44,7 @@ public class Character : MonoBehaviour
         InRelationships = new Dictionary<Character, Relationship>();
 
         transform.position = model.TilemapGenerator.GetWorldPosition(position);
-        CurrentTile = Model.TilemapGenerator.GetTileInfo(position);
+        CurrentTile = Model.TilemapGenerator.GetTile(position);
         CurrentTile.Character = this;
 
         MovementSpeed = 4f;
@@ -52,10 +52,10 @@ public class Character : MonoBehaviour
 
     public TileInfo GetFacedTile()
     {
-        if (FaceDirection == Direction.N) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, 1));
-        if (FaceDirection == Direction.E) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(1, 0));
-        if (FaceDirection == Direction.S) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(0, -1));
-        if (FaceDirection == Direction.W) return Model.TilemapGenerator.GetTileInfo(GridPosition + new Vector2Int(-1, 0));
+        if (FaceDirection == Direction.N) return Model.TilemapGenerator.GetTile(GridPosition + new Vector2Int(0, 1));
+        if (FaceDirection == Direction.E) return Model.TilemapGenerator.GetTile(GridPosition + new Vector2Int(1, 0));
+        if (FaceDirection == Direction.S) return Model.TilemapGenerator.GetTile(GridPosition + new Vector2Int(0, -1));
+        if (FaceDirection == Direction.W) return Model.TilemapGenerator.GetTile(GridPosition + new Vector2Int(-1, 0));
         throw new System.Exception();
     }
 

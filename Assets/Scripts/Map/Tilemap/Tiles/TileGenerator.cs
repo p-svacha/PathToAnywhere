@@ -192,7 +192,7 @@ public static class TileGenerator
         List<Sprite> frames = new List<Sprite>();
         for(int i = 0; i < animationLength; i++)
         {
-            Sprite frame = Sprite.Create(texture, new Rect((startX + i * deltaX) * tileSize, (startY + i * deltaY) * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), TilemapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);
+            Sprite frame = Sprite.Create(texture, new Rect((startX + i * deltaX) * tileSize, (startY + i * deltaY) * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), MapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);
             frames.Add(frame);
         }
         tile.m_AnimatedSprites = frames.ToArray();
@@ -206,7 +206,7 @@ public static class TileGenerator
         Tile tile = ScriptableObject.CreateInstance<Tile>();
         tile.name = texture.name + "_" + x + "_" + y;
 
-        tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), TilemapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);
+        tile.sprite = Sprite.Create(texture, new Rect(x * tileSize, y * tileSize, tileSize, tileSize), new Vector2(0.5f, 0.5f), MapGenerator.TilePixelSize, 1, SpriteMeshType.Tight, Vector4.zero);
         return tile;
     }
 

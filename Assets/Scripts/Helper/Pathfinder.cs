@@ -6,10 +6,10 @@ using UnityEngine;
 public static class Pathfinder
 {
     // A* algorithm implementation. https://pavcreations.com/tilemap-based-a-star-algorithm-implementation-in-unity-game/
-    public static List<Vector2Int> GetPath(TilemapGenerator map, Vector2Int from, Vector2Int to)
+    public static List<Vector2Int> GetPath(MapGenerator map, Vector2Int from, Vector2Int to)
     {
         if (from == to) return new List<Vector2Int>();
-        if (!map.GetTileInfo(to).IsPassable(map)) return new List<Vector2Int>();
+        if (!map.GetTile(to).IsPassable(map)) return new List<Vector2Int>();
 
         List<Vector2Int> openList = new List<Vector2Int>() { from }; // tiles that are queued for searching
         List<Vector2Int> closedList = new List<Vector2Int>(); // tiles that have already been searched
@@ -35,7 +35,7 @@ public static class Pathfinder
             foreach(Vector2Int neighbour in GetAdjacentTiles(currentTile))
             {
                 if (closedList.Contains(neighbour)) continue;
-                if (!map.GetTileInfo(neighbour).IsPassable(map)) continue;
+                if (!map.GetTile(neighbour).IsPassable(map)) continue;
 
                 int tentativeGCost = gCosts[currentTile] + GetHCost(currentTile, neighbour);
                 if(!gCosts.ContainsKey(neighbour) || tentativeGCost < gCosts[neighbour])

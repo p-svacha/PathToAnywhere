@@ -14,7 +14,7 @@ public class TileSetSimple : TileSet
         Tiles = new List<TileBase>();
     }
 
-    public override void PlaceTile(TilemapGenerator generator, Tilemap tilemap, Vector3Int position)
+    public override void PlaceTile(MapGenerator generator, Tilemap tilemap, Vector3Int position)
     {
         tilemap.SetTile(position, GetRandomTile());
     }
