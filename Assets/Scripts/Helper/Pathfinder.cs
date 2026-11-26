@@ -53,6 +53,12 @@ public static class Pathfinder
         return null;
     }
 
+    /// <summary>
+    /// Assumed cost of that path. This function is not allowed to overestimate the cost. The real cost must be >= this cost.
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     private static int GetHCost(Vector2Int from, Vector2Int to)
     {
         return Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);

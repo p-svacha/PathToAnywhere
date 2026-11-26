@@ -12,7 +12,7 @@ public class MapEditorModel : MonoBehaviour
     void Start()
     {
         MapEditor = new FiniteMapGenerator();
-        MapEditor.GenerateMap(new MapGeneration.Finite.FiniteMapGenerationSettings(300, 300));
+        MapEditor.GenerateMap(new MapGeneration.Finite.FiniteMapGenerationSettings(1000, 1000));
     }
 
     // Update is called once per frame

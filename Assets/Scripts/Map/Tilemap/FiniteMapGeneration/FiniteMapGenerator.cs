@@ -30,10 +30,12 @@ namespace MapGeneration
                 for(int x = 0; x < Width; x++)
                 {
                     TileInfo tile = new TileInfo(new Vector2Int(x, y));
-                    float perlin = Mathf.PerlinNoise(5000f + x * 0.1f, 90000f + y * 0.1f);
-                    if (perlin < 0.33f) tile.BaseSurfaceType = BaseSurfaceType.Grass2;
-                    else if(perlin <= 0.66f) tile.BaseSurfaceType = BaseSurfaceType.Sand;
-                    else if(perlin <= 2f) tile.BaseSurfaceType = BaseSurfaceType.Water;
+                    float perlin1 = Mathf.PerlinNoise(5000f + x * 0.1f, 90000f + y * 0.1f);
+                    if(perlin1 <= 0.5f) tile.BaseSurfaceType = BaseSurfaceType.Sand;
+                    else if(perlin1 <= 2f) tile.BaseSurfaceType = BaseSurfaceType.Grass1;
+
+                    float perlin2 = Mathf.PerlinNoise(50000f + x * 0.1f, 9000f + y * 0.1f);
+                    if (perlin2 <= 0.5f) tile.BaseSurfaceType = BaseSurfaceType.Water;
 
                     Tiles[x, y] = tile;
                 }
